@@ -38,8 +38,20 @@ namespace ConfigurationService.Api
 
             services.AddScoped<ISourceApi, GitHubApi>();
 
-            services.AddControllers(options =>
-                options.Filters.Add(new HttpExceptionFilter()));
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        var origins = Configuration.GetSection("ClientOrigins").Get<string[]>();
+                        builder
+                            .WithOrigins(origins)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
+            services.AddControllers(options => options.Filters.Add(new HttpExceptionFilter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +63,7 @@ namespace ConfigurationService.Api
             }
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

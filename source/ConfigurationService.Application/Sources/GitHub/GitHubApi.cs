@@ -126,14 +126,42 @@ namespace ConfigurationService.Application.Sources.GitHub
             return Configuration.Create(new Env(environment), new ConfigurationContent(defaultConfig.Content));
         }
 
-        public Task UpdateConfig(string projectName, string environment, string content)
+        public async Task UpdateConfig(string projectName, string environment, string content)
         {
-            throw new System.NotImplementedException();
+            var fileName = _matcher.BuildFileName(environment);
+            var file = await FindContent(projectName, fileName);
+            if (file == null)
+            {
+                throw new NotFoundException("Configuration does not exist");
+            }
+
+            var request = new
+            {
+                message = $"Update file[${fileName}]",
+                sha = file.Sha,
+                branch = projectName,
+                content
+            };
+
+            await _httpClient.PutAsync<FileDto>($"{_options.Repo}/contents/{fileName}", request);
         }
 
-        public Task DeleteConfig(string projectName, string environment)
+        public async Task DeleteConfig(string projectName, string environment)
         {
-            throw new System.NotImplementedException();
+            var fileName = _matcher.BuildFileName(environment);
+            var file = await FindContent(projectName, fileName);
+            if (file == null)
+            {
+                throw new NotFoundException("Configuration does not exist");
+            }
+
+            var request = new
+            {
+                message = $"Update file[${fileName}]",
+                sha = file.Sha,
+                branch = projectName
+            };
+            await _httpClient.DeleteAsync($"{_options.Repo}/contents/{fileName}", request);
         }
 
         private async Task<RefDto> FindRef(string name)

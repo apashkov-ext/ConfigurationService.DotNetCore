@@ -10,9 +10,15 @@ namespace ConfigurationService.Domain.ValueObjects
 
         public Env(string value)
         {
-            if (!new Regex("^[a-zA-Z_]+$").IsMatch(value))
+            if (value == "")
             {
-                throw new ApplicationException("Invalid environment name");
+                Value = value;
+                return;
+            }
+
+            if (!new Regex("^[a-zA-Z][a-zA-Z_-]+$").IsMatch(value))
+            {
+                throw new ApplicationException($"Invalid environment name '{value}'");
             }
 
             Value = value;

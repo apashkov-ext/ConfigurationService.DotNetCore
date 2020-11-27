@@ -12,15 +12,25 @@ namespace ConfigurationService.Api.Filters
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.Exception is ApiException exception)
+            switch (context.Exception)
             {
-                context.Result = new ObjectResult(new { message = context.Exception.Message })
-                {
-                    StatusCode = exception.StatusCode
-                };
-                context.ExceptionHandled = true;
-            }
+                case ApiException ex:
+                
+                    context.Result = new ObjectResult(new { message = ex.Message })
+                    {
+                        StatusCode = ex.StatusCode
+                    };
+                    context.ExceptionHandled = true;
+                    break;
 
+                case { } ex:
+                    context.Result = new ObjectResult(new { message = ex.Message })
+                    {
+                        StatusCode = 500
+                    };
+                    context.ExceptionHandled = true;
+                    break;
+            }
         }
     }
 }

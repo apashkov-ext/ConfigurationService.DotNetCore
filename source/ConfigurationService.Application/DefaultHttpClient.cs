@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -50,6 +49,17 @@ namespace ConfigurationService.Application
         public Task DeleteAsync(string uri)
         {
             return ExecuteHttpMethod(() => _client.DeleteAsync(uri));
+        }
+
+        public Task DeleteAsync(string uri, object data)
+        {
+            var request = new HttpRequestMessage
+            {
+                Content = ToJsonContent(data),
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(uri)
+            };
+            return ExecuteHttpMethod(() => _client.SendAsync(request));
         }
 
         private static StringContent ToJsonContent(object data)

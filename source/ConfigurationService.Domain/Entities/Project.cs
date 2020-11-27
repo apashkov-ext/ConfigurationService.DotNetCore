@@ -22,5 +22,10 @@ namespace ConfigurationService.Domain.Entities
             Name = name;
             _configs = configs.ToList();
         }
+
+        public void DeleteConfig()
+        {
+
+        }
     }
 }

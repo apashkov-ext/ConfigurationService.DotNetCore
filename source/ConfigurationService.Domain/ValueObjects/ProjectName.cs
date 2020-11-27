@@ -10,9 +10,9 @@ namespace ConfigurationService.Domain.ValueObjects
 
         public ProjectName(string value)
         {
-            if (!new Regex("^[a-zA-Z_]+$").IsMatch(value))
+            if (!new Regex("^[a-zA-Z][\\w_-]+$").IsMatch(value))
             {
-                throw new ApplicationException("Invalid project name");
+                throw new ApplicationException($"Invalid project name '{value}'");
             }
 
             Value = value;

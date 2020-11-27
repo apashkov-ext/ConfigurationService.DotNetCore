@@ -5,7 +5,7 @@ using ConfigurationService.Domain.Entities;
 
 namespace ConfigurationService.Api.Extensions
 {
-    public static class ProjectsExtensions
+    internal static class ProjectsExtensions
     {
         public static IEnumerable<ProjectDto> ToDtoItems(this IEnumerable<Project> source)
         {
