@@ -1,9 +1,6 @@
-using System;
 using ConfigurationService.Api.Filters;
 using ConfigurationService.Application;
-using ConfigurationService.Application.Sources;
-using ConfigurationService.Application.Sources.GitHub;
-using ConfigurationService.Application.Sources.GitHub.Options;
+using ConfigurationService.ServiceCollectionConfiguring;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,19 +21,19 @@ namespace ConfigurationService.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var section = Configuration.GetSection(GitHubApiOptions.Path);
-            services.Configure<GitHubApiOptions>(section);
+            //var section = Configuration.GetSection(GitHubApiOptions.Path);
+            //services.Configure<GitHubApiOptions>(section);
 
             services.AddHttpClient<DefaultHttpClient>(builder =>
             {
-                var cfg = section.Get<GitHubApiOptions>();
-                builder.BaseAddress = new Uri($"{cfg.Uri}/repos/{cfg.UserName}/");
-                builder.DefaultRequestHeaders.Add("Authorization", $"token {cfg.PersonalToken}");
-                builder.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-                builder.DefaultRequestHeaders.Add("User-Agent", "Configuration-Service");
+                //var cfg = section.Get<GitHubApiOptions>();
+                //builder.BaseAddress = new Uri($"{cfg.Uri}/repos/{cfg.UserName}/");
+                //builder.DefaultRequestHeaders.Add("Authorization", $"token {cfg.PersonalToken}");
+                //builder.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+                //builder.DefaultRequestHeaders.Add("User-Agent", "Configuration-Service");
             });
 
-            services.AddScoped<ISourceApi, GitHubApi>();
+            services.ConfigureApplicationServices();
 
             services.AddCors(options =>
             {

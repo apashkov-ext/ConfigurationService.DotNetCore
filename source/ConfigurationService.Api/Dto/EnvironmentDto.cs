@@ -2,9 +2,9 @@
 
 namespace ConfigurationService.Api.Dto
 {
-    public class ProjectDto
+    public class EnvironmentDto
     {
         public string Name { get; set; }
-        public IEnumerable<EnvironmentDto> Configurations { get; set; }
+        public OptionGroupDto OptionGroup { get; set; }
     }
 }

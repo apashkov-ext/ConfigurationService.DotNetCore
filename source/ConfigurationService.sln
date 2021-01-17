@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.Applic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.Api", "ConfigurationService.Api\ConfigurationService.Api.csproj", "{7B11B7A8-903E-4383-A640-D09F05895621}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.Persistence", "ConfigurationService.Persistence\ConfigurationService.Persistence.csproj", "{5A750466-B9D8-4F31-B02A-C7F8224837EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationService.ServiceCollectionConfiguring", "ConfigurationService.ServiceCollectionConfiguring\ConfigurationService.ServiceCollectionConfiguring.csproj", "{9050EFC6-8579-460D-9170-937F632F5F8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{7B11B7A8-903E-4383-A640-D09F05895621}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B11B7A8-903E-4383-A640-D09F05895621}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B11B7A8-903E-4383-A640-D09F05895621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A750466-B9D8-4F31-B02A-C7F8224837EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A750466-B9D8-4F31-B02A-C7F8224837EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A750466-B9D8-4F31-B02A-C7F8224837EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A750466-B9D8-4F31-B02A-C7F8224837EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9050EFC6-8579-460D-9170-937F632F5F8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9050EFC6-8579-460D-9170-937F632F5F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9050EFC6-8579-460D-9170-937F632F5F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9050EFC6-8579-460D-9170-937F632F5F8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

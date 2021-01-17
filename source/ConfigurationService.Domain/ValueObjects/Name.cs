@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace ConfigurationService.Domain.ValueObjects
 {
-    public class ProjectName : ValueObject
+    public class Name : ValueObject
     {
         public string Value { get; }
 
-        public ProjectName(string value)
+        public Name(string value)
         {
-            if (!new Regex("^[a-zA-Z][\\w_-]+$").IsMatch(value))
-            {
-                throw new ApplicationException($"Invalid project name '{value}'");
-            }
-
             Value = value;
         }
 

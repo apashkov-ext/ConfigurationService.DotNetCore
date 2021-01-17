@@ -1,29 +1,31 @@
 ﻿using ConfigurationService.Domain.ValueObjects;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConfigurationService.Domain.Entities
 {
-    public class Project
+    public class Project : Entity
     {
-        private readonly List<Configuration> _configs;
+        public Name Name { get; private set; }
+        public ApiKey ApiKey { get; private set; }
 
-        public ProjectName Name { get; }
-        public IEnumerable<Configuration> Configurations => _configs;
+        private readonly HashSet<Environment> _environments;
+        public IEnumerable<Environment> Environments => _environments;
 
-        public static Project Create(ProjectName name, IEnumerable<Configuration> configs)
-        {
-            return new Project(name, configs);
-        }
+        protected Project() { }
 
-        private Project(ProjectName name, IEnumerable<Configuration> configs)
+        private Project(Name name, ApiKey apiKey, IEnumerable<Environment> environments)
         {
             Name = name;
-            _configs = configs.ToList();
+            ApiKey = apiKey;
+            _environments = new HashSet<Environment>(environments);
         }
 
-        public void DeleteConfig()
+        public static Project Create(Name name, ApiKey apiKey, IEnumerable<Environment> environments)
+        {
+            return new Project(name, apiKey, environments);
+        }
+
+        public void AddEnvironment(Environment env)
         {
 
         }
