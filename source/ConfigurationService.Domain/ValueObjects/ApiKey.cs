@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ConfigurationService.Domain.ValueObjects
 {
@@ -10,7 +9,23 @@ namespace ConfigurationService.Domain.ValueObjects
 
         public ApiKey(Guid value)
         {
+            if (value == Guid.Empty)
+            {
+                throw new ApplicationException("Incorrect api key");
+            }
             Value = value;
+        }
+
+        public ApiKey(string value)
+        {
+            try
+            {
+                Value = Guid.Parse(value);
+            }
+            catch
+            {
+                throw new ApplicationException("Incorrect api key");
+            }
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

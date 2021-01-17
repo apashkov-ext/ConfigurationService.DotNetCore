@@ -14,29 +14,31 @@ namespace ConfigurationService.Api.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly IProjects _projectsReader;
+        private readonly IProjects _projects;
+        private readonly IConfigurations _configurations;
 
-        public ProjectsController(IProjects projectsReader)
+        public ProjectsController(IProjects projectsReader, IConfigurations configurations)
         {
-            _projectsReader = projectsReader;
+            _projects = projectsReader;
+            _configurations = configurations;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
         {
-            var projects = await _projectsReader.GetItems();
+            var projects = await _projects.GetAllProjects();
             return Ok(projects.Select(x => x.ToDto()));
         }
 
-        //[HttpGet("{name}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public async Task<ActionResult<ProjectDto>> GetProject(string name)
-        //{
-        //    var project = await _api.GetProject(name);
-        //    return Ok(project.ToDto());
-        //}
+        [HttpGet("{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProjectDto>> GetProject(string name)
+        {
+            var project = await _projects.GetProjectByName(name);
+            return Ok(project.ToDto());
+        }
 
         //[HttpPost]
         //[ProducesResponseType(StatusCodes.Status201Created)]
@@ -58,14 +60,14 @@ namespace ConfigurationService.Api.Controllers
         //    return NoContent();
         //}
 
-        //[HttpGet("{name}/configs/{env}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public async Task<ActionResult<object>> GetConfig(string name, string env)
-        //{
-        //    var config = await _api.GetConfig(name, env);
-        //    return Ok(config.ToDto());
-        //}
+        [HttpGet("{name}/configs/{env}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<object>> GetConfig(string name, string env, [FromHeader] string apiKey)
+        {
+            var config = await _configurations.GetConfiguration(name, env, apiKey);
+            return Ok(config.ToJsObject());
+        }
 
         //[HttpPost("{name}/configs")]
         //[ProducesResponseType(StatusCodes.Status201Created)]

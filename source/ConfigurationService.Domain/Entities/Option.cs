@@ -4,7 +4,7 @@ namespace ConfigurationService.Domain.Entities
 {
     public class Option : Entity
     {
-        public Name Name { get; private set; }
+        public OptionName Name { get; private set; }
         public Description Description { get; private set; }
         public OptionValue Value { get; private set; }
         public OptionValueType Type { get; private set; }
@@ -12,7 +12,7 @@ namespace ConfigurationService.Domain.Entities
 
         protected Option() { }
 
-        private Option(Name name, Description description, OptionValue value, OptionValueType type, OptionGroup optionGroup)
+        private Option(OptionName name, Description description, OptionValue value, OptionValueType type, OptionGroup optionGroup)
         {
             Name = name;
             Description = description;
@@ -21,7 +21,7 @@ namespace ConfigurationService.Domain.Entities
             OptionGroup = optionGroup;
         }
 
-        public static Option Create(Name name, Description description, OptionValue value, OptionValueType type, OptionGroup optionGroup)
+        public static Option Create(OptionName name, Description description, OptionValue value, OptionValueType type, OptionGroup optionGroup)
         {
             return new Option(name, description, value, type, optionGroup);
         }

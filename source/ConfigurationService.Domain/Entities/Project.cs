@@ -5,7 +5,7 @@ namespace ConfigurationService.Domain.Entities
 {
     public class Project : Entity
     {
-        public Name Name { get; private set; }
+        public ProjectName Name { get; private set; }
         public ApiKey ApiKey { get; private set; }
 
         private readonly HashSet<Environment> _environments;
@@ -13,14 +13,14 @@ namespace ConfigurationService.Domain.Entities
 
         protected Project() { }
 
-        private Project(Name name, ApiKey apiKey, IEnumerable<Environment> environments)
+        private Project(ProjectName name, ApiKey apiKey, IEnumerable<Environment> environments)
         {
             Name = name;
             ApiKey = apiKey;
             _environments = new HashSet<Environment>(environments);
         }
 
-        public static Project Create(Name name, ApiKey apiKey, IEnumerable<Environment> environments)
+        public static Project Create(ProjectName name, ApiKey apiKey, IEnumerable<Environment> environments)
         {
             return new Project(name, apiKey, environments);
         }

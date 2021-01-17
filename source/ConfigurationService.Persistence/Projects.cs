@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ConfigurationService.Domain;
+using ConfigurationService.Application;
+using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain.Entities;
+using ConfigurationService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConfigurationService.Persistence
@@ -17,19 +17,16 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Project>> GetItems()
+        public async Task<IEnumerable<Project>> GetAllProjects()
         {
-            var projects = await _context.Projects
-                .Include(x => x.Environments)
-                .ThenInclude(x => x.OptionGroup)
-                .ThenInclude(x => x.Children)
-                .ThenInclude(x => x.Options)
-                .ToListAsync();
+            return await _context.Projects.ProjectsWithIncludedEntities().ToListAsync();
+        }
 
-            //var projects = await _context.Projects
-            //    .ToListAsync();
-
-            return projects;
+        public async Task<Project> GetProjectByName(string name)
+        {
+            var projName = new ProjectName(name);
+            var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Name == projName);
+            return project ?? throw new NotFoundException("Project does not exist");
         }
     }
 }

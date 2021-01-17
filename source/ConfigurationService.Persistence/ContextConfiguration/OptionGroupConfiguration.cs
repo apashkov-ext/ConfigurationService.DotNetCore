@@ -15,8 +15,8 @@ namespace ConfigurationService.Persistence.ContextConfiguration
             builder.HasMany(x => x.Options).WithOne(x => x.OptionGroup);
             builder.Navigation(x => x.Options).HasField("_options").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
 
-            builder.HasOne(x => x.Parent).WithMany(x => x.Children);
-            builder.Navigation(x => x.Children).HasField("_children").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
+            builder.HasOne(x => x.Parent).WithMany(x => x.NestedGroups);
+            builder.Navigation(x => x.NestedGroups).HasField("_nestedGroups").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
 
             builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
             builder.OwnsOne(x => x.Description).Property(x => x.Value).HasColumnName("Description");
