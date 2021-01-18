@@ -17,7 +17,7 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<OptionGroup> GetConfiguration(string project, string environmnet, string apiKey)
+        public async Task<OptionGroup> GetItem(string project, string environmnet, string apiKey)
         {
             var projName = new ProjectName(project);
             var envName = new ProjectName(environmnet);

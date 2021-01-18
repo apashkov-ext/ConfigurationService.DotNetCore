@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ConfigurationService.Domain;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
+using ConfigurationService.Domain.ValueObjects.OptionValueTypes;
 using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Persistence
@@ -16,24 +17,61 @@ namespace ConfigurationService.Persistence
             var groups = new List<OptionGroup>();
             var projects = new List<Project>();
 
-            var p = Project.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")), envs);
             var rootGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>());
-            var nestedGroup = OptionGroup.Create(new OptionGroupName("Logging"), new Description("Настройки логирования"), options, rootGroup, new List<OptionGroup>());
-            rootGroup.AddNestedGroup(nestedGroup);
-            options.AddRange(new List<Option>
-            {
-                Option.Create(new OptionName("loggingEnabled"), new Description("Логирование включено"), new OptionValue(true), OptionValueType.Boolean, nestedGroup),
-                Option.Create(new OptionName("logErrors"), new Description("Логировать ошибки"), new OptionValue(true), OptionValueType.Boolean, nestedGroup),
-                Option.Create(new OptionName("logInfo"), new Description("Логировать информационные сообщения"), new OptionValue(false), OptionValueType.Boolean, nestedGroup),
-                Option.Create(new OptionName("dbName"), new Description("База данных для логирования"), new OptionValue("MarsLogs"), OptionValueType.String, nestedGroup)
-            });
+            groups.Add(rootGroup);
+
+            var nestedGroupLogging = OptionGroup.Create(
+                new OptionGroupName("Logging"), 
+                new Description("Настройки логирования"), 
+                new List<Option>(), 
+                rootGroup, 
+                new List<OptionGroup>());
+            groups.Add(nestedGroupLogging);
+            rootGroup.AddNestedGroup(nestedGroupLogging);
+            nestedGroupLogging.AddOption(Option.Create(new OptionName("loggingEnabled"), new Description("Логирование включено"), new BooleanValue(true),  nestedGroupLogging));
+            nestedGroupLogging.AddOption(Option.Create(new OptionName("logErrors"), new Description("Логировать ошибки"), new BooleanValue(true), nestedGroupLogging));
+            nestedGroupLogging.AddOption(Option.Create(new OptionName("logInfo"), new Description("Логировать информационные сообщения"), new BooleanValue(false), nestedGroupLogging));
+            nestedGroupLogging.AddOption(Option.Create(new OptionName("dbName"), new Description("База данных для логирования"), new StringValue("MarsLogs"), nestedGroupLogging));
+            options.AddRange(nestedGroupLogging.Options);
+
+            var nestedGroupValidation = OptionGroup.Create(
+                new OptionGroupName("validation"),
+                new Description("Настройки валидации"),
+                new List<Option>(),
+                rootGroup,
+                new List<OptionGroup>());
+            groups.Add(nestedGroupValidation);
+            rootGroup.AddNestedGroup(nestedGroupValidation);
+            nestedGroupValidation.AddOption(Option.Create(new OptionName("validationEnabled"), new Description("Валидация включена"), new BooleanValue(true),  nestedGroupValidation));
+            nestedGroupValidation.AddOption(Option.Create(new OptionName("validationLevel"), new Description("Уровень вложенности валидации"), new NumberValue(5),  nestedGroupValidation));
+            nestedGroupValidation.AddOption(Option.Create(new OptionName("steps"), new Description("Валидация активна на этапах"), new NumberArrayValue(new []{15, 19, 23}), nestedGroupValidation));
+            options.AddRange(nestedGroupValidation.Options);
+
+            var anotherNestedGroup = OptionGroup.Create(
+                new OptionGroupName("sectionValidation"),
+                new Description("Валидация секций"),
+                new List<Option>(),
+                nestedGroupValidation,
+                new List<OptionGroup>());
+            groups.Add(anotherNestedGroup);
+            nestedGroupValidation.AddNestedGroup(anotherNestedGroup);
+            anotherNestedGroup.AddOption(Option.Create(new OptionName("sectionValidatorEnabled"), new Description("Валидация секций включена"), new BooleanValue(true), anotherNestedGroup));
+            anotherNestedGroup.AddOption(Option.Create(
+                new OptionName("sections"), 
+                new Description("Валидировать указанные секции"), 
+                new StringArrayValue(new []{"application", "questionnaire"}),
+                anotherNestedGroup));
+
+            options.AddRange(anotherNestedGroup.Options);
+
+            var p = Project.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")), envs);
+
             envs.AddRange(new List<Environment>
             {
                 Environment.Create(new EnvironmentName("dev"), p, true, rootGroup)
             });
 
-            groups.Add(rootGroup);
-            groups.Add(nestedGroup);
+            groups.Add(nestedGroupLogging);
             projects.Add(p);
 
             context.Projects.AddRange(projects);

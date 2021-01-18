@@ -14,5 +14,15 @@ namespace ConfigurationService.Api.Extensions
                 Configurations = source.Environments.Select(x => x.ToDto())
             };
         }
+
+        public static CreatedProjectDto ToCreatedProjectDto(this Project source)
+        {
+            return new CreatedProjectDto
+            {
+                Name = source.Name.Value,
+                Configurations = source.Environments.Select(x => x.ToDto()),
+                ApiKey = source.ApiKey.Value.ToString()
+            };
+        }
     }
 }

@@ -42,5 +42,10 @@ namespace ConfigurationService.Domain.Entities
         {
             _nestedGroups.Add(group);
         }
+
+        public void AddOption(Option option)
+        {
+            _options.Add(option);
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace ConfigurationService.Persistence.ContextConfiguration
             builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
             builder.OwnsOne(x => x.ApiKey).Property(x => x.Value).HasColumnName("ApiKey");
 
-            builder.HasMany(x => x.Environments).WithOne(x => x.Project); 
+            builder.HasMany(x => x.Environments).WithOne(x => x.Project).OnDelete(DeleteBehavior.Cascade); 
             builder.Navigation(x => x.Environments).HasField("_environments").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         }
     }

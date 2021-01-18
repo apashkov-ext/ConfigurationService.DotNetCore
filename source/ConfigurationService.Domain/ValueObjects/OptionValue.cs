@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ConfigurationService.Domain.Entities;
 
 namespace ConfigurationService.Domain.ValueObjects
 {
     public class OptionValue : ValueObject
     {
-        public string Value { get; }
+        public string Value { get; private set; }
+        public OptionValueType Type { get; }
 
-        private OptionValue() {}
+        protected OptionValue() { }
+        public OptionValue(object value, OptionValueType type)
+        {
+            SetValue(value);
+            Type = type;
+        }
 
-        public OptionValue(object value)
+        private void SetValue(object value)
         {
             Value = ConvertToString(value);
         }
@@ -17,16 +23,11 @@ namespace ConfigurationService.Domain.ValueObjects
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
+            yield return Type;
         }
 
-        private static string ConvertToString(object value)
+        protected virtual string ConvertToString(object value)
         {
-            var t = value.GetType();
-            if (t != typeof(string) && t != typeof(int) && t != typeof(bool))
-            {
-                throw new ApplicationException("Incorrect value");
-            }
-
             return value.ToString();
         }
     }

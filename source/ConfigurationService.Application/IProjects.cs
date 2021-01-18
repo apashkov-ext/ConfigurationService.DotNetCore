@@ -6,7 +6,9 @@ namespace ConfigurationService.Application
 {
     public interface IProjects
     {
-        Task<IEnumerable<Project>> GetAllProjects();
-        Task<Project> GetProjectByName(string name);
+        Task<IEnumerable<Project>> Items();
+        Task<Project> GetItem(string name);
+        Task<Project> Add(string name);
+        Task Remove(string name);
     }
 }

@@ -16,6 +16,7 @@ namespace ConfigurationService.Persistence.ContextConfiguration
 
             builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
             builder.HasOne(x => x.Project).WithMany(x => x.Environments);
+            builder.HasOne(x => x.OptionGroup).WithOne(x => x.Environment).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

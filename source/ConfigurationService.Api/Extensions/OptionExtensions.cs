@@ -12,7 +12,7 @@ namespace ConfigurationService.Api.Extensions
                 Name = source.Name.Value,
                 Description = source.Description.Value,
                 Value = source.Value.Value,
-                Type = source.Type
+                Type = source.Value.Type
             };
         }
     }

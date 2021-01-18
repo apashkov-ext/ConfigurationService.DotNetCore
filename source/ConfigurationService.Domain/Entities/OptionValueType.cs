@@ -4,6 +4,8 @@
     {
         String,
         Number,
-        Boolean
+        Boolean,
+        StringArray,
+        NumberArray
     }
 }

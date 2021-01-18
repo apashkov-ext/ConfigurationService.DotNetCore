@@ -17,8 +17,11 @@ namespace ConfigurationService.Persistence.ContextConfiguration
 
             builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
             builder.OwnsOne(x => x.Description).Property(x => x.Value).HasColumnName("Description");
-            builder.OwnsOne(x => x.Value).Property(x => x.Value).HasColumnName("Value");
-            builder.Property(x => x.Type).HasConversion(new EnumToNumberConverter<OptionValueType, int>()).HasDefaultValue(OptionValueType.String);
+            builder.OwnsOne(x => x.Value, a =>
+            {
+                a.Property(x => x.Value).HasColumnName("Value");
+                a.Property(x => x.Type).HasColumnName("Type").HasConversion(new EnumToNumberConverter<OptionValueType, int>()).HasDefaultValue(OptionValueType.String);
+            });
         }
     }
 }
