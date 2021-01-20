@@ -21,5 +21,10 @@
         {
             return new Environment(name, project, isDefault, configuration);
         }
+
+        public void SetOptionGroup(OptionGroup group)
+        {
+            OptionGroup = group;
+        }
     }
 }

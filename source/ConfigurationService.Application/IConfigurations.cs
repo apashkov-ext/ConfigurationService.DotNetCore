@@ -6,5 +6,6 @@ namespace ConfigurationService.Application
     public interface IConfigurations
     {
         Task<OptionGroup> GetItem(string project, string environmnet, string apiKey);
+        Task<OptionGroup> Add(string project, string environment);
     }
 }

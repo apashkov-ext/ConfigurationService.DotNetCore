@@ -69,16 +69,16 @@ namespace ConfigurationService.Api.Controllers
             return Ok(JsObject.Create(config));
         }
 
-        //[HttpPost("{name}/configs")]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        //public async Task<ActionResult<EnvironmentDto>> CreateConfig(string name, CreateConfigDto body)
-        //{
-        //    var created = await _api.CreateConfig(name, body.Env);
-        //    var dto = created.ToDto();
-        //    return CreatedAtAction(nameof(GetConfig), new { name, env = dto.Environment }, dto);
-        //}
+        [HttpPost("{name}/configs")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult<EnvironmentDto>> CreateConfig(string name, CreateConfigDto body)
+        {
+            var created = await _configurations.Add(name, body.Env);
+            var dto = created.ToDto();
+            return CreatedAtAction(nameof(GetConfig), new { name, env = dto.Environment }, dto);
+        }
 
         //[HttpPut("{name}/configs/{env}")]
         //[ProducesResponseType(StatusCodes.Status204NoContent)]
