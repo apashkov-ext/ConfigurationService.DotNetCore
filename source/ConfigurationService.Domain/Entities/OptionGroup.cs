@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
@@ -40,12 +41,41 @@ namespace ConfigurationService.Domain.Entities
 
         public void AddNestedGroup(OptionGroup group)
         {
+            if (_nestedGroups.Any(x => x.Name == group.Name))
+            {
+                throw new ApplicationException("The group already contains nested group with the same name");
+            }
             _nestedGroups.Add(group);
         }
 
         public void AddOption(Option option)
         {
+            if (_options.Any(x => x.Name == option.Name))
+            {
+                throw new ApplicationException("The group already contains option with the same name");
+            }
             _options.Add(option);
+        }
+
+        public void UpdateName(OptionGroupName name)
+        {
+            if (Name != name)
+            {
+                Name = name;
+            }
+        }
+
+        public void UpdateDescription(Description description)
+        {
+            if (Description != description)
+            {
+                Description = description;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }

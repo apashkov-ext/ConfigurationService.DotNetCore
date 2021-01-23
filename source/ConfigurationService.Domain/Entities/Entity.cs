@@ -4,8 +4,8 @@ namespace ConfigurationService.Domain.Entities
 {
     public abstract class Entity
     {
-        public Guid Id { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Modified { get; set; }
+        public Guid Id { get; }
+        public DateTime Created { get; }
+        public DateTime Modified { get; }
     }
 }

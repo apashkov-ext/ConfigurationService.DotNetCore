@@ -9,6 +9,7 @@ namespace ConfigurationService.Api.Extensions
         {
             return new EnvironmentDto
             {
+                Id = source.Id.ToString(),
                 Name = source.Name.Value,
                 OptionGroup = source.OptionGroup.ToDto()
             };

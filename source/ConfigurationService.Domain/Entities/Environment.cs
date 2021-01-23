@@ -26,5 +26,10 @@
         {
             OptionGroup = group;
         }
+
+        public void UpdateName(EnvironmentName name)
+        {
+            Name = name;
+        }
     }
 }

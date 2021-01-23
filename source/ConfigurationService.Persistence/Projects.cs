@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
+using ConfigurationService.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Environment = ConfigurationService.Domain.Entities.Environment;
 
@@ -19,16 +21,22 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Project>> Items()
+        public async Task<IEnumerable<Project>> Get(string name)
         {
-            return await _context.Projects.ProjectsWithIncludedEntities().ToListAsync();
+            if (string.IsNullOrEmpty(name))
+            {
+                return await _context.Projects.ProjectsWithIncludedEntities().ToListAsync();
+            }
+
+            return await _context.Projects.ProjectsWithIncludedEntities()
+                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .ToListAsync();
         }
 
-        public async Task<Project> GetItem(string name)
+        public async Task<Project> Get(Guid id)
         {
-            var projName = new ProjectName(name);
-            var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Name == projName);
-            return project ?? throw new NotFoundException("Project does not exist");
+            var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
+            return project ?? throw new AlreadyExistsException("Projects with the same name already exists");
         }
 
         public async Task<Project> Add(string name)
@@ -47,10 +55,9 @@ namespace ConfigurationService.Persistence
             return newProj;
         }
 
-        public async Task Remove(string name)
+        public async Task Remove(Guid id)
         {
-            var projName = new ProjectName(name);
-            var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
+            var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Id == id);
             if (existed == null)
             {
                 throw new AlreadyExistsException("Project does not exist");

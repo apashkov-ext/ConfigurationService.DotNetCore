@@ -27,7 +27,7 @@ namespace ConfigurationService.Domain.Entities
 
         public void AddEnvironment(Environment env)
         {
-
+            _environments.Add(env);
         }
     }
 }

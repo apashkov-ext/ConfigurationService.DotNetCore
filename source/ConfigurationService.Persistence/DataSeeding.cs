@@ -68,7 +68,8 @@ namespace ConfigurationService.Persistence
 
             envs.AddRange(new List<Environment>
             {
-                Environment.Create(new EnvironmentName("dev"), p, true, rootGroup)
+                Environment.Create(new EnvironmentName("dev"), p, true, rootGroup),
+                Environment.Create(new EnvironmentName("last"), p, false, OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>()))
             });
 
             groups.Add(nestedGroupLogging);

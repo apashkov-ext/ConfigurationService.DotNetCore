@@ -10,6 +10,7 @@ namespace ConfigurationService.Api.Extensions
         {
             return new ProjectDto
             {
+                Id = source.Id.ToString(),
                 Name = source.Name.Value,
                 Configurations = source.Environments.Select(x => x.ToDto())
             };
@@ -19,6 +20,7 @@ namespace ConfigurationService.Api.Extensions
         {
             return new CreatedProjectDto
             {
+                Id = source.Id.ToString(),
                 Name = source.Name.Value,
                 Configurations = source.Environments.Select(x => x.ToDto()),
                 ApiKey = source.ApiKey.Value.ToString()

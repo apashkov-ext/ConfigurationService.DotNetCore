@@ -9,6 +9,7 @@ namespace ConfigurationService.Api.Extensions
         {
             return new OptionDto
             {
+                Id = source.Id.ToString(),
                 Name = source.Name.Value,
                 Description = source.Description.Value,
                 Value = source.Value.Value,

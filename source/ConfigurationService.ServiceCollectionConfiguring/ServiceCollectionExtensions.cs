@@ -11,6 +11,9 @@ namespace ConfigurationService.ServiceCollectionConfiguring
         {
             services.AddTransient<IProjects, Projects>();
             services.AddTransient<IConfigurations, Configurations>();
+            services.AddTransient<IEnvironments, Environments>();
+            services.AddTransient<IOptionGroups, OptionGroups>();
+            services.AddTransient<IOptions, Options>();
             services.AddDbContext<ConfigurationServiceContext>(options => options.UseInMemoryDatabase("ConfigurationStorage"));
 
             return services;

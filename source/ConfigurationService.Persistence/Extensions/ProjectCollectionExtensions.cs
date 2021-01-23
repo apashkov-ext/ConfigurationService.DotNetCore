@@ -2,7 +2,7 @@
 using ConfigurationService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConfigurationService.Persistence
+namespace ConfigurationService.Persistence.Extensions
 {
     internal static class ProjectCollectionExtensions
     {

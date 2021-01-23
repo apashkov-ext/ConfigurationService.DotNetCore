@@ -35,7 +35,7 @@ namespace ConfigurationService.Api
 
             foreach (var opt in source.Options)
             {
-                obj[opt.Name.Value.ToLowerCamelCase()] = ParseValue(opt.Value.Value, opt.Value.Type);
+                obj[opt.Name.Value.ToLowerCamelCase()] = opt.Value.Value.ParseOptionValue(opt.Value.Type);
             }
 
             foreach (var nested in source.NestedGroups)
@@ -44,19 +44,6 @@ namespace ConfigurationService.Api
             }
 
             return obj;
-        }
-
-        private static object ParseValue(string value, OptionValueType type)
-        {
-            return type switch
-            {
-                OptionValueType.String => value,
-                OptionValueType.Number => int.Parse(value),
-                OptionValueType.Boolean => bool.Parse(value),
-                OptionValueType.StringArray => value.Split(','),
-                OptionValueType.NumberArray => value.Split(',').Select(int.Parse),
-                _ => throw new ApplicationException("Unsupported property type")
-            };
         }
     }
 }

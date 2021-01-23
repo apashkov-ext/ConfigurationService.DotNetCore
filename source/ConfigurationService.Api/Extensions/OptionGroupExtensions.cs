@@ -10,6 +10,7 @@ namespace ConfigurationService.Api.Extensions
         {
             return new OptionGroupDto
             {
+                Id = source.Id.ToString(),
                 Name = source.Name.Value,
                 Description = source.Description.Value,
                 Options = source.Options.Select(x => x.ToDto()),
