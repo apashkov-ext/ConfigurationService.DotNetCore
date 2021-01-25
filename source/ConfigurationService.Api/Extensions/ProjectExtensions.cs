@@ -12,7 +12,7 @@ namespace ConfigurationService.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
-                Configurations = source.Environments.Select(x => x.ToDto())
+                Environments = source.Environments.Select(x => x.ToDto())
             };
         }
 
@@ -22,7 +22,7 @@ namespace ConfigurationService.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
-                Configurations = source.Environments.Select(x => x.ToDto()),
+                Environments = source.Environments.Select(x => x.ToDto()),
                 ApiKey = source.ApiKey.Value.ToString()
             };
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ConfigurationService.Domain.Entities
 {
@@ -8,10 +7,7 @@ namespace ConfigurationService.Domain.Entities
         public EnvironmentName Name { get; private set; }
         public bool IsDefault { get; }
         public Project Project { get; }
-
-        //private readonly List<OptionGroup> _optionGroups;
-        //public IEnumerable<OptionGroup> OptionGroups => _optionGroups;
-        public OptionGroup OptionGroup { get; private set; }
+        public OptionGroup OptionGroup { get; }
 
         protected Environment() {}
 

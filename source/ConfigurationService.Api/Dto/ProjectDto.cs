@@ -6,6 +6,6 @@ namespace ConfigurationService.Api.Dto
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<EnvironmentDto> Configurations { get; set; }
+        public IEnumerable<EnvironmentDto> Environments { get; set; }
     }
 }

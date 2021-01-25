@@ -8,6 +8,6 @@ namespace ConfigurationService.Api.Dto
         public Guid Project { get; set; }
 
         [Required]
-        public string Env { get; set; }
+        public string Name { get; set; }
     }
 }

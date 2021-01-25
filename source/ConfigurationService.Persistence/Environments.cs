@@ -22,6 +22,11 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
+        public async Task<IEnumerable<Environment>> Get()
+        {
+            return await _context.Environments.EnvironmentsWithIncludedEntities().ToListAsync();
+        }
+
         public async Task<Environment> Get(Guid id)
         {
             var env = await _context.Environments.EnvironmentsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);

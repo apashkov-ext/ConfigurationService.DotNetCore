@@ -30,10 +30,11 @@ namespace ConfigurationService.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<OptionGroupDto>> Create(CreateOptionGroupDto request)
+        public async Task<ActionResult<OptionGroupDto>> Create(CreateOptionGroupDto body)
         {
-            var group = await _optionGroups.Add(request.Parent, request.Name, request.Description);
+            var group = await _optionGroups.Add(body.Parent, body.Name, body.Description);
             var dto = group.ToDto();
             return CreatedAtAction(nameof(Get), new {id = group.Id}, dto);
         }
