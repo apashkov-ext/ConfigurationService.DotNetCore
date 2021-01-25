@@ -18,9 +18,9 @@ namespace ConfigurationService.Persistence
 
         public ConfigurationServiceContext(DbContextOptions<ConfigurationServiceContext> options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-            DataSeeding.Seed(this);
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
+            //DataSeeding.Seed(this);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,8 +47,8 @@ namespace ConfigurationService.Persistence
             var created = ChangeTracker.Entries().SelectEntityInstances(EntityState.Added);
             foreach (var entity in created)
             {
-                entity.Created = stamp;
-                entity.Modified = stamp;
+                entity.UpdateCreated(stamp);
+                entity.UpdateCreated(stamp);
             }
         }
 
@@ -57,7 +57,7 @@ namespace ConfigurationService.Persistence
             var modified = ChangeTracker.Entries().SelectEntityInstances(EntityState.Modified);
             foreach (var entity in modified)
             {
-                entity.Modified = stamp;
+                entity.UpdateModified(stamp);
             }
         }
     }

@@ -7,7 +7,7 @@ namespace ConfigurationService.Domain.Entities
         public OptionName Name { get; private set; }
         public Description Description { get; private set; }
         public OptionValue Value { get; private set; }
-        public OptionGroup OptionGroup { get; private set; }
+        public OptionGroup OptionGroup { get; }
 
         protected Option() { }
 
@@ -22,6 +22,30 @@ namespace ConfigurationService.Domain.Entities
         public static Option Create(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
         {
             return new Option(name, description, value, optionGroup);
+        }
+
+        public void UpdateName(OptionName name)
+        {
+            if (Name != name)
+            {
+                Name = name;
+            }
+        }
+
+        public void UpdateDescription(Description description)
+        {
+            if (Description != description)
+            {
+                Description = description;
+            }
+        }
+
+        public void UpdateValue(OptionValue optionValue)
+        {
+            if (Value != optionValue)
+            {
+                Value = optionValue;
+            }
         }
     }
 }

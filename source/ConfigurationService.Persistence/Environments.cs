@@ -44,9 +44,11 @@ namespace ConfigurationService.Persistence
                 throw new AlreadyExistsException("Environment with the same name already exists");
             }
 
-            var newEnv = Environment.Create(envName, proj, !envs.Any(), null);
-            var newGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>(), newEnv);
-            newEnv.SetOptionGroup(newGroup);
+            
+            var newGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>());
+            var newEnv = Environment.Create(envName, proj, !envs.Any(), newGroup);
+            newGroup.SetEnvironment(newEnv);
+
             proj.AddEnvironment(newEnv);
 
             await _context.Environments.AddAsync(newEnv);

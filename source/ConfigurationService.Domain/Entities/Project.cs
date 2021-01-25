@@ -8,7 +8,7 @@ namespace ConfigurationService.Domain.Entities
         public ProjectName Name { get; private set; }
         public ApiKey ApiKey { get; private set; }
 
-        private readonly HashSet<Environment> _environments;
+        private readonly HashSet<Environment> _environments = new HashSet<Environment>();
         public IEnumerable<Environment> Environments => _environments;
 
         protected Project() { }

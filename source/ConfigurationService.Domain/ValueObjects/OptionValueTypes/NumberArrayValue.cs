@@ -8,7 +8,7 @@ namespace ConfigurationService.Domain.ValueObjects.OptionValueTypes
         {
         }
 
-        protected override string ConvertToString(int[] value)
+        protected override string Serialize(int[] value)
         {
             return string.Join(',', value);
         }

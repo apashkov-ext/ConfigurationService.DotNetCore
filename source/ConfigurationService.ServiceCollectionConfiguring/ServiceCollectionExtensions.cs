@@ -14,7 +14,11 @@ namespace ConfigurationService.ServiceCollectionConfiguring
             services.AddTransient<IEnvironments, Environments>();
             services.AddTransient<IOptionGroups, OptionGroups>();
             services.AddTransient<IOptions, Options>();
-            services.AddDbContext<ConfigurationServiceContext>(options => options.UseInMemoryDatabase("ConfigurationStorage"));
+            services.AddDbContext<ConfigurationServiceContext>(options =>
+            {
+                options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=ConfigurationStorage;");
+                //options.UseInMemoryDatabase("ConfigurationStorage");
+            });
 
             return services;
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ConfigurationService.Api.Extensions;
+using ConfigurationService.Domain;
 using ConfigurationService.Domain.Entities;
 
 namespace ConfigurationService.Api
@@ -35,12 +35,12 @@ namespace ConfigurationService.Api
 
             foreach (var opt in source.Options)
             {
-                obj[opt.Name.Value.ToLowerCamelCase()] = opt.Value.Value.ParseOptionValue(opt.Value.Type);
+                obj[opt.Name.Value.ToLowerCamelCase()] = TypeConversion.Parse(opt.Value.Value, opt.Value.Type);
             }
 
             foreach (var nested in source.NestedGroups)
             {
-                obj[nested.Name.Value.ToLowerCamelCase()] = JsObject.Create(nested);
+                obj[nested.Name.Value.ToLowerCamelCase()] = Create(nested);
             }
 
             return obj;

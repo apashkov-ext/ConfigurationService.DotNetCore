@@ -10,9 +10,9 @@ namespace ConfigurationService.Domain.ValueObjects
 
         protected override string ConvertToString(object value)
         {
-            return ConvertToString((T)value);
+            return Serialize((T)value);
         }
 
-        protected abstract string ConvertToString(T value);
+        protected abstract string Serialize(T value);
     }
 }

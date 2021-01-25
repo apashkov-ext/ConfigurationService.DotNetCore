@@ -21,7 +21,7 @@ namespace ConfigurationService.Api.Controllers
             _projects = projectsReader;
         }
 
-        [HttpGet("{name=null}")]
+        [HttpGet("{name?}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ProjectDto>>> Get(string name)
         {

@@ -13,9 +13,7 @@ namespace ConfigurationService.Persistence
         public static void Seed(ConfigurationServiceContext context)
         {
             var options = new List<Option>();
-            var envs = new List<Environment>();
             var groups = new List<OptionGroup>();
-            var projects = new List<Project>();
 
             var rootGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>());
             groups.Add(rootGroup);
@@ -64,20 +62,19 @@ namespace ConfigurationService.Persistence
 
             options.AddRange(anotherNestedGroup.Options);
 
-            var p = Project.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")), envs);
+            var p = Project.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")), new List<Environment>());
+            var dev = Environment.Create(new EnvironmentName("dev"), p, true, rootGroup);
+            var last = Environment.Create(new EnvironmentName("last"), p, false, OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>()));
 
-            envs.AddRange(new List<Environment>
-            {
-                Environment.Create(new EnvironmentName("dev"), p, true, rootGroup),
-                Environment.Create(new EnvironmentName("last"), p, false, OptionGroup.Create(new OptionGroupName(""), new Description(""), new List<Option>(), null, new List<OptionGroup>()))
-            });
+            p.AddEnvironment(dev);
+            p.AddEnvironment(last);
 
             groups.Add(nestedGroupLogging);
-            projects.Add(p);
-
-            context.Projects.AddRange(projects);
-            context.Environments.AddRange(envs);
             context.OptionGroups.AddRange(groups);
+
+            context.Projects.AddRange(p);
+            context.Environments.AddRange(dev, last);
+
             context.Options.AddRange(options);
 
             context.SaveChanges();

@@ -10,6 +10,7 @@ namespace ConfigurationService.Persistence.ContextConfiguration
         public void Configure(EntityTypeBuilder<Option> builder)
         {
             builder.ToTable("Options").HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
             builder.Property(x => x.Created).IsRequired();
             builder.Property(x => x.Modified).IsRequired();
 

@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
+using ConfigurationService.Domain;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
-using ConfigurationService.Domain.ValueObjects.OptionValueTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConfigurationService.Persistence
@@ -32,23 +32,42 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Option group does not exist");
             }
 
-            var option = Option.Create(new OptionName(name), new Description(description), new )
-            group.AddOption();
+            var optionValue = TypeConversion.GetOptionValue(value, type);
+            var option = Option.Create(new OptionName(name), new Description(description), optionValue, group);
+            group.AddOption(option);
+
+            await _context.Options.AddAsync(option);
+            await _context.SaveChangesAsync();
+
+            return option;
         }
 
         public async Task Update(Guid id, string name, string description, object value, OptionValueType? type)
         {
-            throw new NotImplementedException();
+            var option = await _context.Options.FindAsync(id);
+            if (option == null)
+            {
+                throw new NotFoundException("Option does not exist");
+            }
+
+            option.UpdateName(new OptionName(name));
+            option.UpdateDescription(new Description(description));
+            option.UpdateValue(TypeConversion.GetOptionValue(value, type ?? option.Value.Type));
+
+            _context.Options.Update(option);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Remove(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            var option = await _context.Options.FindAsync(id);
+            if (option == null)
+            {
+                throw new NotFoundException("Option does not exist");
+            }
 
-        private static OptionValue WrapValue(object value, OptionValueType type)
-        {
-            return null;
+            _context.Options.Remove(option);
+            await _context.SaveChangesAsync();
         }
     }
 }

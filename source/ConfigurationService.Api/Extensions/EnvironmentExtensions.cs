@@ -1,4 +1,5 @@
-﻿using ConfigurationService.Api.Dto;
+﻿using System.Linq;
+using ConfigurationService.Api.Dto;
 using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Api.Extensions

@@ -9,14 +9,14 @@ namespace ConfigurationService.Domain.Entities
     {
         public OptionGroupName Name { get; private set; }
         public Description Description { get; private set; }
-        public OptionGroup Parent { get; private set; }
+        public OptionGroup Parent { get; }
         public Environment Environment { get; private set; }
-        public Guid EnvironmentId { get; private set; }
+        public Guid? EnvironmentId { get; }
 
-        private readonly HashSet<OptionGroup> _nestedGroups;
+        private readonly HashSet<OptionGroup> _nestedGroups = new HashSet<OptionGroup>();
         public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
 
-        private readonly HashSet<Option> _options;
+        private readonly HashSet<Option> _options = new HashSet<Option>();
         public IEnumerable<Option> Options => _options;
 
         protected OptionGroup() { }
@@ -29,7 +29,6 @@ namespace ConfigurationService.Domain.Entities
             Parent = parent;
             _nestedGroups = new HashSet<OptionGroup>(children);
             Environment = environment;
-            EnvironmentId = environment?.Id ?? Guid.Empty;
         }
 
         public static OptionGroup Create(OptionGroupName name, Description description, IEnumerable<Option> options, OptionGroup parent, 
@@ -73,9 +72,9 @@ namespace ConfigurationService.Domain.Entities
             }
         }
 
-        public override int GetHashCode()
+        public void SetEnvironment(Environment env)
         {
-            return Id.GetHashCode();
+            Environment = env;
         }
     }
 }

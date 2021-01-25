@@ -8,7 +8,7 @@ namespace ConfigurationService.Domain.ValueObjects.OptionValueTypes
         {
         }
 
-        protected override string ConvertToString(bool value)
+        protected override string Serialize(bool value)
         {
             return value.ToString();
         }
