@@ -5,30 +5,46 @@ namespace ConfigurationService.Domain.ValueObjects
 {
     public class OptionValue : ValueObject
     {
-        public string Value { get; private set; }
+        public string Value { get; }
         public OptionValueType Type { get; }
 
         protected OptionValue() { }
-        public OptionValue(object value, OptionValueType type)
+
+        public OptionValue(bool value)
         {
-            SetValue(value);
-            Type = type;
+            Value = value.ToString().ToLower();
+            Type = OptionValueType.Boolean;
         }
 
-        private void SetValue(object value)
+        public OptionValue(int value)
         {
-            Value = ConvertToString(value);
+            Value = value.ToString().ToLower();
+            Type = OptionValueType.Number;
         }
+
+        public OptionValue(string value)
+        {
+            Value = value;
+            Type = OptionValueType.String;
+        }
+
+        public OptionValue(string[] value)
+        {
+            Value = string.Join(',', value);
+            Type = OptionValueType.StringArray;
+        }
+
+        public OptionValue(int[] value)
+        {
+            Value = string.Join(',', value);
+            Type = OptionValueType.NumberArray;
+        }
+
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
             yield return Type;
-        }
-
-        protected virtual string ConvertToString(object value)
-        {
-            return value.ToString();
         }
     }
 }

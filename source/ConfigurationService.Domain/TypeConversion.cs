@@ -2,7 +2,6 @@
 using System.Linq;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
-using ConfigurationService.Domain.ValueObjects.OptionValueTypes;
 
 namespace ConfigurationService.Domain
 {
@@ -25,11 +24,11 @@ namespace ConfigurationService.Domain
         {
             return type switch
             {
-                OptionValueType.String => new StringValue((string)value),
-                OptionValueType.Number => new NumberValue((int)value),
-                OptionValueType.Boolean => new BooleanValue((bool)value),
-                OptionValueType.StringArray => new StringArrayValue((string[])value),
-                OptionValueType.NumberArray => new NumberArrayValue((int[])value),
+                OptionValueType.String => new OptionValue((string)value),
+                OptionValueType.Number => new OptionValue((int)value),
+                OptionValueType.Boolean => new OptionValue((bool)value),
+                OptionValueType.StringArray => new OptionValue((string[])value),
+                OptionValueType.NumberArray => new OptionValue((int[])value),
                 _ => throw new ApplicationException("Unsupported type")
             };
         }

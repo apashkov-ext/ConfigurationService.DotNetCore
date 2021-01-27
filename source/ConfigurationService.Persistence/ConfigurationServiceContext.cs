@@ -11,10 +11,12 @@ namespace ConfigurationService.Persistence
 {
     public class ConfigurationServiceContext : DbContext
     {
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<Environment> Environments { get; set; }
-        public DbSet<OptionGroup> OptionGroups { get; set; }
-        public DbSet<Option> Options { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<Environment> Environments { get; set; }
+        public virtual DbSet<OptionGroup> OptionGroups { get; set; }
+        public virtual DbSet<Option> Options { get; set; }
+
+        public ConfigurationServiceContext() { }
 
         public ConfigurationServiceContext(DbContextOptions<ConfigurationServiceContext> options) : base(options)
         {

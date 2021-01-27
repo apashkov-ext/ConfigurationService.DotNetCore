@@ -2,7 +2,6 @@
 using ConfigurationService.Domain;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
-using ConfigurationService.Domain.ValueObjects.OptionValueTypes;
 
 namespace ConfigurationService.Persistence
 {
@@ -16,20 +15,20 @@ namespace ConfigurationService.Persistence
             var devRootGroup = dev.RootOptionGroop();
 
             var nestedGroupLogging = devRootGroup.AddNestedGroup(new OptionGroupName("Logging"), new Description("Настройки логирования"));
-            nestedGroupLogging.AddOption(new OptionName("loggingEnabled"), new Description("Логирование включено"), new BooleanValue(true));
-            nestedGroupLogging.AddOption(new OptionName("logErrors"), new Description("Логировать ошибки"), new BooleanValue(true));
-            nestedGroupLogging.AddOption(new OptionName("logInfo"), new Description("Логировать информационные сообщения"), new BooleanValue(false));
-            nestedGroupLogging.AddOption(new OptionName("dbName"), new Description("База данных для логирования"), new StringValue("MarsLogs"));
+            nestedGroupLogging.AddOption(new OptionName("loggingEnabled"), new Description("Логирование включено"), new OptionValue(true));
+            nestedGroupLogging.AddOption(new OptionName("logErrors"), new Description("Логировать ошибки"), new OptionValue(true));
+            nestedGroupLogging.AddOption(new OptionName("logInfo"), new Description("Логировать информационные сообщения"), new OptionValue(false));
+            nestedGroupLogging.AddOption(new OptionName("dbName"), new Description("База данных для логирования"), new OptionValue("MarsLogs"));
 
             var nestedGroupValidation = devRootGroup.AddNestedGroup(new OptionGroupName("validation"), new Description("Настройки валидации"));
-            nestedGroupValidation.AddOption(new OptionName("validationEnabled"), new Description("Валидация включена"), new BooleanValue(true));
-            nestedGroupValidation.AddOption(new OptionName("validationLevel"), new Description("Уровень вложенности валидации"), new NumberValue(5));
-            nestedGroupValidation.AddOption(new OptionName("steps"), new Description("Валидация активна на этапах"), new NumberArrayValue(new []{15, 19, 23}));
+            nestedGroupValidation.AddOption(new OptionName("validationEnabled"), new Description("Валидация включена"), new OptionValue(true));
+            nestedGroupValidation.AddOption(new OptionName("validationLevel"), new Description("Уровень вложенности валидации"), new OptionValue(5));
+            nestedGroupValidation.AddOption(new OptionName("steps"), new Description("Валидация активна на этапах"), new OptionValue(new []{15, 19, 23}));
 
             var anotherNestedGroup = nestedGroupValidation.AddNestedGroup(new OptionGroupName("sectionValidation"), new Description("Валидация секций"));
-            anotherNestedGroup.AddOption(new OptionName("sectionValidatorEnabled"), new Description("Валидация секций включена"), new BooleanValue(true));
+            anotherNestedGroup.AddOption(new OptionName("sectionValidatorEnabled"), new Description("Валидация секций включена"), new OptionValue(true));
             anotherNestedGroup.AddOption(new OptionName("sections"), new Description("Валидировать указанные секции"), 
-                new StringArrayValue(new []{"application", "questionnaire"}));
+                new OptionValue(new []{"application", "questionnaire"}));
 
             context.Projects.AddRange(p);
             context.SaveChanges();

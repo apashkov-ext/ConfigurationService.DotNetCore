@@ -11,7 +11,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [Theory]
         [InlineData(null)]
         [InlineData("   ")]
-        public void New_IncorrectNames_Fails(string val)
+        public void New_IncorrectValues_Fails(string val)
         {
             Assert.Throws<ApplicationException>(() => new Description(val));
         }
@@ -19,7 +19,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [Theory]
         [InlineData("")]
         [InlineData("Description Описание 34 _-()[]{}")]
-        public void New_CorrectNames_Success(string val)
+        public void New_CorrectValues_Success(string val)
         {
             Assert.NotNull(new Description(val));
         }
