@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConfigurationService.Domain.Entities;
 
@@ -6,6 +7,7 @@ namespace ConfigurationService.Application
 {
     public interface IOptions
     {
+        Task<IEnumerable<Option>> Get(string name);
         Task<Option> Get(Guid id);
         Task<Option> Add(Guid optionGroup, string name, string description, object value, OptionValueType type);
         Task Update(Guid id, string name, string description, object value, OptionValueType? type);

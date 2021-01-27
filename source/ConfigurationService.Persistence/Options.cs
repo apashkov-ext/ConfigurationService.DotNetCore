@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
@@ -16,6 +18,11 @@ namespace ConfigurationService.Persistence
         public Options(ConfigurationServiceContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<Option>> Get(string name)
+        {
+            return await _context.Options.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)).ToListAsync();
         }
 
         public async Task<Option> Get(Guid id)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Api.Dto;
 using ConfigurationService.Api.Extensions;
@@ -17,6 +18,15 @@ namespace ConfigurationService.Api.Controllers
         public OptionsController(IOptions options)
         {
             _options = options;
+        }
+
+        [HttpGet("{name?}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<OptionDto>> Get(string name)
+        {
+            var options = await _options.Get(name);
+            return Ok(options.Select(x => x.ToDto()));
         }
 
         [HttpGet("{id}")]

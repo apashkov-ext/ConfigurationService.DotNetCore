@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.Api", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.Persistence", "ConfigurationService.Persistence\ConfigurationService.Persistence.csproj", "{5A750466-B9D8-4F31-B02A-C7F8224837EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationService.ServiceCollectionConfiguring", "ConfigurationService.ServiceCollectionConfiguring\ConfigurationService.ServiceCollectionConfiguring.csproj", "{9050EFC6-8579-460D-9170-937F632F5F8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.ServiceCollectionConfiguring", "ConfigurationService.ServiceCollectionConfiguring\ConfigurationService.ServiceCollectionConfiguring.csproj", "{9050EFC6-8579-460D-9170-937F632F5F8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationService.Tests", "ConfigurationService.Tests\ConfigurationService.Tests.csproj", "{8EF5BB2B-6F62-41A7-83F1-3FBB1FC77A77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{9050EFC6-8579-460D-9170-937F632F5F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9050EFC6-8579-460D-9170-937F632F5F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9050EFC6-8579-460D-9170-937F632F5F8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF5BB2B-6F62-41A7-83F1-3FBB1FC77A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF5BB2B-6F62-41A7-83F1-3FBB1FC77A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF5BB2B-6F62-41A7-83F1-3FBB1FC77A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF5BB2B-6F62-41A7-83F1-3FBB1FC77A77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
