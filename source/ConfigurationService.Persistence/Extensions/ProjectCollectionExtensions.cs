@@ -8,11 +8,7 @@ namespace ConfigurationService.Persistence.Extensions
     {
         public static IQueryable<Project> ProjectsWithIncludedEntities(this IQueryable<Project> source)
         {
-            return source
-                .Include(x => x.Environments)
-                .ThenInclude(x => x.OptionGroup)
-                .ThenInclude(x => x.NestedGroups)
-                .ThenInclude(x => x.Options);
+            return source.Include(x => x.Environments).ThenInclude(x => x.OptionGroups).ThenInclude(x => x.Options);
         }
     }
 }

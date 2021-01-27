@@ -11,7 +11,8 @@ namespace ConfigurationService.Persistence.Extensions
             return source
                 .Include(x => x.Parent)
                 .ThenInclude(x => x.NestedGroups)
-                .ThenInclude(x => x.Options);
+                .ThenInclude(x => x.Options)
+                .Include(x => x.Environment);
         }
     }
 }

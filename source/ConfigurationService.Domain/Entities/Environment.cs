@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
 {
@@ -7,26 +10,39 @@ namespace ConfigurationService.Domain.Entities
         public EnvironmentName Name { get; private set; }
         public bool IsDefault { get; }
         public Project Project { get; }
-        public OptionGroup OptionGroup { get; }
+
+        private readonly List<OptionGroup> _optionGroups = new List<OptionGroup>();
+        public IEnumerable<OptionGroup> OptionGroups => _optionGroups;
 
         protected Environment() {}
 
-        private Environment(EnvironmentName name, Project project, bool isDefault, OptionGroup optionGroup)
+        private Environment(EnvironmentName name, Project project, bool isDefault)
         {
-            Name = name;
-            Project = project;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Project = project ?? throw new ArgumentNullException(nameof(project));
             IsDefault = isDefault;
-            OptionGroup = optionGroup ?? throw new ArgumentNullException(nameof(optionGroup));
+            SetMainOptionGroup();
         }
 
-        public static Environment Create(EnvironmentName name, Project project, bool isDefault, OptionGroup optionGroup)
+        public static Environment Create(EnvironmentName name, Project project)
         {
-            return new Environment(name, project, isDefault, optionGroup);
+            return new Environment(name, project, false);
         }
 
         public void UpdateName(EnvironmentName name)
         {
             Name = name;
+        }
+
+        public OptionGroup RootOptionGroop()
+        {
+            return _optionGroups.FirstOrDefault(x => x.Parent == null);
+        }
+
+        private void SetMainOptionGroup()
+        {
+            var g = OptionGroup.Create(new OptionGroupName(""), new Description(""), this);
+            _optionGroups.Add(g);
         }
     }
 }

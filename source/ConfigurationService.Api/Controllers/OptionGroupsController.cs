@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Api.Dto;
 using ConfigurationService.Api.Extensions;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConfigurationService.Api.Controllers
 {
     [Route("api/option-groups")]
+    [ApiController]
     public class OptionGroupsController : ControllerBase
     {
         private readonly IOptionGroups _optionGroups;
@@ -16,6 +18,14 @@ namespace ConfigurationService.Api.Controllers
         public OptionGroupsController(IOptionGroups optionGroups)
         {
             _optionGroups = optionGroups;
+        }
+
+        [HttpGet("{name?}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<OptionGroupDto>> Get(string name)
+        {
+            var groups = (await _optionGroups.Get(name)).Where(x => x.Parent == null);
+            return Ok(groups.Select(x => x.ToDto()));
         }
 
         [HttpGet("{id}")]

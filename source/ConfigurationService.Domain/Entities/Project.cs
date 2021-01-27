@@ -1,5 +1,7 @@
-﻿using ConfigurationService.Domain.ValueObjects;
+﻿using System;
+using ConfigurationService.Domain.ValueObjects;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConfigurationService.Domain.Entities
 {
@@ -8,26 +10,32 @@ namespace ConfigurationService.Domain.Entities
         public ProjectName Name { get; private set; }
         public ApiKey ApiKey { get; private set; }
 
-        private readonly HashSet<Environment> _environments = new HashSet<Environment>();
+        private readonly List<Environment> _environments = new List<Environment>();
         public IEnumerable<Environment> Environments => _environments;
 
         protected Project() { }
 
-        private Project(ProjectName name, ApiKey apiKey, IEnumerable<Environment> environments)
+        private Project(ProjectName name, ApiKey apiKey)
         {
             Name = name;
             ApiKey = apiKey;
-            _environments = new HashSet<Environment>(environments);
         }
 
-        public static Project Create(ProjectName name, ApiKey apiKey, IEnumerable<Environment> environments)
+        public static Project Create(ProjectName name, ApiKey apiKey)
         {
-            return new Project(name, apiKey, environments);
+            return new Project(name, apiKey);
         }
 
-        public void AddEnvironment(Environment env)
+        public Environment AddEnvironment(EnvironmentName name)
         {
-            _environments.Add(env);
+            if (_environments.Any(x => x.Name == name))
+            {
+                throw new ApplicationException("The project already contains environment with the same name");
+            }
+
+            var e = Environment.Create(name, this);
+            _environments.Add(e);
+            return e;
         }
     }
 }

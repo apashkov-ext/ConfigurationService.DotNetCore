@@ -48,7 +48,7 @@ namespace ConfigurationService.Persistence
                 throw new AlreadyExistsException("Projects with the same name already exists");
             }
 
-            var newProj = Project.Create(new ProjectName(name), new ApiKey(Guid.NewGuid()), new List<Environment>());
+            var newProj = Project.Create(new ProjectName(name), new ApiKey(Guid.NewGuid()));
             await _context.Projects.AddAsync(newProj);
             await _context.SaveChangesAsync();
 

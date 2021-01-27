@@ -10,50 +10,39 @@ namespace ConfigurationService.Domain.Entities
         public OptionGroupName Name { get; private set; }
         public Description Description { get; private set; }
         public OptionGroup Parent { get; }
-        public Environment Environment { get; private set; }
-        public Guid? EnvironmentId { get; }
+        public Environment Environment { get; }
 
-        private readonly HashSet<OptionGroup> _nestedGroups = new HashSet<OptionGroup>();
+        private readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
         public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
 
-        private readonly HashSet<Option> _options = new HashSet<Option>();
+        private readonly List<Option> _options = new List<Option>();
         public IEnumerable<Option> Options => _options;
 
         protected OptionGroup() { }
 
-        private OptionGroup(OptionGroupName name, Description description, IEnumerable<Option> options, OptionGroup parent, IEnumerable<OptionGroup> children, Environment environment)
+        private OptionGroup(OptionGroupName name, Description description, Environment environment, OptionGroup parent)
         {
             Name = name;
             Description = description;
-            _options = new HashSet<Option>(options);
-            Parent = parent;
-            _nestedGroups = new HashSet<OptionGroup>(children);
             Environment = environment;
+            Parent = parent;
         }
 
-        public static OptionGroup Create(OptionGroupName name, Description description, IEnumerable<Option> options, OptionGroup parent, 
-            IEnumerable<OptionGroup> children, 
-            Environment environment = null)
+        public static OptionGroup Create(OptionGroupName name, Description description, Environment environment, OptionGroup parent = null)
         {
-            return new OptionGroup(name, description, options, parent, children, environment);
+            return new OptionGroup(name, description, environment, parent);
         }
 
-        public void AddNestedGroup(OptionGroup group)
+        public Option AddOption(OptionName name, Description description, OptionValue value)
         {
-            if (_nestedGroups.Any(x => x.Name == group.Name))
-            {
-                throw new ApplicationException("The group already contains nested group with the same name");
-            }
-            _nestedGroups.Add(group);
-        }
-
-        public void AddOption(Option option)
-        {
-            if (_options.Any(x => x.Name == option.Name))
+            if (_options.Any(x => x.Name == name))
             {
                 throw new ApplicationException("The group already contains option with the same name");
             }
-            _options.Add(option);
+
+            var o = Option.Create(name, description, value, this);
+            _options.Add(o);
+            return o;
         }
 
         public void UpdateName(OptionGroupName name)
@@ -72,9 +61,16 @@ namespace ConfigurationService.Domain.Entities
             }
         }
 
-        public void SetEnvironment(Environment env)
+        public OptionGroup AddNestedGroup(OptionGroupName name, Description description)
         {
-            Environment = env;
+            if (_nestedGroups.Any(x => x.Name == name))
+            {
+                throw new ApplicationException("This option group already contains nested group with the same name");
+            }
+
+            var g = Create(name, description, Environment, this);
+            _nestedGroups.Add(g);
+            return g;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ConfigurationService.Domain.Entities;
-using Environment = ConfigurationService.Domain.Entities.Environment;
+﻿using Environment = ConfigurationService.Domain.Entities.Environment;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,10 +16,8 @@ namespace ConfigurationService.Persistence.ContextConfiguration
 
             builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
             builder.HasOne(x => x.Project).WithMany(x => x.Environments);
-            builder.HasOne(x => x.OptionGroup).WithOne(x => x.Environment)
-                .IsRequired(false)
-                .HasForeignKey<OptionGroup>(x => x.EnvironmentId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.OptionGroups).WithOne(x => x.Environment).OnDelete(DeleteBehavior.Cascade);
+            builder.Navigation(x => x.OptionGroups).HasField("_optionGroups").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         }
     }
 }

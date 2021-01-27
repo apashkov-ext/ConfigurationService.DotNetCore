@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
@@ -19,6 +20,18 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
+        public async Task<IEnumerable<OptionGroup>> Get(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
+            }
+
+            return await _context.OptionGroups.OptionGroupsWithIncludedEntities()
+                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .ToListAsync();
+        }
+
         public async Task<OptionGroup> Get(Guid id)
         {
             var group = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
@@ -33,9 +46,7 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Parent group does not exist");
             }
 
-            var nestedGroup = OptionGroup.Create(new OptionGroupName(name), new Description(description), new List<Option>(), parentGroup, new List<OptionGroup>());
-            parentGroup.AddNestedGroup(nestedGroup);
-            await _context.OptionGroups.AddAsync(nestedGroup);
+            var nestedGroup = parentGroup.AddNestedGroup(new OptionGroupName(name), new Description(description));
             await _context.SaveChangesAsync();
 
             return nestedGroup;
@@ -58,13 +69,13 @@ namespace ConfigurationService.Persistence
 
         public async Task Remove(Guid id)
         {
-            var group = await _context.OptionGroups.FindAsync(id);
+            var group = await _context.OptionGroups.Include(x => x.NestedGroups).FirstOrDefaultAsync(x => x.Id == id);
             if (group == null)
             {
                 throw new NotFoundException("Option group does not exist");
             }
 
-            _context.OptionGroups.Remove(group);
+            _context.OptionGroups.RemoveRecursive(group);
             await _context.SaveChangesAsync();
         }
     }

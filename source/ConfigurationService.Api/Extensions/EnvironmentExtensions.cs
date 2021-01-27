@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ConfigurationService.Api.Dto;
+﻿using ConfigurationService.Api.Dto;
 using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Api.Extensions
@@ -12,7 +11,7 @@ namespace ConfigurationService.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
-                OptionGroup = source.OptionGroup.ToDto()
+                OptionGroup = source.RootOptionGroop().ToDto()
             };
         }
     }
