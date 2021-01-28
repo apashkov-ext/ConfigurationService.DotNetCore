@@ -16,7 +16,7 @@ namespace ConfigurationService.Domain.Entities
 
         protected Environment() {}
 
-        private Environment(EnvironmentName name, Project project, bool isDefault)
+        protected Environment(EnvironmentName name, Project project, bool isDefault)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Project = project ?? throw new ArgumentNullException(nameof(project));

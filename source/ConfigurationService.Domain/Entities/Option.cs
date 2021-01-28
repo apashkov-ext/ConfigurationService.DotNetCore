@@ -11,7 +11,7 @@ namespace ConfigurationService.Domain.Entities
 
         protected Option() { }
 
-        private Option(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
+        protected Option(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
         {
             Name = name;
             Description = description;

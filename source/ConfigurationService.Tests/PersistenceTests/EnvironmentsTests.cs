@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Persistence;
+using ConfigurationService.Tests.TestSetup;
 using ConfigurationService.Tests.TestSetup.Fixtures;
 using Xunit;
 
@@ -18,14 +19,14 @@ namespace ConfigurationService.Tests.PersistenceTests
             _contextFixture = new DbContextFixture();
         }
 
-        //[Fact]
-        //public async void Add_NotExistedEnv_Success()
-        //{
-
-        //    const string name = "Dev";
-        //    var p = await new Environments(_contextFixture.EmptyContext).Add();
-        //    Assert.Equal(p.Name.Value, name);
-        //}
+        [Fact]
+        public async void Add_NotExistedEnv_Success()
+        {
+            const string name = TestLiterals.Environment.Name.Correct;
+            var db = _contextFixture.Context;
+            var env = await new Environments(db).Add(db.Projects.First().Id, name);
+            Assert.Equal(env.Name.Value, name);
+        }
 
         //[Fact]
         //public async void Add_ExistedProject_Exception()

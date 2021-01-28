@@ -4,7 +4,7 @@ namespace ConfigurationService.Domain.Entities
 {
     public abstract class Entity
     {
-        public virtual Guid Id { get; protected set; }
+        public Guid Id { get; protected set; }
         public DateTime Created { get; private set; }
         public DateTime Modified { get; private set; }
 

@@ -20,7 +20,7 @@ namespace ConfigurationService.Domain.Entities
 
         protected OptionGroup() { }
 
-        private OptionGroup(OptionGroupName name, Description description, Environment environment, OptionGroup parent)
+        protected OptionGroup(OptionGroupName name, Description description, Environment environment, OptionGroup parent)
         {
             Name = name;
             Description = description;
