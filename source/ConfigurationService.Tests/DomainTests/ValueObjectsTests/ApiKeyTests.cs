@@ -10,21 +10,21 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData((string)null)]
         [InlineData("")]
         [InlineData("ere54rfg")]
-        public void NewByString_IncorrectValues_Fails(string val)
+        public void NewByString_IncorrectValues_Exception(string val)
         {
             Assert.Throws<ApplicationException>(() => new ApiKey(val));
         }
 
         [Fact]
-        public void NewByGuid_Empty_Fails()
+        public void NewByGuid_Empty_Exception()
         {
             Assert.Throws<ApplicationException>(() => new ApiKey(Guid.Empty));
         }
 
         [Fact]
-        public void NewByGuid_NotEmpty_Fails()
+        public void NewByGuid_NotEmpty_Success()
         {
-            Assert.NotNull(new ApiKey(Guid.NewGuid()));
+            var apiKey = new ApiKey(Guid.NewGuid());
         }
     }
 }

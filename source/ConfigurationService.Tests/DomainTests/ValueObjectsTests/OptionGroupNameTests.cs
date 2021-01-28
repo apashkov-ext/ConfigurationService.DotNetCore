@@ -15,7 +15,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData("3v")]
         [InlineData("v3")]
         [InlineData("na me")]
-        public void New_IncorrectNames_Fails(string name)
+        public void New_IncorrectNames_Exception(string name)
         {
             Assert.Throws<ApplicationException>(() => new OptionGroupName(name));
         }
@@ -27,7 +27,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData("VariAble")]
         public void New_CorrectNames_Success(string name)
         {
-            Assert.NotNull(new OptionGroupName(name));
+            var n = new OptionGroupName(name);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ConfigurationService.Domain.Entities
 
         protected Project() { }
 
-        private Project(ProjectName name, ApiKey apiKey)
+        protected Project(ProjectName name, ApiKey apiKey)
         {
             Name = name;
             ApiKey = apiKey;

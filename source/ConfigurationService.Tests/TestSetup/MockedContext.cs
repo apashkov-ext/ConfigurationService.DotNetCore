@@ -4,7 +4,7 @@ using Moq;
 
 namespace ConfigurationService.Tests.TestSetup
 {
-    public class MockedContext<TContext> : Mock<TContext> where TContext : DbContext
+    internal class MockedContext<TContext> : Mock<TContext> where TContext : DbContext
     {
         public MockedContext(Action<TestContextBuilder<TContext>> builder = null)
         {

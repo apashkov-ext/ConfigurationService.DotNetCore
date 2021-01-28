@@ -4,11 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using ConfigurationService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using MockQueryable.Moq;
 using Moq;
 
 namespace ConfigurationService.Tests.TestSetup
 {
-    public class TestContextBuilder<TContext> where TContext : DbContext
+    internal class TestContextBuilder<TContext> where TContext : DbContext
     {
         private readonly Mock<TContext> _contextMock;
 
@@ -39,15 +40,7 @@ namespace ConfigurationService.Tests.TestSetup
 
         private static Mock<DbSet<TEntity>> ConstructDbSet<TEntity>(IEnumerable<TEntity> data) where TEntity : Entity
         {
-            var qData = data.AsQueryable();
-            var mockSet = new Mock<DbSet<TEntity>>();
-
-            mockSet.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(qData.Provider);
-            mockSet.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(qData.Expression);
-            mockSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(qData.ElementType);
-            mockSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(qData.GetEnumerator());
-
-            return mockSet;
+            return data.AsQueryable().BuildMockDbSet();
         }
     }
 }

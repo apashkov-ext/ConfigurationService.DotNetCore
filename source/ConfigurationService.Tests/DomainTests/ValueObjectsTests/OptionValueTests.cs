@@ -11,7 +11,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData(null)]
         public void NewByString_Correct_Success(string val)
         {
-            Assert.NotNull(new OptionValue(val));
+            var v = new OptionValue(val);
         }
 
         [Theory]
@@ -19,7 +19,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData(true)]
         public void NewByBool_Correct_Success(bool val)
         {
-            Assert.NotNull(new OptionValue(val));
+            var v = new OptionValue(val);
         }
 
         [Theory]
@@ -27,31 +27,31 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData(-1)]
         public void NewByInt_Correct_Success(int val)
         {
-            Assert.NotNull(new OptionValue(val));
+            var v = new OptionValue(val);
         }
 
         [Fact]
         public void NewByStringArray_Empty_Success()
         {
-            Assert.NotNull(new OptionValue(new string[]{}));
+            var v = new OptionValue(new string[]{});
         }
 
         [Fact]
         public void NewByStringArray_NotEmpty_Success()
         {
-            Assert.NotNull(new OptionValue(new [] { "val" }));
+            var v = new OptionValue(new [] { "val" });
         }
 
         [Fact]
         public void NewByIntArray_Empty_Success()
         {
-            Assert.NotNull(new OptionValue(new int[] { }));
+            var v = new OptionValue(new int[] { });
         }
 
         [Fact]
         public void NewByIntArray_NotEmpty_Success()
         {
-            Assert.NotNull(new OptionValue(new[] { 1 }));
+            var v = new OptionValue(new[] { 1 });
         }
     }
 }

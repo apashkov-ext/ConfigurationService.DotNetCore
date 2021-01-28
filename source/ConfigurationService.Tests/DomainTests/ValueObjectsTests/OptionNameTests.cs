@@ -1,5 +1,6 @@
 ﻿using System;
 using ConfigurationService.Domain.ValueObjects;
+using ConfigurationService.Tests.TestSetup;
 using Xunit;
 
 namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
@@ -16,7 +17,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData("3v")]
         [InlineData("v3")]
         [InlineData("na me")]
-        public void New_IncorrectNames_Fails(string name)
+        public void New_IncorrectNames_Exception(string name)
         {
             Assert.Throws<ApplicationException>(() => new OptionName(name));
         }
@@ -27,7 +28,7 @@ namespace ConfigurationService.Tests.DomainTests.ValueObjectsTests
         [InlineData("VariAble")]
         public void New_CorrectNames_Success(string name)
         {
-            Assert.NotNull(new OptionName(name));
+            var n = new OptionName(name);
         }
     }
 }

@@ -8,7 +8,6 @@ using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
 using ConfigurationService.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Persistence
 {
@@ -36,7 +35,7 @@ namespace ConfigurationService.Persistence
         public async Task<Project> Get(Guid id)
         {
             var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
-            return project ?? throw new AlreadyExistsException("Projects with the same name already exists");
+            return project ?? throw new NotFoundException("Project does not exist");
         }
 
         public async Task<Project> Add(string name)
@@ -60,7 +59,7 @@ namespace ConfigurationService.Persistence
             var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Id == id);
             if (existed == null)
             {
-                throw new AlreadyExistsException("Project does not exist");
+                throw new NotFoundException("Project does not exist");
             }
 
             _context.Projects.Remove(existed);
