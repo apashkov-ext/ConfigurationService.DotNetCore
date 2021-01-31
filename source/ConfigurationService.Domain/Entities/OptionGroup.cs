@@ -68,6 +68,11 @@ namespace ConfigurationService.Domain.Entities
                 throw new ApplicationException("This option group already contains nested group with the same name");
             }
 
+            if (name.Value == string.Empty)
+            {
+                throw new ApplicationException("Invalid nested group name");
+            }
+
             var g = Create(name, description, Environment, this);
             _nestedGroups.Add(g);
             return g;

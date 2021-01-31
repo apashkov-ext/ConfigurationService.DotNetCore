@@ -66,6 +66,13 @@ namespace ConfigurationService.Tests.DomainTests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
+        public void AddNested_EmptyStringName_Exception(OptionGroup parent)
+        {
+            Assert.Throws<ApplicationException>(() => parent.AddNestedGroup(new OptionGroupName(""), new Description("New Nested Group")));
+        }
+
+        [Theory]
+        [ClassData(typeof(NonRootOptionGroup))]
         public void AddOption_NotExisted_ValueIsCorrect(OptionGroup group)
         {
             const string val = "Value";

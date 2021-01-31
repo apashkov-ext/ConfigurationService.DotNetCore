@@ -1,4 +1,5 @@
-﻿using ConfigurationService.Domain.ValueObjects;
+﻿using System;
+using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
 {
@@ -13,10 +14,10 @@ namespace ConfigurationService.Domain.Entities
 
         protected Option(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
         {
-            Name = name;
-            Description = description;
-            Value = value;
-            OptionGroup = optionGroup;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Description = description ?? throw new ArgumentNullException(nameof(description));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
+            OptionGroup = optionGroup ?? throw new ArgumentNullException(nameof(optionGroup));
         }
 
         public static Option Create(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
