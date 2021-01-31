@@ -4,11 +4,19 @@ using Moq;
 
 namespace ConfigurationService.Tests.TestSetup
 {
+    /// <summary>
+    /// Testable EF context.
+    /// </summary>
+    /// <typeparam name="TContext"></typeparam>
     internal class MockedContext<TContext> : Mock<TContext> where TContext : DbContext
     {
-        public MockedContext(Action<TestContextBuilder<TContext>> builder = null)
+        /// <summary>
+        /// Creates instance of the testable EF context.
+        /// </summary>
+        /// <param name="configure">Configures testable context.</param>
+        public MockedContext(Action<TestContextConfigurer<TContext>> configure = null)
         {
-            builder?.Invoke(new TestContextBuilder<TContext>(this));
+            configure?.Invoke(new TestContextConfigurer<TContext>(this));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
+using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Tests.TestSetup.Stubs
 {
@@ -9,6 +10,11 @@ namespace ConfigurationService.Tests.TestSetup.Stubs
         public TestableProject(Guid id, string name, Guid apiKey) : base(new ProjectName(name), new ApiKey(apiKey))
         {
             Id = id;
+        }
+
+        public void AddEnv(Environment env)
+        {
+            _environments.Add(env);
         }
     }
 }

@@ -1,87 +1,87 @@
 ﻿using System;
-using System.Linq;
 using ConfigurationService.Application.Exceptions;
+using ConfigurationService.Domain.Entities;
 using ConfigurationService.Persistence;
 using ConfigurationService.Tests.TestSetup;
 using ConfigurationService.Tests.TestSetup.Fixtures;
+using ConfigurationService.Tests.TestSetup.Presets;
 using Xunit;
 
 namespace ConfigurationService.Tests.PersistenceTests
 {
     public class ProjectsTests
     {
-        private const string CorrectProjectName = TestLiterals.Project.Name.Correct;
-        private readonly Guid ApiKey = TestLiterals.Project.ApiKeys.Correct;
-        private readonly DbContextFixture _contextFixture;
-
-        public ProjectsTests()
-        {
-            _contextFixture = new DbContextFixture();
-        }
-
         [Fact]
         public async void Add_NotExistedProject_Success()
         {
-            var p = await new Projects(_contextFixture.EmptyContext).Add(CorrectProjectName);
-            Assert.Equal(p.Name.Value, CorrectProjectName);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
+            var p = await new Projects(ctx).Add(TestLiterals.Project.Name.Correct);
+            Assert.Equal(p.Name.Value, TestLiterals.Project.Name.Correct);
         }
 
-        [Fact]
-        public async void Add_ExistedProject_Exception()
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void Add_ExistedProject_Exception(Project p)
         {
-            await Assert.ThrowsAsync<AlreadyExistsException>(() => new Projects(_contextFixture.Context).Add(CorrectProjectName));
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
+            await Assert.ThrowsAsync<AlreadyExistsException>(() => new Projects(ctx).Add(p.Name.Value));
         }
 
-        [Fact]
-        public async void Remove_ExistedProject_Success()
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void Remove_ExistedProject_Success(Project p)
         {
-            var db = _contextFixture.Context;
-            var id = db.Projects.First().Id;
-            await new Projects(db).Remove(id);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
+            await new Projects(ctx).Remove(p.Id);
         }
 
         [Fact]
         public async void Remove_NotExistedProject_Exception()
         {
-            await Assert.ThrowsAsync<NotFoundException>(() => new Projects(_contextFixture.EmptyContext).Remove(Guid.NewGuid()));
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Projects(ctx).Remove(Guid.NewGuid()));
         }
 
-        [Fact]
-        public async void GetById_ExistedProject_Success()
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void GetById_ExistedProject_Success(Project p)
         {
-            var db = _contextFixture.Context;
-            var first = db.Projects.First();
-            var p = await new Projects(db).Get(first.Id);
-            Assert.Equal(first, p);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
+            var proj = await new Projects(ctx).Get(p.Id);
+            Assert.Equal(proj, p);
         }
 
         [Fact]
         public async void GetById_NotExistedProject_Exception()
         {
-            await Assert.ThrowsAsync<NotFoundException>(() => new Projects(_contextFixture.EmptyContext).Get(Guid.NewGuid()));
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Projects(ctx).Get(Guid.NewGuid()));
         }
 
         [Theory]
-        [InlineData("TestProject")]
-        [InlineData("TestProj")]
-        [InlineData("testproject")]
-        public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(string name)
+        [ClassData(typeof(EmptyProject))]
+        public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(Project p)
         {
-            var result = await new Projects(_contextFixture.Context).Get(name);
-            Assert.Contains(result, x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+            const string search = "pRojeCt";
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
+            var result = await new Projects(ctx).Get(search);
+            Assert.Contains(result, x => x.Name.Value.StartsWith(search, StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
         public async void GetByName_NotExistedProject_ReturnsEmptyCollection()
         {
-            var result = await new Projects(_contextFixture.EmptyContext).Get(CorrectProjectName);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
+            var result = await new Projects(ctx).Get(TestLiterals.Project.Name.Correct);
             Assert.Empty(result);
         }
 
-        [Fact]
-        public async void GetByName_EmptyString_ReturnsAllProjects()
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void GetByName_EmptyString_ReturnsAllProjects(Project p)
         {
-            var result = await new Projects(_contextFixture.Context).Get("");
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
+            var result = await new Projects(ctx).Get("");
             Assert.NotEmpty(result);
         }
     }

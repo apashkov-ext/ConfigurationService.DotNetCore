@@ -12,10 +12,10 @@ namespace ConfigurationService.Domain.Entities
         public OptionGroup Parent { get; }
         public Environment Environment { get; }
 
-        private readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
+        protected readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
         public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
 
-        private readonly List<Option> _options = new List<Option>();
+        protected readonly List<Option> _options = new List<Option>();
         public IEnumerable<Option> Options => _options;
 
         protected OptionGroup() { }

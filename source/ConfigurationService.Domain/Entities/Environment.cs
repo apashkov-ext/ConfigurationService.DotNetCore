@@ -34,7 +34,7 @@ namespace ConfigurationService.Domain.Entities
             Name = name;
         }
 
-        public OptionGroup RootOptionGroop()
+        public OptionGroup GetRootOptionGroop()
         {
             return _optionGroups.FirstOrDefault(x => x.Parent == null);
         }

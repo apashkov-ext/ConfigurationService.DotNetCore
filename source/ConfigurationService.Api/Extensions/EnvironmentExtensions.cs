@@ -11,7 +11,7 @@ namespace ConfigurationService.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
-                OptionGroup = source.RootOptionGroop().ToDto()
+                OptionGroup = source.GetRootOptionGroop().ToDto()
             };
         }
     }

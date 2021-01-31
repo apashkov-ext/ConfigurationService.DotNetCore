@@ -41,7 +41,7 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Configuration does not exist");
             }
 
-            return env.RootOptionGroop();
+            return env.GetRootOptionGroop();
         }
     }
 }

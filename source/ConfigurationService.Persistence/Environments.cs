@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
@@ -47,10 +48,15 @@ namespace ConfigurationService.Persistence
         public async Task Update(Guid id, string name)
         {
             var envName = new EnvironmentName(name);
-            var env = await _context.Environments.FirstOrDefaultAsync(x => x.Id == id);
+            var env = await _context.Environments.Include(x => x.Project).ThenInclude(x => x.Environments).FirstOrDefaultAsync(x => x.Id == id);
             if (env == null)
             {
                 throw new NotFoundException("Environment does not exist");
+            }
+
+            if (env.Project.Environments.Any(x => x.Name == envName))
+            {
+                throw new InconsistentDataState("Environment with the same name already exists in this project");
             }
 
             env.UpdateName(envName);

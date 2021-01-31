@@ -12,7 +12,7 @@ namespace ConfigurationService.Persistence
             var p = Project.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")));
             var dev = p.AddEnvironment(new EnvironmentName("dev"));
             p.AddEnvironment(new EnvironmentName("last"));
-            var devRootGroup = dev.RootOptionGroop();
+            var devRootGroup = dev.GetRootOptionGroop();
 
             var nestedGroupLogging = devRootGroup.AddNestedGroup(new OptionGroupName("Logging"), new Description("Настройки логирования"));
             nestedGroupLogging.AddOption(new OptionName("loggingEnabled"), new Description("Логирование включено"), new OptionValue(true));

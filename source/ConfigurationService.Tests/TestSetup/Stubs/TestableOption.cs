@@ -9,7 +9,7 @@ namespace ConfigurationService.Tests.TestSetup.Stubs
         public TestableOption(Guid id, string name, string desc, string value, OptionGroup group) 
             : base(new OptionName(name), new Description(desc), new OptionValue(value), group)
         {
-
+            Id = id;
         }
     }
 }

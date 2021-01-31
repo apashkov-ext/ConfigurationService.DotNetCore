@@ -10,7 +10,7 @@ namespace ConfigurationService.Domain.Entities
         public ProjectName Name { get; private set; }
         public ApiKey ApiKey { get; private set; }
 
-        private readonly List<Environment> _environments = new List<Environment>();
+        protected readonly List<Environment> _environments = new List<Environment>();
         public IEnumerable<Environment> Environments => _environments;
 
         protected Project() { }

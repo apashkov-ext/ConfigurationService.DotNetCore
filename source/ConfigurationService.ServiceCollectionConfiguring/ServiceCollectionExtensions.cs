@@ -19,7 +19,6 @@ namespace ConfigurationService.ServiceCollectionConfiguring
             services.AddDbContext<ConfigurationServiceContext>(options =>
             {
                 options.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog={DbName};");
-                //options.UseInMemoryDatabase(DbName);
             });
 
             return services;

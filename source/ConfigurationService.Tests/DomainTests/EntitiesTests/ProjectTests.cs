@@ -3,36 +3,33 @@ using ConfigurationService.Domain;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
 using ConfigurationService.Tests.TestSetup;
+using ConfigurationService.Tests.TestSetup.Presets;
 using Xunit;
+using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Tests.DomainTests.EntitiesTests
 {
     public class ProjectTests
     {
-        private const string CorrectProjectName = TestLiterals.Project.Name.Correct;
-        private const string EnvName = TestLiterals.Environment.Name.Correct;
-        private readonly Guid ApiKey = TestLiterals.Project.ApiKeys.Correct;
-
         [Fact]
-        public void Create_NewCorrectEntity()
+        public void Create_CorrectData_NewCorrectEntity()
         {
-            var project = Project.Create(new ProjectName(CorrectProjectName), new ApiKey(ApiKey));
+            Project.Create(new ProjectName(TestLiterals.Project.Name.Correct), new ApiKey(TestLiterals.Project.ApiKeys.Correct));
         }
 
-        [Fact]
-        public void AddEnvironment_NotExisted_ReturnsNewEnvEntity()
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public void AddEnvironment_NotExisted_ReturnsNewEnvEntity(Project p)
         {
-            var project = Project.Create(new ProjectName(CorrectProjectName), new ApiKey(ApiKey));
-            var env = project.AddEnvironment(new EnvironmentName(EnvName));
-            Assert.Equal(env.Name.Value, EnvName);
+            var env = p.AddEnvironment(new EnvironmentName(TestLiterals.Environment.Name.Correct));
+            Assert.Equal(env.Name.Value, TestLiterals.Environment.Name.Correct);
         }
 
-        [Fact]
-        public void AddEnvironment_Existed_Exception()
+        [Theory]
+        [ClassData(typeof(ProjectWithEnvironment))]
+        public void AddEnvironment_Existed_Exception(Project p, Environment e)
         {
-            var project = Project.Create(new ProjectName(CorrectProjectName), new ApiKey(ApiKey));
-            project.AddEnvironment(new EnvironmentName(EnvName));
-            Assert.Throws<ApplicationException>(() => project.AddEnvironment(new EnvironmentName(EnvName)));
+            Assert.Throws<ApplicationException>(() => p.AddEnvironment(new EnvironmentName(e.Name.Value)));
         }
     }
 }

@@ -1,90 +1,96 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ConfigurationService.Application.Exceptions;
+using ConfigurationService.Domain.Entities;
 using ConfigurationService.Persistence;
 using ConfigurationService.Tests.TestSetup;
 using ConfigurationService.Tests.TestSetup.Fixtures;
+using ConfigurationService.Tests.TestSetup.Presets;
 using Xunit;
+using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Tests.PersistenceTests
 {
     public class EnvironmentsTests
     {
-        private readonly DbContextFixture _contextFixture;
-
-        public EnvironmentsTests()
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void Add_NotExistedEnv_Success(Project p)
         {
-            _contextFixture = new DbContextFixture();
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
+            var env = await new Environments(ctx).Add(p.Id, TestLiterals.Environment.Name.Correct);
+            Assert.Equal(env.Name.Value, TestLiterals.Environment.Name.Correct);
+        }
+
+        [Theory]
+        [ClassData(typeof(ProjectWithEnvironment))]
+        public async void Add_ExistedEnv_Exception(Project p, Environment e)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments, e)).Context;
+            await Assert.ThrowsAsync<ApplicationException>(() => new Environments(ctx).Add(p.Id, e.Name.Value));
+        }
+
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void Add_IncorrectName_Exception(Project p)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
+            await Assert.ThrowsAsync<ApplicationException>(() => new Environments(ctx).Add(p.Id, "123"));
+        }
+
+        [Theory]
+        [ClassData(typeof(ProjectWithEnvironment))]
+        public async void Remove_ExistedEnv_Success(Project p, Environment e)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments, e)).Context;
+            await new Environments(ctx).Remove(e.Id);
+        }
+
+        [Theory]
+        [ClassData(typeof(EmptyProject))]
+        public async void Remove_NotExistedEnv_Exception(Project p)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).Remove(Guid.NewGuid()));
+        }
+
+        [Theory]
+        [ClassData(typeof(ValidEnvironment))]
+        public async void GetById_ExistedEnv_ReturnsEnv(Environment e)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
+            var env = await new Environments(ctx).Get(e.Id);
+            Assert.Equal(e.Id, env.Id);
         }
 
         [Fact]
-        public async void Add_NotExistedEnv_Success()
+        public async void GetById_NotExistedEnv_Exception()
         {
-            const string name = TestLiterals.Environment.Name.Correct;
-            var db = _contextFixture.Context;
-            var env = await new Environments(db).Add(db.Projects.First().Id, name);
-            Assert.Equal(env.Name.Value, name);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).Get(Guid.NewGuid()));
         }
 
-        //[Fact]
-        //public async void Add_ExistedProject_Exception()
-        //{
-        //    await Assert.ThrowsAsync<AlreadyExistsException>(() => new Projects(_contextFixture.Context).Add("TestProject"));
-        //}
+        [Theory]
+        [ClassData(typeof(ValidEnvironment))]
+        public async void Update_NotExistedEnv_Exception(Environment e)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).Update(e.Id, "NewEnv"));
+        }
 
-        //[Fact]
-        //public async void Remove_ExistedProject_Success()
-        //{
-        //    var db = _contextFixture.Context;
-        //    var id = db.Projects.First().Id;
-        //    await new Projects(db).Remove(id);
-        //}
+        [Theory]
+        [ClassData(typeof(ValidEnvironment))]
+        public async void Update_ExistedEnvCorrectName_Success(Environment e)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
+            await new Environments(ctx).Update(e.Id, "NewEnv");
+        }
 
-        //[Fact]
-        //public async void Remove_NotExistedProject_Exception()
-        //{
-        //    await Assert.ThrowsAsync<NotFoundException>(() => new Projects(_contextFixture.EmptyContext).Remove(Guid.NewGuid()));
-        //}
-
-        //[Fact]
-        //public async void GetById_ExistedProject_Success()
-        //{
-        //    var db = _contextFixture.Context;
-        //    var id = db.Projects.First().Id;
-        //    var p = await new Projects(db).Get(id);
-        //    Assert.Equal(id, p.Id);
-        //}
-
-        //[Fact]
-        //public async void GetById_NotExistedProject_Exception()
-        //{
-        //    await Assert.ThrowsAsync<NotFoundException>(() => new Projects(_contextFixture.EmptyContext).Get(Guid.NewGuid()));
-        //}
-
-        //[Theory]
-        //[InlineData("TestProject")]
-        //[InlineData("TestProj")]
-        //[InlineData("testproject")]
-        //public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(string name)
-        //{
-        //    var result = await new Projects(_contextFixture.Context).Get(name);
-        //    Assert.Contains(result, x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
-        //}
-
-        //[Fact]
-        //public async void GetByName_NotExistedProject_ReturnsEmptyCollection()
-        //{
-        //    var result = await new Projects(_contextFixture.EmptyContext).Get("Proj");
-        //    Assert.Empty(result);
-        //}
-
-        //[Fact]
-        //public async void GetByName_EmptyString_ReturnsAllProjects()
-        //{
-        //    var result = await new Projects(_contextFixture.Context).Get("");
-        //    Assert.NotEmpty(result);
-        //}
+        [Theory]
+        [ClassData(typeof(ValidEnvironment))]
+        public async void Update_AlreadyExistedName_Exception(Environment e)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
+            await Assert.ThrowsAsync<InconsistentDataState>(() => new Environments(ctx).Update(e.Id, e.Name.Value));
+        }
     }
 }
