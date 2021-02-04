@@ -2,7 +2,7 @@
 
 namespace ConfigurationService.Application
 {
-    internal static class SerializerOptions
+    public static class SerializerOptions
     {
         public static JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
         {
