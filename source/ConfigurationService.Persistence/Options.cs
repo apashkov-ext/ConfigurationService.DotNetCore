@@ -40,7 +40,7 @@ namespace ConfigurationService.Persistence
             }
 
             var optionValue = TypeConversion.GetOptionValue(value, type);
-            var option = group.AddOption(new OptionName(name), new Description(description), optionValue);
+            var option = group.AddOption(new OptionName(name), new Description(description ?? ""), optionValue);
 
             await _context.SaveChangesAsync();
 

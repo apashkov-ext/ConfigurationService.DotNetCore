@@ -46,7 +46,7 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Parent group does not exist");
             }
 
-            var nestedGroup = parentGroup.AddNestedGroup(new OptionGroupName(name), new Description(description));
+            var nestedGroup = parentGroup.AddNestedGroup(new OptionGroupName(name), new Description(description ?? ""));
             await _context.SaveChangesAsync();
 
             return nestedGroup;
