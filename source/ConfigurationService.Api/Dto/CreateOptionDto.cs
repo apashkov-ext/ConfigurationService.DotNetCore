@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ConfigurationService.Domain.Entities;
 
 namespace ConfigurationService.Api.Dto
@@ -11,8 +12,12 @@ namespace ConfigurationService.Api.Dto
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
-        [Required]
-        public object Value { get; set; }
         public OptionValueType Type { get; set; }
+
+        [JsonPropertyName("value")]
+        public object ValueKind { get; set; }
+
+        [JsonIgnore]
+        public object Value => new JsonValueParser(ValueKind, Type).Parse();
     }
 }
