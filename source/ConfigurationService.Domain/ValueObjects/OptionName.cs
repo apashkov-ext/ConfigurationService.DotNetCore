@@ -13,7 +13,7 @@ namespace ConfigurationService.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value))
             {
-                throw new ApplicationException("Incorrect project name");
+                throw new ApplicationException("Incorrect option name");
             }
 
             Value = value;
