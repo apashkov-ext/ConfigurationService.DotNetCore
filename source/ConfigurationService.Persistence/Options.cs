@@ -49,13 +49,23 @@ namespace ConfigurationService.Persistence
 
         public async Task Update(Guid id, string name, string description, object value, OptionValueType? type)
         {
-            var option = await _context.Options.FindAsync(id);
+            var option = await _context.Options.Include(x => x.OptionGroup).ThenInclude(x => x.Options).FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)
             {
                 throw new NotFoundException("Option does not exist");
             }
 
-            option.UpdateName(new OptionName(name));
+            var newName = new OptionName(name);
+            if (option.Name != newName)
+            {
+                if (option.OptionGroup.Options.Except(new[] { option }).Any(x => x.Name == newName))
+                {
+                    throw new ApplicationException("Option with the same name already exists");
+                }
+
+                option.UpdateName(newName);
+            }
+
             option.UpdateDescription(new Description(description));
             option.UpdateValue(TypeConversion.GetOptionValue(value, type ?? option.Value.Type));
 

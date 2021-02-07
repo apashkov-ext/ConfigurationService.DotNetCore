@@ -1,5 +1,4 @@
 ﻿using System;
-using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Tests;
 using ConfigurationService.Tests.Fixtures;
@@ -10,13 +9,14 @@ namespace ConfigurationService.Persistence.Tests
 {
     public class OptionGroupsTests
     {
-        [Fact]
+        [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
         public async void Add_NotExistedGroup_Success(OptionGroup parent)
         {
+            const string name = "Validation";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent)).Context;
-            var g = await new OptionGroups(ctx).Add(parent.Id, TestLiterals.OptionGroup.Name.Correct, TestLiterals.OptionGroup.Description.Correct);
-            Assert.Equal(g.Name.Value, TestLiterals.Project.Name.Correct);
+            var g = await new OptionGroups(ctx).Add(parent.Id, name, TestLiterals.OptionGroup.Description.Correct);
+            Assert.Equal(name, g.Name.Value);
         }
 
         [Theory]
@@ -25,6 +25,38 @@ namespace ConfigurationService.Persistence.Tests
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent, nested)).Context;
             await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Add(parent.Id, nested.Name.Value, TestLiterals.OptionGroup.Description.Correct));
+        }
+
+        [Theory]
+        [ClassData(typeof(NonRootOptionGroup))]
+        public async void UpdateNonRootGroup_EmptyName_Exception(OptionGroup g)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, g)).Context;
+            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(g.Id, "", "desc"));
+        }
+
+        [Theory]
+        [ClassData(typeof(NonRootOptionGroup))]
+        public async void UpdateNonRootGroup_CorrectName_Success(OptionGroup g)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, g)).Context;
+            await new OptionGroups(ctx).Update(g.Id, "OptGrName", "desc");
+        }
+
+        [Theory]
+        [ClassData(typeof(NonRootOptionGroupWithTwoNested))]
+        public async void UpdateNonRootGroup_OtherGroupWithTheSameNameExists_Exception(OptionGroup parent, OptionGroup nested, OptionGroup nested2)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent, nested, nested2)).Context;
+            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(nested2.Id, nested.Name.Value, "desc"));
+        }
+
+        [Theory]
+        [ClassData(typeof(RootOptionGroup))]
+        public async void UpdateRootGroup_CorrectName_Exception(OptionGroup root)
+        {
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, root)).Context;
+            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(root.Id, "OptGrName", "desc"));
         }
     }
 }

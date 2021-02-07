@@ -54,13 +54,34 @@ namespace ConfigurationService.Persistence
 
         public async Task Update(Guid id, string name, string description)
         {
-            var group = await _context.OptionGroups.FindAsync(id);
+            var group = await _context.OptionGroups
+                .Include(x => x.Environment)
+                .ThenInclude(x => x.OptionGroups)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (group == null)
             {
                 throw new NotFoundException("Option group does not exist");
             }
 
-            group.UpdateName(new OptionGroupName(name));
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ApplicationException("Invalid Option Group name");
+            }
+
+            if (group.Environment.GetRootOptionGroop() == group)
+            {
+                throw new ApplicationException("Root Option Group cannot be modified");
+            }
+
+            var newName = new OptionGroupName(name);
+            var nestedExceptCurrent = group.Parent.NestedGroups.Except(new[] {group});
+            if (nestedExceptCurrent.Any(x => x.Name == newName))
+            {
+                throw new ApplicationException("Option group with the same name already exists");
+            }
+
+            group.UpdateName(newName);
             group.UpdateDescription(new Description(description));
 
             _context.OptionGroups.Update(group);

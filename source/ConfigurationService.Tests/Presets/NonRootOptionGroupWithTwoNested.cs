@@ -5,7 +5,7 @@ using ConfigurationService.Tests.Stubs;
 
 namespace ConfigurationService.Tests.Presets
 {
-    public class NonRootOptionGroupWithNested : IEnumerable<object[]>
+    public class NonRootOptionGroupWithTwoNested : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
@@ -18,13 +18,19 @@ namespace ConfigurationService.Tests.Presets
                 TestLiterals.OptionGroup.Description.Correct,
                 env, env.GetRootOptionGroop());
 
-            var nested = new TestableOptionGroup(Guid.NewGuid(),
-                TestLiterals.OptionGroup.Name.Correct + "Nested",
+            var nested = new TestableOptionGroup(Guid.NewGuid(), 
+                TestLiterals.OptionGroup.Name.Correct + "Nested", 
                 TestLiterals.OptionGroup.Description.Correct,
                 env, group);
             group.AddNested(nested);
 
-            yield return new object[] { group, nested };
+            var nested2 = new TestableOptionGroup(Guid.NewGuid(),
+                TestLiterals.OptionGroup.Name.Correct + "SecondNested",
+                TestLiterals.OptionGroup.Description.Correct,
+                env, group);
+            group.AddNested(nested2);
+
+            yield return new object[] { group, nested, nested2 };
         }
 
         IEnumerator IEnumerable.GetEnumerator()
