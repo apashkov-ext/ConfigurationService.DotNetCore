@@ -5,5 +5,6 @@
         public string Id { get; set; }
         public string Name { get; set; }
         public OptionGroupDto OptionGroup { get; set; }
+        public string Preview { get; set; }
     }
 }

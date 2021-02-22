@@ -9,5 +9,6 @@ namespace ConfigurationService.Api.Dto
         public string Description { get; set; }
         public IEnumerable<OptionDto> Options { get; set; }
         public IEnumerable<OptionGroupDto> NestedGroups { get; set; }
+        public bool Root { get; set; }
     }
 }

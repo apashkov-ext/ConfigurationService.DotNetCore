@@ -90,13 +90,15 @@ namespace ConfigurationService.Persistence
 
         public async Task Remove(Guid id)
         {
-            var group = await _context.OptionGroups.Include(x => x.NestedGroups).FirstOrDefaultAsync(x => x.Id == id);
+            var group = await _context.OptionGroups.Include(x => x.Environment).ThenInclude(x => x.OptionGroups).FirstOrDefaultAsync(x => x.Id == id);
             if (group == null)
             {
                 throw new NotFoundException("Option group does not exist");
             }
 
-            _context.OptionGroups.RemoveRecursive(group);
+            var allElements = group.WithChildren();
+
+            _context.OptionGroups.RemoveRange(allElements);
             await _context.SaveChangesAsync();
         }
     }

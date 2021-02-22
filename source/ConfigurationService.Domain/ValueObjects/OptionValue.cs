@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ConfigurationService.Domain.Entities;
 
 namespace ConfigurationService.Domain.ValueObjects
@@ -30,12 +31,14 @@ namespace ConfigurationService.Domain.ValueObjects
 
         public OptionValue(string[] value)
         {
+            if (value == null) throw new ApplicationException("Invalid array value");
             Value = string.Join(',', value);
             Type = OptionValueType.StringArray;
         }
 
         public OptionValue(int[] value)
         {
+            if (value == null) throw new ApplicationException("Invalid array value");
             Value = string.Join(',', value);
             Type = OptionValueType.NumberArray;
         }

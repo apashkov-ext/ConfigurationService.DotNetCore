@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ConfigurationService.Domain.Entities;
 
 namespace ConfigurationService.Application
@@ -6,5 +7,6 @@ namespace ConfigurationService.Application
     public interface IConfigurations
     {
         Task<OptionGroup> GetItem(string project, string environmnet, string apiKey);
+        Task Import(Guid project, string environment, byte[] file);
     }
 }

@@ -14,7 +14,8 @@ namespace ConfigurationService.Api.Extensions
                 Name = source.Name.Value,
                 Description = source.Description.Value,
                 Options = source.Options.Select(x => x.ToDto()),
-                NestedGroups = source.NestedGroups.Select(x => x.ToDto())
+                NestedGroups = source.NestedGroups.Select(x => x.ToDto()),
+                Root = source.Parent == null
             };
         }
     }

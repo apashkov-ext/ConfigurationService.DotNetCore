@@ -77,5 +77,15 @@ namespace ConfigurationService.Domain.Entities
             _nestedGroups.Add(g);
             return g;
         }
+
+        public OptionGroup DeepFind(string name)
+        {
+            if (Name.Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return this;
+            }
+
+            return NestedGroups.Select(n => n.DeepFind(name)).FirstOrDefault(found => found != null);
+        }
     }
 }
