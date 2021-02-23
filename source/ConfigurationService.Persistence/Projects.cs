@@ -27,9 +27,8 @@ namespace ConfigurationService.Persistence
                 return await _context.Projects.ProjectsWithIncludedEntities().ToListAsync();
             }
 
-            return await _context.Projects.ProjectsWithIncludedEntities()
-                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
-                .ToListAsync();
+            var list = await _context.Projects.ProjectsWithIncludedEntities().ToListAsync();
+            return list.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task<Project> Get(Guid id)

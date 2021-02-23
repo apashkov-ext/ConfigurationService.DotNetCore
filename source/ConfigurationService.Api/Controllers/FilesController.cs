@@ -18,7 +18,7 @@ namespace ConfigurationService.Api.Controllers
             _configurations = configurations;
         }
 
-        [HttpPost("api/projects/{projectId}/configs/{env}")]
+        [HttpPost("{projectId}/configs/{env}")]
         [DisableRequestSizeLimit]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

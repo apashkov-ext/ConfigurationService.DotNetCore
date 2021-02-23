@@ -22,7 +22,8 @@ namespace ConfigurationService.Persistence
 
         public async Task<IEnumerable<Option>> Get(string name)
         {
-            return await _context.Options.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)).ToListAsync();
+            var list = await _context.Options.ToListAsync();
+            return list.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task<Option> Get(Guid id)
@@ -75,13 +76,13 @@ namespace ConfigurationService.Persistence
 
         public async Task Remove(Guid id)
         {
-            var option = await _context.Options.FindAsync(id);
+            var option = await _context.Options.Include(x => x.OptionGroup).FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)
             {
                 throw new NotFoundException("Option does not exist");
             }
 
-            _context.Options.Remove(option);
+            option.OptionGroup.RemoveOption(option);
             await _context.SaveChangesAsync();
         }
     }

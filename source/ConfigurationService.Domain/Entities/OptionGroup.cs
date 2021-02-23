@@ -45,6 +45,11 @@ namespace ConfigurationService.Domain.Entities
             return o;
         }
 
+        public void RemoveOption(Option option)
+        {
+            _options.Remove(option);
+        }
+
         public void UpdateName(OptionGroupName name)
         {
             if (Name != name)
@@ -76,16 +81,6 @@ namespace ConfigurationService.Domain.Entities
             var g = Create(name, description, Environment, this);
             _nestedGroups.Add(g);
             return g;
-        }
-
-        public OptionGroup DeepFind(string name)
-        {
-            if (Name.Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return this;
-            }
-
-            return NestedGroups.Select(n => n.DeepFind(name)).FirstOrDefault(found => found != null);
         }
     }
 }

@@ -20,10 +20,10 @@ namespace ConfigurationService.Api.Controllers
             _options = options;
         }
 
-        [HttpGet("{name?}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OptionDto>> Get(string name)
+        public async Task<ActionResult<OptionDto>> Get([FromHeader]string name)
         {
             var options = await _options.Get(name);
             return Ok(options.Select(x => x.ToDto()));

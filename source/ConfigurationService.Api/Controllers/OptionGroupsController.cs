@@ -20,11 +20,11 @@ namespace ConfigurationService.Api.Controllers
             _optionGroups = optionGroups;
         }
 
-        [HttpGet("{name?}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<OptionGroupDto>> Get(string name)
+        public async Task<ActionResult<OptionGroupDto>> Get([FromHeader]string name)
         {
-            var groups = (await _optionGroups.Get(name)).Where(x => x.Parent == null);
+            var groups = await _optionGroups.Get(name);
             return Ok(groups.Select(x => x.ToDto()));
         }
 

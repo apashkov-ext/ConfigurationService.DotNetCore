@@ -15,8 +15,4 @@
     <ProjectReference Include="..\ConfigurationService.Domain\ConfigurationService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ConfigImporting\" />
-  </ItemGroup>
-
 </Project>

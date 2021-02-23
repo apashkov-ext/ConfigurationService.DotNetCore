@@ -27,9 +27,8 @@ namespace ConfigurationService.Persistence
                 return await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
             }
 
-            return await _context.OptionGroups.OptionGroupsWithIncludedEntities()
-                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
-                .ToListAsync();
+            var list = await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
+            return list.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task<OptionGroup> Get(Guid id)
@@ -97,8 +96,8 @@ namespace ConfigurationService.Persistence
             }
 
             var allElements = group.WithChildren();
-
             _context.OptionGroups.RemoveRange(allElements);
+
             await _context.SaveChangesAsync();
         }
     }

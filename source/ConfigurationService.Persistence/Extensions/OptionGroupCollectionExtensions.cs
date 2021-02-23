@@ -10,9 +10,9 @@ namespace ConfigurationService.Persistence.Extensions
         {
             return source
                 .Include(x => x.Parent)
-                .ThenInclude(x => x.NestedGroups)
-                .ThenInclude(x => x.Options)
-                .Include(x => x.Environment);
+                .Include(x => x.Environment)
+                .ThenInclude(x => x.OptionGroups)
+                .ThenInclude(x => x.Options);
         }
     }
 }

@@ -21,9 +21,9 @@ namespace ConfigurationService.Api.Controllers
             _projects = projectsReader;
         }
 
-        [HttpGet("{name?}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ProjectDto>>> Get(string name)
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromHeader]string name)
         {
             var projects = await _projects.Get(name);
             return Ok(projects.Select(x => x.ToDto()));
