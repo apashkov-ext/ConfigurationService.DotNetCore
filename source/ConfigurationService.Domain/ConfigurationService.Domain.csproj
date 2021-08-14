@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="ValueObjects\OptionGroupName.cs~RF343bb818.TMP" />
+  </ItemGroup>
+
 </Project>

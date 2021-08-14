@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ConfigurationService.Domain.ValueObjects;
+
+namespace ConfigurationService.Domain.Entities
+{
+    public class Environment : Entity
+    {
+        public EnvironmentName Name { get; private set; }
+        public bool IsDefault { get; }
+        public Project Project { get; }
+
+        private readonly List<OptionGroup> _optionGroups = new List<OptionGroup>();
+        public IEnumerable<OptionGroup> OptionGroups => _optionGroups;
+
+        protected Environment() {}
+
+        protected Environment(EnvironmentName name, Project project, bool isDefault)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Project = project ?? throw new ArgumentNullException(nameof(project));
+            IsDefault = isDefault;
+            SetMainOptionGroup();
+        }
+
+        public static Environment Create(EnvironmentName name, Project project)
+        {
+            return new Environment(name, project, false);
+        }
+
+        public void UpdateName(EnvironmentName name)
+        {
+            Name = name;
+        }
+
+        public OptionGroup GetRootOptionGroop()
+        {
+            return _optionGroups.FirstOrDefault(x => x.Parent == null);
+        }
+
+        private void SetMainOptionGroup()
+        {
+            var g = OptionGroup.Create(new OptionGroupName(""), new Description(""), this);
+            _optionGroups.Add(g);
+        }
+    }
+}

@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/source/ConfigurationService.Api/CustomerDB.db
+/source/ConfigurationService.Tests/coverage.json
+/.vs

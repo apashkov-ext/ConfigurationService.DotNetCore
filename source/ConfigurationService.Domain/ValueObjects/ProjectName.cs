@@ -6,13 +6,14 @@ namespace ConfigurationService.Domain.ValueObjects
 {
     public class ProjectName : ValueObject
     {
+        private static readonly Regex Regex = new Regex("^[a-zA-Z]+[\\w_-]*$");
         public string Value { get; }
 
         public ProjectName(string value)
         {
-            if (!new Regex("^[a-zA-Z][\\w_-]+$").IsMatch(value))
+            if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value))
             {
-                throw new ApplicationException($"Invalid project name '{value}'");
+                throw new ApplicationException("Incorrect project name");
             }
 
             Value = value;

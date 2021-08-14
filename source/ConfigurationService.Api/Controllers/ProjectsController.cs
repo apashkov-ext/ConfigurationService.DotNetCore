@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Api.Dto;
 using ConfigurationService.Api.Extensions;
-using ConfigurationService.Application.Sources;
+using ConfigurationService.Application;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,27 +14,27 @@ namespace ConfigurationService.Api.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly ISourceApi _api;
+        private readonly IProjects _projects;
 
-        public ProjectsController(ISourceApi api)
+        public ProjectsController(IProjects projectsReader)
         {
-            _api = api;
+            _projects = projectsReader;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromHeader]string name)
         {
-            var projects = await _api.GetProjects();
-            return Ok(projects.ToDtoItems());
+            var projects = await _projects.Get(name);
+            return Ok(projects.Select(x => x.ToDto()));
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProjectDto>> GetProject(string name)
+        public async Task<ActionResult<ProjectDto>> Get(Guid id)
         {
-            var project = await _api.GetProject(name);
+            var project = await _projects.Get(id);
             return Ok(project.ToDto());
         }
 
@@ -40,58 +42,19 @@ namespace ConfigurationService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<ProjectDto>> CreateProject(CreateProjectDto body)
+        public async Task<ActionResult<CreatedProjectDto>> Create(CreateProjectDto body)
         {
-            var created = await _api.CreateProjects(body.Name);
-            var dto = created.ToDto();
-            return CreatedAtAction(nameof(GetProject), new { name = dto.Name }, dto);
+            var created = await _projects.Add(body.Name);
+            var dto = created.ToCreatedProjectDto();
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, dto);
         }
 
-        [HttpDelete("{name}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteProject(string name)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            await _api.DeleteProject(name);
-            return NoContent();
-        }
-
-        [HttpGet("{name}/configs/{env}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<object>> GetConfig(string name, string env)
-        {
-            var config = await _api.GetConfig(name, env);
-            return Ok(config.ToDto());
-        }
-
-        [HttpPost("{name}/configs")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<ConfigurationDto>> CreateConfig(string name, CreateConfigDto body)
-        {
-            var created = await _api.CreateConfig(name, body.Env);
-            var dto = created.ToDto();
-            return CreatedAtAction(nameof(GetConfig), new { name, env = dto.Environment }, dto);
-        }
-
-        [HttpPut("{name}/configs/{env}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> UpdateConfig(string name, string env, UpdateConfigDto body)
-        {
-            await _api.UpdateConfig(name, env, body.Content);
-            return NoContent();
-        }
-
-        [HttpDelete("{name}/configs/{env}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteConfig(string name, string env)
-        {
-            await _api.DeleteConfig(name, env);
+            await _projects.Remove(id);
             return NoContent();
         }
     }
