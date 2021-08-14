@@ -3,4 +3,5 @@
 ################################################################################
 
 /source/ConfigurationService.Api/CustomerDB.db
+/source/ConfigurationService.Tests/coverage.json
 /.vs

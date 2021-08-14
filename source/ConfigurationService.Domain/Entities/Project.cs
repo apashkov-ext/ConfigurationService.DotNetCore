@@ -1,31 +1,41 @@
-﻿using ConfigurationService.Domain.ValueObjects;
-using System;
+﻿using System;
+using ConfigurationService.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ConfigurationService.Domain.Entities
 {
-    public class Project
+    public class Project : Entity
     {
-        private readonly List<Configuration> _configs;
+        public ProjectName Name { get; private set; }
+        public ApiKey ApiKey { get; private set; }
 
-        public ProjectName Name { get; }
-        public IEnumerable<Configuration> Configurations => _configs;
+        protected readonly List<Environment> _environments = new List<Environment>();
+        public IEnumerable<Environment> Environments => _environments;
 
-        public static Project Create(ProjectName name, IEnumerable<Configuration> configs)
-        {
-            return new Project(name, configs);
-        }
+        protected Project() { }
 
-        private Project(ProjectName name, IEnumerable<Configuration> configs)
+        protected Project(ProjectName name, ApiKey apiKey)
         {
             Name = name;
-            _configs = configs.ToList();
+            ApiKey = apiKey;
         }
 
-        public void DeleteConfig()
+        public static Project Create(ProjectName name, ApiKey apiKey)
         {
+            return new Project(name, apiKey);
+        }
 
+        public Environment AddEnvironment(EnvironmentName name)
+        {
+            if (_environments.Any(x => x.Name == name))
+            {
+                throw new ApplicationException("The project already contains environment with the same name");
+            }
+
+            var e = Environment.Create(name, this);
+            _environments.Add(e);
+            return e;
         }
     }
 }
