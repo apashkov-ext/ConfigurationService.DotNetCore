@@ -21,18 +21,6 @@ namespace ConfigurationService.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var section = Configuration.GetSection(GitHubApiOptions.Path);
-            //services.Configure<GitHubApiOptions>(section);
-
-            services.AddHttpClient<DefaultHttpClient>(builder =>
-            {
-                //var cfg = section.Get<GitHubApiOptions>();
-                //builder.BaseAddress = new Uri($"{cfg.Uri}/repos/{cfg.UserName}/");
-                //builder.DefaultRequestHeaders.Add("Authorization", $"token {cfg.PersonalToken}");
-                //builder.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-                //builder.DefaultRequestHeaders.Add("User-Agent", "Configuration-Service");
-            });
-
             services.ConfigureApplicationServices();
 
             services.AddCors(options =>

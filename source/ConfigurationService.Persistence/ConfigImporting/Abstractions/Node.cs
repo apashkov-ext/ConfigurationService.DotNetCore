@@ -23,9 +23,9 @@ namespace ConfigurationService.Persistence.ConfigImporting.Abstractions
 
         public abstract T Value { get; }
         public abstract IEnumerable<Node<T>> Children { get; }
-        public abstract void ReplaceAction(T value);
         public abstract Node<T> AddChild(T value);
         public abstract void RemoveChild(Node<T> child);
         public abstract Node<T> FindChild(T value);
+        protected abstract void ReplaceAction(T value);
     }
 }

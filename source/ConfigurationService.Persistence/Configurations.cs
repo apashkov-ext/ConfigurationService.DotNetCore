@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
@@ -83,8 +82,7 @@ namespace ConfigurationService.Persistence
 
         private static Tree<OptionGroup> ParseTree(string json)
         {
-            var doc = JsonDocument.Parse(json);
-            var hierarchy = new OptionGroupHierarchyImporter().ImportFromJson(doc);
+            var hierarchy = new OptionGroupHierarchyImporter().ImportFromJson(json);
             return new ImportedTree(hierarchy);
         }
     }

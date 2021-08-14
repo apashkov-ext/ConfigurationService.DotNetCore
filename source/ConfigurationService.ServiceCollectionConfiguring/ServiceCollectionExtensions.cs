@@ -7,8 +7,6 @@ namespace ConfigurationService.ServiceCollectionConfiguring
 {
     public static class ServiceCollectionExtensions
     {
-        private const string DbName = "ConfigurationStorage";
-
         public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
         {
             services.AddTransient<IProjects, Projects>();
@@ -18,7 +16,7 @@ namespace ConfigurationService.ServiceCollectionConfiguring
             services.AddTransient<IOptions, Options>();
             services.AddDbContext<ConfigurationServiceContext>(options =>
             {
-                options.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog={DbName};");
+                options.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=ConfigurationStorage;");
             });
 
             return services;

@@ -33,7 +33,7 @@ namespace ConfigurationService.Persistence.ConfigImporting.Implementation
             Visited = visited;
         }
 
-        public override void ReplaceAction(OptionGroup value)
+        protected override void ReplaceAction(OptionGroup value)
         {
             if (!value.Options.Any())
             {
@@ -64,7 +64,7 @@ namespace ConfigurationService.Persistence.ConfigImporting.Implementation
             if (!notVisitedOptions.Any())
             {
                 return;
-            };
+            }
             
             foreach (var option in notVisitedOptions.ToArray())
             {

@@ -20,18 +20,18 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Environment>> Get()
+        public async Task<IEnumerable<Environment>> GetAsync()
         {
             return await _context.Environments.EnvironmentsWithIncludedEntities().ToListAsync();
         }
 
-        public async Task<Environment> Get(Guid id)
+        public async Task<Environment> GetAsync(Guid id)
         {
             var env = await _context.Environments.EnvironmentsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             return env ?? throw new NotFoundException("Environment does not exist");
         }
 
-        public async Task<Environment> Add(Guid projectId, string name)
+        public async Task<Environment> AddAsync(Guid projectId, string name)
         {
             var proj = await _context.Projects.Include(x => x.Environments).FirstOrDefaultAsync(x => x.Id == projectId);
             if (proj == null)
@@ -45,7 +45,7 @@ namespace ConfigurationService.Persistence
             return env;
         }
 
-        public async Task Update(Guid id, string name)
+        public async Task UpdateAsync(Guid id, string name)
         {
             var envName = new EnvironmentName(name);
             var env = await _context.Environments.Include(x => x.Project).ThenInclude(x => x.Environments).FirstOrDefaultAsync(x => x.Id == id);
@@ -64,7 +64,7 @@ namespace ConfigurationService.Persistence
             await _context.SaveChangesAsync();
         }
 
-        public async Task Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
             var existed = await _context.Environments.FirstOrDefaultAsync(x => x.Id == id);
             if (existed == null)

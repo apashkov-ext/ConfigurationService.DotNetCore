@@ -9,8 +9,8 @@ namespace ConfigurationService.Tests.Presets
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            var p = new TestableProject(Guid.NewGuid(), TestLiterals.Project.Name.Correct, TestLiterals.Project.ApiKeys.Correct);
-            var env = new TestableEnvironment(Guid.NewGuid(), TestLiterals.Environment.Name.Correct, p);
+            var p = new TestableProject(Guid.NewGuid(), "TestProject", TestLiterals.Project.ApiKeys.Correct);
+            var env = new TestableEnvironment(Guid.NewGuid(), "Dev", p);
             p.AddEnv(env);
             yield return new object[] { env };
         }

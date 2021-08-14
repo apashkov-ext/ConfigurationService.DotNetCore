@@ -20,7 +20,7 @@ namespace ConfigurationService.Persistence.ConfigImporting.Implementation
             }
         }
 
-        public override void ReplaceAction(OptionGroup value) { }
+        protected override void ReplaceAction(OptionGroup value) { }
 
         public override Node<OptionGroup> AddChild(OptionGroup value)
         {

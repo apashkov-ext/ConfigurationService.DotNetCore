@@ -8,10 +8,11 @@ namespace ConfigurationService.Persistence.ConfigImporting
 {
     internal class OptionGroupHierarchyImporter
     {
-        public OptionGroup ImportFromJson(JsonDocument json)
+        public OptionGroup ImportFromJson(string json)
         {
+            var doc = JsonDocument.Parse(json);
             var rootGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), null);
-            FillGroup(rootGroup, json.RootElement);
+            FillGroup(rootGroup, doc.RootElement);
             return rootGroup;
         }
 
@@ -19,15 +20,14 @@ namespace ConfigurationService.Persistence.ConfigImporting
         {
             foreach (var p in element.EnumerateObject())
             {
-                if (p.Value.ValueKind == JsonValueKind.Object)
-                {
-                    var created = parent.AddNestedGroup(new OptionGroupName(p.Name), new Description(""));
-                    FillGroup(created, p.Value);
-                }
-                else
+                if (p.Value.ValueKind != JsonValueKind.Object)
                 {
                     AddOption(parent, p);
+                    continue;
                 }
+             
+                var created = parent.AddNestedGroup(new OptionGroupName(p.Name), new Description(""));
+                FillGroup(created, p.Value);
             }
         }
 
@@ -45,7 +45,7 @@ namespace ConfigurationService.Persistence.ConfigImporting
                 JsonValueKind.False => new OptionValue(prop.Value.GetBoolean()),
                 JsonValueKind.True => new OptionValue(prop.Value.GetBoolean()),
                 JsonValueKind.Number => new OptionValue(prop.Value.GetInt32()),
-                _ => throw new ApplicationException("Invalid Json format")
+                _ => throw new ApplicationException("Unsupported json property value.")
             };
         }
 
@@ -61,7 +61,7 @@ namespace ConfigurationService.Persistence.ConfigImporting
             {
                 JsonValueKind.String => new OptionValue(arr.Select(x => x.GetString()).ToArray()),
                 JsonValueKind.Number => new OptionValue(arr.Select(x => x.GetInt32()).ToArray()),
-                _ => throw new ApplicationException("Invalid Json format")
+                _ => throw new ApplicationException("Unsupported json array item value.")
             };
         }
     }
