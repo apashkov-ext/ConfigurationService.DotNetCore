@@ -1,12 +1,9 @@
-using ConfigurationService.Tests.Presets;
 using Xunit;
 using Environment = ConfigurationService.Domain.Entities.Environment;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ConfigurationService.Persistence;
 using System.Linq;
-using System.Net;
-using System.Text.Json;
 using ConfigurationService.Api.Dto;
 using AutoFixture;
 using FluentAssertions;

@@ -9,7 +9,8 @@
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="FluentAssertions.Web" Version="1.0.138" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -24,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConfigurationService.Api\ConfigurationService.Api.csproj" />
-    <ProjectReference Include="..\ConfigurationService.Tests\ConfigurationService.Tests.csproj" />
   </ItemGroup>
 
 </Project>
