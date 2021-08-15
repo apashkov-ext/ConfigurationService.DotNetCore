@@ -5,3 +5,4 @@
 /source/ConfigurationService.Api/CustomerDB.db
 /source/ConfigurationService.Tests/coverage.json
 /.vs
+/source/ConfigurationService.Api/.config
