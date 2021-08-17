@@ -20,9 +20,9 @@ namespace ConfigurationService.Persistence
 
         public ConfigurationServiceContext(DbContextOptions<ConfigurationServiceContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
-            //DataSeeding.Seed(this);
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
+            DataSeeding.Seed(this);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
