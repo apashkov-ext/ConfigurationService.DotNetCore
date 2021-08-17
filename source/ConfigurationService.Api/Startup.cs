@@ -1,3 +1,4 @@
+using ConfigurationService.Api.Extensions;
 using ConfigurationService.Api.Filters;
 using ConfigurationService.ServiceCollectionConfiguring;
 using Microsoft.AspNetCore.Builder;
@@ -33,9 +34,9 @@ namespace ConfigurationService.Api
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        var origins = Configuration.GetSection("ClientOrigins").Get<string[]>();
+                        var hosts = Configuration.GetAllowedHosts();
                         builder
-                            .WithOrigins(origins)
+                            .WithOrigins(hosts)
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
