@@ -10,6 +10,7 @@ namespace ConfigurationService.Api.Extensions
             return new EnvironmentDto
             {
                 Id = source.Id.ToString(),
+                ProjectId = source.Project.Id.ToString(),
                 Name = source.Name.Value,
                 OptionGroup = source.GetRootOptionGroop().ToDto(),
                 Preview = JsObject.Create(source.GetRootOptionGroop()).ToString()
