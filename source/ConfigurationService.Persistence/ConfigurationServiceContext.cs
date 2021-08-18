@@ -20,9 +20,9 @@ namespace ConfigurationService.Persistence
 
         public ConfigurationServiceContext(DbContextOptions<ConfigurationServiceContext> options) : base(options)
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
-            DataSeeding.Seed(this);
+            //DataSeeding.Seed(this);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,7 +50,7 @@ namespace ConfigurationService.Persistence
             foreach (var entity in created)
             {
                 entity.UpdateCreated(stamp);
-                entity.UpdateCreated(stamp);
+                entity.UpdateModified(stamp);
             }
         }
 

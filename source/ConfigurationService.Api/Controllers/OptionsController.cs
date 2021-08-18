@@ -25,7 +25,7 @@ namespace ConfigurationService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<OptionDto>> Get([FromHeader]string name)
         {
-            var options = await _options.Get(name);
+            var options = await _options.GetAsync(name);
             return Ok(options.Select(x => x.ToDto()));
         }
 
@@ -34,7 +34,7 @@ namespace ConfigurationService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<OptionDto>> Get(Guid id)
         {
-            var o = await _options.Get(id);
+            var o = await _options.GetAsync(id);
             return Ok(o.ToDto());
         }
 
@@ -44,7 +44,7 @@ namespace ConfigurationService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<OptionDto>> Create(CreateOptionDto body)
         {
-            var o = await _options.Add(body.OptionGroup, body.Name, body.Description, body.Value, body.Type);
+            var o = await _options.AddAsync(body.OptionGroup, body.Name, body.Description, body.Value, body.Type);
             return CreatedAtAction(nameof(Get), new {id = o.Id}, o.ToDto());
         }
 
@@ -53,7 +53,7 @@ namespace ConfigurationService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(Guid id, UpdateOptionDto body)
         {
-            await _options.Update(id, body.Name, body.Description, body.Value, body.Type);
+            await _options.UpdateAsync(id, body.Name, body.Description, body.Value);
             return NoContent();
         }
 
@@ -62,7 +62,7 @@ namespace ConfigurationService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(Guid id)
         {
-            await _options.Remove(id);
+            await _options.RemoveAsync(id);
             return NoContent();
         }
     }

@@ -9,7 +9,6 @@ namespace ConfigurationService.Persistence.ContextConfiguration
         public void Configure(EntityTypeBuilder<Environment> builder)
         {
             builder.ToTable("Environments").HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
             builder.Property(x => x.Created).IsRequired();
             builder.Property(x => x.Modified).IsRequired();
             builder.Property(x => x.IsDefault).HasDefaultValue(false);

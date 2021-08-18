@@ -7,10 +7,10 @@ namespace ConfigurationService.Application
 {
     public interface IOptions
     {
-        Task<IEnumerable<Option>> Get(string name);
-        Task<Option> Get(Guid id);
-        Task<Option> Add(Guid optionGroup, string name, string description, object value, OptionValueType type);
-        Task Update(Guid id, string name, string description, object value, OptionValueType? type);
-        Task Remove(Guid id);
+        Task<IEnumerable<Option>> GetAsync(string name);
+        Task<Option> GetAsync(Guid id);
+        Task<Option> AddAsync(Guid optionGroup, string name, string description, object value, OptionValueType type);
+        Task UpdateAsync(Guid id, string name, string description, object value);
+        Task RemoveAsync(Guid id);
     }
 }

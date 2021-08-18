@@ -20,19 +20,19 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Option>> Get(string name)
+        public async Task<IEnumerable<Option>> GetAsync(string name)
         {
             var list = await _context.Options.ToListAsync();
             return list.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public async Task<Option> Get(Guid id)
+        public async Task<Option> GetAsync(Guid id)
         {
             var o = await _context.Options.FindAsync(id);
             return o ?? throw new NotFoundException("Option does not exist");
         }
 
-        public async Task<Option> Add(Guid optionGroup, string name, string description, object value, OptionValueType type)
+        public async Task<Option> AddAsync(Guid optionGroup, string name, string description, object value, OptionValueType type)
         {
             var group = await _context.OptionGroups.Include(x => x.Options).FirstOrDefaultAsync(x => x.Id == optionGroup);
             if (group == null)
@@ -48,7 +48,7 @@ namespace ConfigurationService.Persistence
             return option;
         }
 
-        public async Task Update(Guid id, string name, string description, object value, OptionValueType? type)
+        public async Task UpdateAsync(Guid id, string name, string description, object value)
         {
             var option = await _context.Options.Include(x => x.OptionGroup).ThenInclude(x => x.Options).FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)
@@ -68,13 +68,13 @@ namespace ConfigurationService.Persistence
             }
 
             option.UpdateDescription(new Description(description));
-            option.UpdateValue(TypeConversion.GetOptionValue(value, type ?? option.Value.Type));
+            option.UpdateValue(TypeConversion.GetOptionValue(value, option.Value.Type));
 
             _context.Options.Update(option);
             await _context.SaveChangesAsync();
         }
 
-        public async Task Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
             var option = await _context.Options.Include(x => x.OptionGroup).FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)

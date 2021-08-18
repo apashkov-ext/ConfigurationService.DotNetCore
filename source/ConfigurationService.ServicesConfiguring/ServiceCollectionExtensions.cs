@@ -1,6 +1,5 @@
 ﻿using ConfigurationService.Application;
 using ConfigurationService.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigurationService.ServiceCollectionConfiguring
@@ -16,7 +15,7 @@ namespace ConfigurationService.ServiceCollectionConfiguring
             services.AddTransient<IOptions, Options>();
             services.AddDbContext<ConfigurationServiceContext>(options =>
             {
-                options.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=ConfigurationStorage;");
+                options.ConfigureSqlite();
             });
 
             return services;
