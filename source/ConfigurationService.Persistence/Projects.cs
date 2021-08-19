@@ -61,8 +61,35 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Project does not exist");
             }
 
+            foreach (var env in existed.Environments)
+            {
+                RemoveEnvironment(env, _context);
+            }
+
             _context.Projects.Remove(existed);
             await _context.SaveChangesAsync();
+        }
+
+        private static void RemoveEnvironment(Domain.Entities.Environment e, ConfigurationServiceContext context)
+        {
+            foreach (var g in e.OptionGroups)
+            {
+                RemoveGroup(g, context);
+            }
+
+            context.Environments.Remove(e);
+        }
+
+        private static void RemoveGroup(OptionGroup group, ConfigurationServiceContext context)
+        {
+            context.Options.RemoveRange(group.Options);
+
+            foreach (var g in group.NestedGroups)
+            {
+                RemoveGroup(g, context);
+            }
+
+            context.OptionGroups.Remove(group);
         }
     }
 }

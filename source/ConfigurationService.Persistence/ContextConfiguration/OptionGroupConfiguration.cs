@@ -12,7 +12,7 @@ namespace ConfigurationService.Persistence.ContextConfiguration
             builder.Property(x => x.Created).IsRequired();
             builder.Property(x => x.Modified).IsRequired();
 
-            builder.HasMany(x => x.Options).WithOne(x => x.OptionGroup).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.Options).WithOne(x => x.OptionGroup);
             builder.Navigation(x => x.Options).HasField("_options").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
 
             builder.HasOne(x => x.Parent).WithMany(x => x.NestedGroups).IsRequired(false);

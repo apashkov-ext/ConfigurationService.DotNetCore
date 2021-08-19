@@ -34,7 +34,7 @@ namespace ConfigurationService.Persistence
         public async Task<OptionGroup> Get(Guid id)
         {
             var group = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
-            return group ?? throw new NotFoundException("Project does not exist");
+            return group ?? throw new NotFoundException("Option group does not exist");
         }
 
         public async Task<OptionGroup> Add(Guid parent, string name, string description)

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Persistence.ContextConfiguration;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +20,7 @@ namespace ConfigurationService.Persistence
         {
             //Database.EnsureDeleted();
             Database.EnsureCreated();
-            //DataSeeding.Seed(this);
+            DataSeeding.Seed(this);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,14 +59,6 @@ namespace ConfigurationService.Persistence
             {
                 entity.UpdateModified(stamp);
             }
-        }
-    }
-
-    internal static class EntityEntryExtensions
-    {
-        public static IEnumerable<Entity> SelectEntityInstances(this IEnumerable<EntityEntry> source, EntityState state)
-        {
-            return source.Where(x => x.State == state && x.Entity is Entity).Select(x => x.Entity as Entity);
         }
     }
 }
