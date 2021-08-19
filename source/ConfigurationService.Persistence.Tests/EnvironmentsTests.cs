@@ -89,7 +89,7 @@ namespace ConfigurationService.Persistence.Tests
         public async void Update_AlreadyExistedName_Exception(Environment e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
-            await Assert.ThrowsAsync<InconsistentDataState>(() => new Environments(ctx).UpdateAsync(e.Id, e.Name.Value));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new Environments(ctx).UpdateAsync(e.Id, e.Name.Value));
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace ConfigurationService.Application.Exceptions
+﻿using System;
+
+namespace ConfigurationService.Application.Exceptions
 {
-    public class AlreadyExistsException : ApiException
+    public class AlreadyExistsException : Exception
     {
-        public AlreadyExistsException() : base("", 422) { }
-        public AlreadyExistsException(string message) : base(message, 422) { }
+        public AlreadyExistsException() : base("") { }
+        public AlreadyExistsException(string message) : base(message) { }
     }
 }

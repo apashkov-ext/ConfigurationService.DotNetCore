@@ -55,7 +55,7 @@ namespace ConfigurationService.Persistence
 
         public async Task Remove(Guid id)
         {
-            var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Id == id);
+            var existed = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             if (existed == null)
             {
                 throw new NotFoundException("Project does not exist");

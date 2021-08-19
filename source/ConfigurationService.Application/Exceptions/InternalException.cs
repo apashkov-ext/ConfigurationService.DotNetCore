@@ -1,8 +1,10 @@
-﻿namespace ConfigurationService.Application.Exceptions
+﻿using System;
+
+namespace ConfigurationService.Application.Exceptions
 {
-    public class InternalException : ApiException
+    public class InternalException : Exception
     {
-        public InternalException() : base("", 500) { }
-        public InternalException(string message) : base(message, 500) { }
+        public InternalException() : base("") { }
+        public InternalException(string message) : base(message) { }
     }
 }

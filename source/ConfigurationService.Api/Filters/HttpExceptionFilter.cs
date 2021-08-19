@@ -1,6 +1,7 @@
 ﻿using ConfigurationService.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace ConfigurationService.Api.Filters
 {
@@ -14,11 +15,38 @@ namespace ConfigurationService.Api.Filters
         {
             switch (context.Exception)
             {
-                case ApiException ex:
+                case NotFoundException ex:
                 
                     context.Result = new ObjectResult(new { message = ex.Message })
                     {
-                        StatusCode = ex.StatusCode
+                        StatusCode = (int)HttpStatusCode.NotFound
+                    };
+                    context.ExceptionHandled = true;
+                    break;
+                
+                case AlreadyExistsException ex:
+                
+                    context.Result = new ObjectResult(new { message = ex.Message })
+                    {
+                        StatusCode = (int)HttpStatusCode.UnprocessableEntity
+                    };
+                    context.ExceptionHandled = true;
+                    break;
+                
+                case InconsistentDataStateException ex:
+                
+                    context.Result = new ObjectResult(new { message = ex.Message })
+                    {
+                        StatusCode = (int)HttpStatusCode.UnprocessableEntity
+                    };
+                    context.ExceptionHandled = true;
+                    break;
+                
+                case InternalException ex:
+                
+                    context.Result = new ObjectResult(new { message = ex.Message })
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError
                     };
                     context.ExceptionHandled = true;
                     break;
@@ -26,7 +54,7 @@ namespace ConfigurationService.Api.Filters
                 case { } ex:
                     context.Result = new ObjectResult(new { message = ex.Message })
                     {
-                        StatusCode = 500
+                        StatusCode = (int)HttpStatusCode.InternalServerError
                     };
                     context.ExceptionHandled = true;
                     break;

@@ -1,8 +1,10 @@
-﻿namespace ConfigurationService.Application.Exceptions
+﻿using System;
+
+namespace ConfigurationService.Application.Exceptions
 {
-    public class NotFoundException : ApiException
+    public class NotFoundException : Exception
     {
-        public NotFoundException() : base("", 404) { }
-        public NotFoundException(string message) : base(message, 404) { }
+        public NotFoundException() : base("") { }
+        public NotFoundException(string message) : base(message) { }
     }
 }

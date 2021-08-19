@@ -56,7 +56,7 @@ namespace ConfigurationService.Persistence
 
             if (env.Project.Environments.Any(x => x.Name == envName))
             {
-                throw new InconsistentDataState("Environment with the same name already exists in this project");
+                throw new InconsistentDataStateException("Environment with the same name already exists in this project");
             }
 
             env.UpdateName(envName);

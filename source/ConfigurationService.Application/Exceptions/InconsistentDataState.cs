@@ -1,8 +1,10 @@
-﻿namespace ConfigurationService.Application.Exceptions
+﻿using System;
+
+namespace ConfigurationService.Application.Exceptions
 {
-    public class InconsistentDataState : ApiException
+    public class InconsistentDataStateException : Exception
     {
-        public InconsistentDataState() : base("", 422) { }
-        public InconsistentDataState(string message) : base(message, 422) { }
+        public InconsistentDataStateException() : base("") { }
+        public InconsistentDataStateException(string message) : base(message) { }
     }
 }
