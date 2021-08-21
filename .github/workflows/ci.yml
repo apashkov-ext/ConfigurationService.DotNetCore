@@ -18,13 +18,13 @@ jobs:
           dotnet-version: '5.0.x'
 
       - name: build
-        run: dotnet build
+        run: dotnet build source
 
       - name: run tests
         run: dotnet test --no-build --no-restore
 
       - name: publish
-        run: dotnet publish --no-build --no-restore
+        run: dotnet publish -c Release -p:UseAppHost=false
 
       - name: deploy artifact
         uses: appleboy/scp-action@master
