@@ -32,7 +32,7 @@ jobs:
 
 
       - name: publish
-        run: dotnet publish "source/ConfigurationService.Api/ConfigurationService.Api.csproj" -c Release -p:UseAppHost=false      
+        run: dotnet publish "source/ConfigurationService.Api/ConfigurationService.Api.csproj" -c Release -p:UseAppHost=false --o artifact     
       - run: ls -R
 
       - name: deploy artifact
