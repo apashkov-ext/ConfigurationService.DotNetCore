@@ -33,7 +33,6 @@ jobs:
 
       - name: publish
         run: dotnet publish "source/ConfigurationService.Api/ConfigurationService.Api.csproj" -c Release -p:UseAppHost=false -o artifact     
-      - run: ls -R
 
       - name: deploy artifact
         uses: appleboy/scp-action@master
@@ -43,6 +42,6 @@ jobs:
           PORT: ${{ secrets.PORT }}
           KEY: ${{ secrets.SSHKEY }}
         with:
-          source: "artifact/*"
+          source: "./artifact/*.*"
           target: "/var/www/api"
           rm: true
