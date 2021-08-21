@@ -43,6 +43,6 @@ jobs:
           PORT: ${{ secrets.PORT }}
           KEY: ${{ secrets.SSHKEY }}
         with:
-          source: "artifact/"
+          source: "artifact/*"
           target: "/var/www/api"
           rm: true
