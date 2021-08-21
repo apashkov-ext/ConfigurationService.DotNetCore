@@ -36,7 +36,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: sources
-      - run: dotnet build
+      #- run: dotnet build
       #- name: run tests for ConfigurationService.Api
       #  run: dotnet test "ConfigurationService.Api.Tests/ConfigurationService.Api.Tests.csproj" --no-build --no-restore 
         
@@ -62,7 +62,7 @@ jobs:
           name: artifact
           path: artifact
           
-  deploy:
+  release:
     needs: publish
     runs-on: ubuntu-latest
     steps:
