@@ -7,3 +7,4 @@
 /.vs
 /source/ConfigurationService.Api/.config
 /source/artifact
+/source/ConfigurationService.Api/logs

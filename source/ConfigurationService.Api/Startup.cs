@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NLog.Extensions.Logging;
 
 namespace ConfigurationService.Api
 {
@@ -30,6 +32,13 @@ namespace ConfigurationService.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddNLog(Configuration);
+            });
+
             services.ConfigureApplicationServices();
             services.AddCors(options =>
             {
