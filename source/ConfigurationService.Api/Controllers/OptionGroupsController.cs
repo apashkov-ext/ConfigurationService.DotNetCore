@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Api.Dto;
@@ -22,7 +23,7 @@ namespace ConfigurationService.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<OptionGroupDto>> Get([FromHeader]string name)
+        public async Task<ActionResult<IEnumerable<OptionGroupDto>>> Get(string name)
         {
             var groups = await _optionGroups.Get(name);
             return Ok(groups.Select(x => x.ToDto()));

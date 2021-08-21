@@ -23,7 +23,7 @@ namespace ConfigurationService.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromHeader]string name)
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> Get(string name)
         {
             var projects = await _projects.Get(name);
             return Ok(projects.Select(x => x.ToDto()));

@@ -3,28 +3,30 @@ using ConfigurationService.Api.Filters;
 using ConfigurationService.ServiceCollectionConfiguring;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConfigurationService.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+        public IConfiguration Configuration { get; }
+
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
-        }
+            _env = environment;
 
-        public IConfiguration Configuration { get; }
+            Configuration = new ConfigurationBuilder()
+                     .AddJsonFile("appsettings.json", false, true)
+                     .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", true, true)
+                     .Build();
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -48,16 +50,23 @@ namespace ConfigurationService.Api
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ConfigurationService.Api v1"));
+            } 
+            else
+            {
+                // needs to pass headers to the reverse proxy.
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
             }
 
-            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
             app.UseAuthorization();

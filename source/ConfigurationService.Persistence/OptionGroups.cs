@@ -24,11 +24,15 @@ namespace ConfigurationService.Persistence
         {
             if (string.IsNullOrEmpty(name))
             {
-                return await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
+                var all = await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
+                return all;
             }
 
-            var list = await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
-            return list.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+            var list = await _context.OptionGroups
+                .OptionGroupsWithIncludedEntities()
+                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .ToListAsync();
+            return list;
         }
 
         public async Task<OptionGroup> Get(Guid id)

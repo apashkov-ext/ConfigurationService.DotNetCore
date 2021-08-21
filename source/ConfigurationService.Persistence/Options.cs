@@ -22,8 +22,15 @@ namespace ConfigurationService.Persistence
 
         public async Task<IEnumerable<Option>> GetAsync(string name)
         {
-            var list = await _context.Options.ToListAsync();
-            return list.Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+            if (string.IsNullOrEmpty(name))
+            {
+                return await _context.Options.ToListAsync();
+            }
+
+            var list = await _context.Options
+                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .ToListAsync();
+            return list;
         }
 
         public async Task<Option> GetAsync(Guid id)

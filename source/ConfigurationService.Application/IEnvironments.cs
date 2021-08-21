@@ -7,7 +7,7 @@ namespace ConfigurationService.Application
 {
     public interface IEnvironments
     {
-        Task<IEnumerable<Environment>> GetAsync();
+        Task<IEnumerable<Environment>> GetAsync(string name);
         Task<Environment> GetAsync(Guid id);
         Task<Environment> AddAsync(Guid projectId, string name);
         Task UpdateAsync(Guid id, string name);

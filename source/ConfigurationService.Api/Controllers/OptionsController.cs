@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Api.Dto;
@@ -23,10 +24,11 @@ namespace ConfigurationService.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OptionDto>> Get([FromHeader]string name)
+        public async Task<ActionResult<IEnumerable<OptionDto>>> Get([FromHeader]string name)
         {
             var options = await _options.GetAsync(name);
-            return Ok(options.Select(x => x.ToDto()));
+            var result = options.Select(x => x.ToDto());
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

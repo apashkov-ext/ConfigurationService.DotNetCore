@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationService.Api.Dto;
@@ -23,9 +24,9 @@ namespace ConfigurationService.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<EnvironmentDto>> Get()
+        public async Task<ActionResult<IEnumerable<EnvironmentDto>>> Get(string name)
         {
-            var envs = await _environments.GetAsync();
+            var envs = await _environments.GetAsync(name);
             return Ok(envs.Select(x => x.ToDto()));
         }
 

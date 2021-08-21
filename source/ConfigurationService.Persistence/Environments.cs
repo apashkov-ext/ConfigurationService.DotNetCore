@@ -20,9 +20,20 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Environment>> GetAsync()
+        public async Task<IEnumerable<Environment>> GetAsync(string name)
         {
-            return await _context.Environments.EnvironmentsWithIncludedEntities().ToListAsync();
+            if (string.IsNullOrEmpty(name))
+            {
+                var all = await _context.Environments.EnvironmentsWithIncludedEntities().ToListAsync();
+                return all;
+            }
+
+            var list = await _context.Environments
+                .EnvironmentsWithIncludedEntities()
+                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .ToListAsync();
+
+            return list;
         }
 
         public async Task<Environment> GetAsync(Guid id)
