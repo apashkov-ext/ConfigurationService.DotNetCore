@@ -39,7 +39,7 @@ namespace ConfigurationService.Api
                 loggingBuilder.AddNLog(Configuration);
             });
 
-            services.ConfigureApplicationServices();
+            services.ConfigureApplicationServices(_env);
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(

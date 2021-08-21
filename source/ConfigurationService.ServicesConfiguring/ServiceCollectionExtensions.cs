@@ -1,21 +1,22 @@
 ﻿using ConfigurationService.Application;
 using ConfigurationService.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ConfigurationService.ServiceCollectionConfiguring
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
+        public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services, IHostEnvironment environment)
         {
             services.AddTransient<IProjects, Projects>();
             services.AddTransient<IConfigurations, Configurations>();
-            services.AddTransient<IEnvironments, Environments>();
+            services.AddTransient<IEnvironments, Persistence.Environments>();
             services.AddTransient<IOptionGroups, OptionGroups>();
             services.AddTransient<IOptions, Options>();
             services.AddDbContext<ConfigurationServiceContext>(options =>
             {
-                options.ConfigureSqlite();
+                options.ConfigureSqlite(environment);
             });
 
             return services;
