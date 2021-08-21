@@ -6,11 +6,18 @@ on:
 
 jobs:
 
-  pipeline:
+  # run build
+  build:
     runs-on: ubuntu-latest
     steps:
+    
       - name: get sources
         uses: actions/checkout@master
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: sources
+          path: source
 
       - name: install dotnet
         uses: actions/setup-dotnet@v1
@@ -19,30 +26,56 @@ jobs:
 
       - name: build
         run: dotnet build source
-
-
+  
+  # run tests
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    
+      - uses: actions/download-artifact@v2
+        with:
+          name: sources
+      - run: dotnet build
       #- name: run tests for ConfigurationService.Api
-      #  run: dotnet test "source/ConfigurationService.Api.Tests/ConfigurationService.Api.Tests.csproj" --no-build --no-restore 
+      #  run: dotnet test "ConfigurationService.Api.Tests/ConfigurationService.Api.Tests.csproj" --no-build --no-restore 
         
       #- name: run tests for ConfigurationService.Domain
-      #  run: dotnet test "source/ConfigurationService.Domain.Tests/ConfigurationService.Domain.Tests.csproj" --no-build --no-restore  
+      #  run: dotnet test "ConfigurationService.Domain.Tests/ConfigurationService.Domain.Tests.csproj" --no-build --no-restore  
         
       #- name: run tests for ConfigurationService.Persistence
-      #  run: dotnet test "source/ConfigurationService.Persistence.Tests/ConfigurationService.Persistence.Tests.csproj" --no-build --no-restore
+      #  run: dotnet test "ConfigurationService.Persistence.Tests/ConfigurationService.Persistence.Tests.csproj" --no-build --no-restore
 
-
+  publish:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: sources
+          
       - name: publish
-        run: dotnet publish "source/ConfigurationService.Api/ConfigurationService.Api.csproj" -c Release -p:UseAppHost=false      
-      - run: ls -R
-
-      - name: deploy artifact
-        uses: appleboy/scp-action@master
+        run: dotnet publish "ConfigurationService.Api/ConfigurationService.Api.csproj" -c Release -p:UseAppHost=false -o artifact     
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: artifact
+          
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+      - uses: appleboy/scp-action@master
         env:
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
           PORT: ${{ secrets.PORT }}
           KEY: ${{ secrets.SSHKEY }}
         with:
-          source: "publish/"
+          source: "."
           target: "/var/www/api"
           rm: true
