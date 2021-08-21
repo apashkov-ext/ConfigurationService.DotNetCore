@@ -36,7 +36,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: sources
-
+      - run: dotnet build
       #- name: run tests for ConfigurationService.Api
       #  run: dotnet test "ConfigurationService.Api.Tests/ConfigurationService.Api.Tests.csproj" --no-build --no-restore 
         
@@ -59,13 +59,16 @@ jobs:
       
       - uses: actions/upload-artifact@v2
         with:
-          name: sources
+          name: artifact
           path: artifact
           
   deploy:
     needs: publish
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
       - uses: appleboy/scp-action@master
         env:
           HOST: ${{ secrets.HOST }}
