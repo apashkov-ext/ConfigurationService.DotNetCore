@@ -2,7 +2,7 @@ name: dotnet ci
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
 
