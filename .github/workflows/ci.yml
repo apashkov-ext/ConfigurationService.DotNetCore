@@ -13,6 +13,11 @@ jobs:
     
       - name: get sources
         uses: actions/checkout@master
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: sources
+          path: source
 
       - name: install dotnet
         uses: actions/setup-dotnet@v1
@@ -21,11 +26,6 @@ jobs:
 
       - name: build
         run: dotnet build source
-        
-      - uses: actions/upload-artifact@v2
-        with:
-          name: sources
-          path: source
   
   # run tests
   tests:
