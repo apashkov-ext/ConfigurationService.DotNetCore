@@ -90,7 +90,7 @@ namespace ConfigurationService.Persistence.ConfigImporting.Implementation
 
         public override void RemoveChild(Node<OptionGroup> child)
         {
-            var allElements = child.Value.WithChildren();
+            var allElements = child.Value.ExpandHierarchy();
             _context.OptionGroups.RemoveRange(allElements);
             _children.Remove(child);
         }

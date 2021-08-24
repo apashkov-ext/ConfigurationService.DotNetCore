@@ -99,9 +99,7 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Option group does not exist");
             }
 
-            var allElements = group.WithChildren();
-            _context.OptionGroups.RemoveRange(allElements);
-
+            group.RemoveOptionGroupWithHierarchy(_context);
             await _context.SaveChangesAsync();
         }
     }

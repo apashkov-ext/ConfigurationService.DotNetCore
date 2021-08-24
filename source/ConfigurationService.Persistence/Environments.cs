@@ -83,7 +83,7 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Environment does not exist");
             }
 
-            _context.Environments.Remove(existed);
+            existed.RemoveEnvironmentWithHierarchy(_context);
             await _context.SaveChangesAsync();
         }
     }

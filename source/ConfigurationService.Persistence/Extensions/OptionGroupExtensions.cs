@@ -6,7 +6,7 @@ namespace ConfigurationService.Persistence.Extensions
 {
     internal static class OptionGroupExtensions
     {
-        public static IEnumerable<OptionGroup> WithChildren(this OptionGroup group)
+        public static IEnumerable<OptionGroup> ExpandHierarchy(this OptionGroup group)
         {
             var allElements = new List<OptionGroup>{ group };
 
@@ -14,7 +14,7 @@ namespace ConfigurationService.Persistence.Extensions
             {
                 if (nested.NestedGroups.Any())
                 {
-                    allElements.AddRange(WithChildren(nested));
+                    allElements.AddRange(ExpandHierarchy(nested));
                 }
                 else
                 {
@@ -23,6 +23,18 @@ namespace ConfigurationService.Persistence.Extensions
             }
 
             return allElements;
+        }
+
+        public static void RemoveOptionGroupWithHierarchy(this OptionGroup group, ConfigurationServiceContext context)
+        {
+            context.Options.RemoveRange(group.Options);
+
+            foreach (var g in group.NestedGroups)
+            {
+                RemoveOptionGroupWithHierarchy(g, context);
+            }
+
+            context.OptionGroups.Remove(group);
         }
     }
 }
