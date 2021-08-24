@@ -40,18 +40,6 @@ namespace ConfigurationService.Api
             });
 
             services.ConfigureApplicationServices(_env);
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        var hosts = Configuration.GetAllowedHosts();
-                        builder
-                            .WithOrigins(hosts)
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
             services.AddControllers(options => options.Filters.Add(new HttpExceptionFilter()));
             services.AddSwaggerGen(c =>
             {
@@ -77,7 +65,6 @@ namespace ConfigurationService.Api
             }
 
             app.UseRouting();
-            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
