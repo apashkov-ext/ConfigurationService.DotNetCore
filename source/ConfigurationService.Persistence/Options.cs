@@ -41,7 +41,7 @@ namespace ConfigurationService.Persistence
 
         public async Task<Option> AddAsync(Guid optionGroup, string name, string description, object value, OptionValueType type)
         {
-            var group = await _context.OptionGroups.Include(x => x.Options).FirstOrDefaultAsync(x => x.Id == optionGroup);
+            var group = await _context.OptionGroups.Include(x => x.Options).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == optionGroup);
             if (group == null)
             {
                 throw new NotFoundException("Option group does not exist");
@@ -57,7 +57,11 @@ namespace ConfigurationService.Persistence
 
         public async Task UpdateAsync(Guid id, string name, string description, object value)
         {
-            var option = await _context.Options.Include(x => x.OptionGroup).ThenInclude(x => x.Options).FirstOrDefaultAsync(x => x.Id == id);
+            var option = await _context.Options
+                .Include(x => x.OptionGroup)
+                .ThenInclude(x => x.Options)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)
             {
                 throw new NotFoundException("Option does not exist");
@@ -83,7 +87,7 @@ namespace ConfigurationService.Persistence
 
         public async Task RemoveAsync(Guid id)
         {
-            var option = await _context.Options.Include(x => x.OptionGroup).FirstOrDefaultAsync(x => x.Id == id);
+            var option = await _context.Options.Include(x => x.OptionGroup).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)
             {
                 throw new NotFoundException("Option does not exist");

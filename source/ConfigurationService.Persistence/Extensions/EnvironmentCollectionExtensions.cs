@@ -12,7 +12,8 @@ namespace ConfigurationService.Persistence.Extensions
                 .Include(x => x.OptionGroups)
                 .ThenInclude(x => x.Parent)
                 .ThenInclude(x => x.NestedGroups)
-                .ThenInclude(x => x.Options);
+                .ThenInclude(x => x.Options)
+                .AsSingleQuery();
         }
     }
 }

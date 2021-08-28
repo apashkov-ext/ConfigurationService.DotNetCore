@@ -10,7 +10,7 @@ namespace ConfigurationService.Persistence
     {
         public static void Seed(ConfigurationServiceContext context)
         {
-            if (context.Projects.FirstOrDefault() != null)
+            if (context.Projects.Any())
             {
                 return;
             }

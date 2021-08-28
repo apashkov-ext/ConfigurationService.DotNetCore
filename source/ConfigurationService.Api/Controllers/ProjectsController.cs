@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ConfigurationService.Api.Dto;
+﻿using ConfigurationService.Api.Dto;
 using ConfigurationService.Api.Extensions;
 using ConfigurationService.Application;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConfigurationService.Api.Controllers
 {

@@ -44,7 +44,7 @@ namespace ConfigurationService.Persistence
 
         public async Task<Environment> AddAsync(Guid projectId, string name)
         {
-            var proj = await _context.Projects.Include(x => x.Environments).FirstOrDefaultAsync(x => x.Id == projectId);
+            var proj = await _context.Projects.Include(x => x.Environments).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == projectId);
             if (proj == null)
             {
                 throw new NotFoundException("Project does not exist");
@@ -59,7 +59,11 @@ namespace ConfigurationService.Persistence
         public async Task UpdateAsync(Guid id, string name)
         {
             var envName = new EnvironmentName(name);
-            var env = await _context.Environments.Include(x => x.Project).ThenInclude(x => x.Environments).FirstOrDefaultAsync(x => x.Id == id);
+            var env = await _context.Environments
+                .Include(x => x.Project)
+                .ThenInclude(x => x.Environments)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (env == null)
             {
                 throw new NotFoundException("Environment does not exist");

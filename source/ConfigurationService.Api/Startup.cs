@@ -1,5 +1,4 @@
 using ConfigurationService.Api.Extensions;
-using ConfigurationService.Api.Filters;
 using ConfigurationService.ServiceCollectionConfiguring;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,7 +16,6 @@ namespace ConfigurationService.Api
     {
         private readonly IWebHostEnvironment _env;
         public IConfiguration Configuration { get; }
-
 
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
@@ -38,23 +36,36 @@ namespace ConfigurationService.Api
                 loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
                 loggingBuilder.AddNLog(Configuration);
             });
-
-            services.ConfigureApplicationServices(_env);
-            services.AddControllers(options => options.Filters.Add(new HttpExceptionFilter()));
+            services.ConfigureApplicationServices();
+            services.AddCors(options =>
+            {
+                var origins = Configuration.GetOrigins();
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConfigurationService.Api", Version = "v1" });
             });
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (_env.IsDevelopment())
+            app.Use(async (context, next) =>
+            {
+                await next.Invoke();              
+            });
+
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ConfigurationService.Api v1"));
-            } 
+            }
             else
             {
                 // needs to pass headers to the reverse proxy.
@@ -65,8 +76,8 @@ namespace ConfigurationService.Api
             }
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

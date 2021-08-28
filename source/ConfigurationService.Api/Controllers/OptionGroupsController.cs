@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ConfigurationService.Api.Dto;
+﻿using ConfigurationService.Api.Dto;
 using ConfigurationService.Api.Extensions;
 using ConfigurationService.Application;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConfigurationService.Api.Controllers
 {
@@ -26,7 +26,8 @@ namespace ConfigurationService.Api.Controllers
         public async Task<ActionResult<IEnumerable<OptionGroupDto>>> Get(string name)
         {
             var groups = await _optionGroups.Get(name);
-            return Ok(groups.Select(x => x.ToDto()));
+            var resp = groups.Select(x => x.ToDto());
+            return Ok(resp);
         }
 
         [HttpGet("{id}")]
@@ -35,7 +36,8 @@ namespace ConfigurationService.Api.Controllers
         public async Task<ActionResult<OptionGroupDto>> Get(Guid id)
         {
             var group = await _optionGroups.Get(id);
-            return Ok(group.ToDto());
+            var dto = group.ToDto();
+            return Ok(dto);
         }
 
         [HttpPost]

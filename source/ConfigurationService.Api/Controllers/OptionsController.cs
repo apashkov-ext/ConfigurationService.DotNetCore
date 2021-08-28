@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ConfigurationService.Api.Dto;
+﻿using ConfigurationService.Api.Dto;
 using ConfigurationService.Api.Extensions;
 using ConfigurationService.Application;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConfigurationService.Api.Controllers
 {
@@ -24,7 +24,7 @@ namespace ConfigurationService.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<OptionDto>>> Get([FromHeader]string name)
+        public async Task<ActionResult<IEnumerable<OptionDto>>> Get(string name)
         {
             var options = await _options.GetAsync(name);
             var result = options.Select(x => x.ToDto());

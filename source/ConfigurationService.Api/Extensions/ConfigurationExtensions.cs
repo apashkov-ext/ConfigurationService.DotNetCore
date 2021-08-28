@@ -5,9 +5,9 @@ namespace ConfigurationService.Api.Extensions
 {
     internal static class ConfigurationExtensions
     {
-        public static string[] GetAllowedHosts(this IConfiguration config)
+        public static string[] GetOrigins(this IConfiguration config)
         {
-            var section = config?["AllowedHosts"];
+            var section = config?["Origins"];
             var splitted = section?.Split(";", StringSplitOptions.RemoveEmptyEntries);
             var hosts = splitted ?? Array.Empty<string>();
             return hosts;

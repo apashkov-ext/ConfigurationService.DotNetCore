@@ -60,6 +60,7 @@ namespace ConfigurationService.Persistence
             var group = await _context.OptionGroups
                 .Include(x => x.Environment)
                 .ThenInclude(x => x.OptionGroups)
+                .AsSingleQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (group == null)
@@ -93,7 +94,11 @@ namespace ConfigurationService.Persistence
 
         public async Task Remove(Guid id)
         {
-            var group = await _context.OptionGroups.Include(x => x.Environment).ThenInclude(x => x.OptionGroups).FirstOrDefaultAsync(x => x.Id == id);
+            var group = await _context.OptionGroups
+                .Include(x => x.Environment)
+                .ThenInclude(x => x.OptionGroups)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (group == null)
             {
                 throw new NotFoundException("Option group does not exist");

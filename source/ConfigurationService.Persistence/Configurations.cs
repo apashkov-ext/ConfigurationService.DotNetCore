@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConfigurationService.Application;
+﻿using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain;
 using ConfigurationService.Domain.Entities;
@@ -13,6 +8,11 @@ using ConfigurationService.Persistence.ConfigImporting.Abstractions;
 using ConfigurationService.Persistence.ConfigImporting.Implementation;
 using ConfigurationService.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ConfigurationService.Persistence
 {

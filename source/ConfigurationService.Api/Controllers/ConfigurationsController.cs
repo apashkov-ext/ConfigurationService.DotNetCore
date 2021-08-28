@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using ConfigurationService.Application;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConfigurationService.Api.Controllers
 {
-    [Route("api/projects/{name}")]
+    [Route("api/configurations")]
     [ApiController]
     public class ConfigurationsController : ControllerBase
     {
@@ -16,13 +18,32 @@ namespace ConfigurationService.Api.Controllers
             _configurations = configurations;
         }
 
-        [HttpGet("configs/{env}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<object>> GetConfig(string name, string env, [FromHeader] string apiKey)
+        public async Task<ActionResult<object>> GetConfig(string projName, string envName, [FromHeader] string apiKey)
         {
-            var config = await _configurations.GetItem(name, env, apiKey);
+            var config = await _configurations.GetItem(projName, envName, apiKey);
             return Ok(JsObject.Create(config));
+        }
+
+        [HttpPost]
+        [RequestSizeLimit(10 * 1024 * 1024)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Import(Guid projId, string envName)
+        {
+            var file = Request.Form.Files[0];
+            if (file.Length <= 0)
+            {
+                return BadRequest();
+            }
+
+            await using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+            await _configurations.Import(projId, envName, stream.ToArray());
+
+            return Ok();
         }
     }
 }
