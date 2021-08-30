@@ -50,6 +50,11 @@ namespace ConfigurationService.Domain.Entities
             _options.Remove(option);
         }
 
+        public void RemoveNestedGroup(OptionGroup group)
+        {
+            _nestedGroups.Remove(group);
+        }
+
         public void UpdateName(OptionGroupName name)
         {
             if (Name != name)

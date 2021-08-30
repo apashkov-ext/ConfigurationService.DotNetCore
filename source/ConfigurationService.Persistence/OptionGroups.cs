@@ -24,14 +24,16 @@ namespace ConfigurationService.Persistence
         {
             if (string.IsNullOrEmpty(name))
             {
-                var all = await _context.OptionGroups.OptionGroupsWithIncludedEntities().ToListAsync();
+                var all = await _context.OptionGroups.OptionGroupsWithIncludedEntities().AsNoTracking().ToListAsync();
                 return all;
             }
 
             var list = await _context.OptionGroups
                 .OptionGroupsWithIncludedEntities()
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
+
             return list;
         }
 
@@ -88,7 +90,6 @@ namespace ConfigurationService.Persistence
             group.UpdateName(newName);
             group.UpdateDescription(new Description(description));
 
-            _context.OptionGroups.Update(group);
             await _context.SaveChangesAsync();
         }
 
@@ -97,6 +98,7 @@ namespace ConfigurationService.Persistence
             var group = await _context.OptionGroups
                 .Include(x => x.Environment)
                 .ThenInclude(x => x.OptionGroups)
+                .ThenInclude(x => x.Options)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (group == null)
@@ -104,7 +106,14 @@ namespace ConfigurationService.Persistence
                 throw new NotFoundException("Option group does not exist");
             }
 
-            group.RemoveOptionGroupWithHierarchy(_context);
+            var root = group.Environment.GetRootOptionGroop();
+            if (group == root)
+            {
+                throw new InconsistentDataStateException("The root cannot be deleted");
+            }
+
+            group.RemoveWithHierarchy(_context);
+
             await _context.SaveChangesAsync();
         }
     }

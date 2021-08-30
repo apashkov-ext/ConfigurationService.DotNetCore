@@ -40,7 +40,12 @@ namespace ConfigurationService.Persistence.Tests
         [ClassData(typeof(ProjectWithEnvironment))]
         public async void Remove_ExistedEnv_Success(Project p, Environment e)
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments, e)).Context;
+            var ctx = new DbContextFixture(x => 
+                x.WithSet(s => s.Projects, p)
+                .WithSet(s => s.Environments, e)
+                .WithSet(x => x.OptionGroups)
+                .WithSet(s => s.Options))
+                .Context;
             await new Environments(ctx).RemoveAsync(e.Id);
         }
 

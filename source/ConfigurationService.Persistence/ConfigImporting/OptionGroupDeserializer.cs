@@ -6,9 +6,9 @@ using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Persistence.ConfigImporting
 {
-    internal class OptionGroupHierarchyImporter
+    internal class OptionGroupDeserializer
     {
-        public OptionGroup ImportFromJson(string json)
+        public static OptionGroup DeserializeFromJson(string json)
         {
             var doc = JsonDocument.Parse(json);
             var rootGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), null);
@@ -42,8 +42,8 @@ namespace ConfigurationService.Persistence.ConfigImporting
             {
                 JsonValueKind.Array => GetArrayValue(prop.Value),
                 JsonValueKind.String => new OptionValue(prop.Value.GetString()),
-                JsonValueKind.False => new OptionValue(prop.Value.GetBoolean()),
-                JsonValueKind.True => new OptionValue(prop.Value.GetBoolean()),
+                JsonValueKind.False => new OptionValue(false),
+                JsonValueKind.True => new OptionValue(true),
                 JsonValueKind.Number => new OptionValue(prop.Value.GetInt32()),
                 _ => throw new ApplicationException("Unsupported json property value.")
             };

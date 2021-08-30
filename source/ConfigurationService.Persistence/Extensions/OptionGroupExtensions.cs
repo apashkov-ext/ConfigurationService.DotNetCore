@@ -25,13 +25,13 @@ namespace ConfigurationService.Persistence.Extensions
             return allElements;
         }
 
-        public static void RemoveOptionGroupWithHierarchy(this OptionGroup group, ConfigurationServiceContext context)
+        public static void RemoveWithHierarchy(this OptionGroup group, ConfigurationServiceContext context)
         {
             context.Options.RemoveRange(group.Options);
 
             foreach (var g in group.NestedGroups)
             {
-                RemoveOptionGroupWithHierarchy(g, context);
+                RemoveWithHierarchy(g, context);
             }
 
             context.OptionGroups.Remove(group);

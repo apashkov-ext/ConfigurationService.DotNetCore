@@ -24,13 +24,18 @@ namespace ConfigurationService.Persistence
         {
             if (string.IsNullOrEmpty(name))
             {
-                var all = await _context.Environments.EnvironmentsWithIncludedEntities().ToListAsync();
+                var all = await _context.Environments
+                    .EnvironmentsWithIncludedEntities()
+                    .AsNoTrackingWithIdentityResolution()
+                    .ToListAsync();
+
                 return all;
             }
 
             var list = await _context.Environments
                 .EnvironmentsWithIncludedEntities()
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
 
             return list;
@@ -75,19 +80,22 @@ namespace ConfigurationService.Persistence
             }
 
             env.UpdateName(envName);
-            _context.Environments.Update(env);
             await _context.SaveChangesAsync();
         }
 
         public async Task RemoveAsync(Guid id)
         {
-            var existed = await _context.Environments.FirstOrDefaultAsync(x => x.Id == id);
-            if (existed == null)
+            var env = await _context.Environments
+                .Include(x => x.Project)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (env == null)
             {
                 throw new NotFoundException("Environment does not exist");
             }
 
-            existed.RemoveEnvironmentWithHierarchy(_context);
+            env.RemoveWithHierarchy(_context);
+
             await _context.SaveChangesAsync();
         }
     }

@@ -82,7 +82,7 @@ namespace ConfigurationService.Persistence
 
         private static Tree<OptionGroup> ParseTree(string json)
         {
-            var hierarchy = new OptionGroupHierarchyImporter().ImportFromJson(json);
+            var hierarchy = OptionGroupDeserializer.DeserializeFromJson(json);
             return new ImportedTree(hierarchy);
         }
     }

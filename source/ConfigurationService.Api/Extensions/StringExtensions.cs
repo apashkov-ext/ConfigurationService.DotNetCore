@@ -4,7 +4,13 @@
     {
         public static string ToLowerCamelCase(this string input)
         {
-            return string.IsNullOrWhiteSpace(input) ? input : char.ToLower(input[0]) + input.Substring(1);
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+
+            var modified = char.ToLower(input[0]) + input.Substring(1);
+            return modified;
         }
     }
 }

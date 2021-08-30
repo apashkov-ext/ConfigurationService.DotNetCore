@@ -4,7 +4,7 @@ using Environment = ConfigurationService.Domain.Entities.Environment;
 
 namespace ConfigurationService.Persistence.Extensions
 {
-    internal static class EnvironmentCollectionExtensions
+    internal static class EnvironmentQueryableCollectionExtensions
     {
         public static IQueryable<Environment> EnvironmentsWithIncludedEntities(this IQueryable<Environment> source)
         {

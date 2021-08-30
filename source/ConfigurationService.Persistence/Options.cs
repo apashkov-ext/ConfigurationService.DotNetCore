@@ -24,12 +24,14 @@ namespace ConfigurationService.Persistence
         {
             if (string.IsNullOrEmpty(name))
             {
-                return await _context.Options.ToListAsync();
+                return await _context.Options.AsNoTracking().ToListAsync();
             }
 
             var list = await _context.Options
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                .AsNoTracking()
                 .ToListAsync();
+
             return list;
         }
 
@@ -41,7 +43,10 @@ namespace ConfigurationService.Persistence
 
         public async Task<Option> AddAsync(Guid optionGroup, string name, string description, object value, OptionValueType type)
         {
-            var group = await _context.OptionGroups.Include(x => x.Options).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == optionGroup);
+            var group = await _context.OptionGroups.Include(x => x.Options)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(x => x.Id == optionGroup);
+
             if (group == null)
             {
                 throw new NotFoundException("Option group does not exist");
@@ -62,6 +67,7 @@ namespace ConfigurationService.Persistence
                 .ThenInclude(x => x.Options)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             if (option == null)
             {
                 throw new NotFoundException("Option does not exist");
@@ -81,7 +87,6 @@ namespace ConfigurationService.Persistence
             option.UpdateDescription(new Description(description));
             option.UpdateValue(TypeConversion.GetOptionValue(value, option.Value.Type));
 
-            _context.Options.Update(option);
             await _context.SaveChangesAsync();
         }
 

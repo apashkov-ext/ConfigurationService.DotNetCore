@@ -24,7 +24,8 @@ namespace ConfigurationService.Api.Controllers
         public async Task<ActionResult<object>> GetConfig(string projName, string envName, [FromHeader] string apiKey)
         {
             var config = await _configurations.GetItem(projName, envName, apiKey);
-            return Ok(JsObject.Create(config));
+            var response = JsObject.Create(config);
+            return Ok(response);
         }
 
         [HttpPost]

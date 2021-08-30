@@ -24,19 +24,29 @@ namespace ConfigurationService.Persistence
         {
             if (string.IsNullOrEmpty(name))
             {
-                return await _context.Projects.ProjectsWithIncludedEntities().ToListAsync();
+                var all =  await _context.Projects
+                    .ProjectsWithIncludedEntities()
+                    .AsNoTrackingWithIdentityResolution()
+                    .ToListAsync();
+
+                return all;
             }
 
             var list = await _context.Projects
                 .ProjectsWithIncludedEntities()
+                .AsNoTrackingWithIdentityResolution()
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
                 .ToListAsync();
+
             return list;
         }
 
         public async Task<Project> Get(Guid id)
         {
-            var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
+            var project = await _context.Projects
+                .ProjectsWithIncludedEntities()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             return project ?? throw new NotFoundException("Project does not exist");
         }
 
@@ -58,18 +68,13 @@ namespace ConfigurationService.Persistence
 
         public async Task Remove(Guid id)
         {
-            var existed = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
-            if (existed == null)
+            var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
+            if (project == null)
             {
                 throw new NotFoundException("Project does not exist");
             }
 
-            foreach (var env in existed.Environments)
-            {
-                env.RemoveEnvironmentWithHierarchy(_context);
-            }
-
-            _context.Projects.Remove(existed);
+            project.RemoveWithHierarchy(_context);
             await _context.SaveChangesAsync();
         }
     }

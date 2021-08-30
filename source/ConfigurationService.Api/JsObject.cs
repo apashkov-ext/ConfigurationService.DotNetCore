@@ -35,12 +35,16 @@ namespace ConfigurationService.Api
 
             foreach (var opt in source.Options)
             {
-                obj[opt.Name.Value.ToLowerCamelCase()] = TypeConversion.Parse(opt.Value.Value, opt.Value.Type);
+                var key = opt.Name.Value.ToLowerCamelCase();
+                var value = TypeConversion.Parse(opt.Value.Value, opt.Value.Type);
+                obj[key] = value;
             }
 
             foreach (var nested in source.NestedGroups)
             {
-                obj[nested.Name.Value.ToLowerCamelCase()] = Create(nested);
+                var key = nested.Name.Value.ToLowerCamelCase();
+                var value = Create(nested);
+                obj[key] = value;
             }
 
             return obj;

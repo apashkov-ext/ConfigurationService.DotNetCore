@@ -13,7 +13,7 @@ namespace ConfigurationService.Domain.ValueObjects
         {
             if (value == null || value != string.Empty && !Regex.IsMatch(value))
             {
-                throw new ApplicationException("Incorrect option group name");
+                throw new ApplicationException($"Incorrect option group name: {value}");
             }
 
             Value = value;

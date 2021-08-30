@@ -1,4 +1,5 @@
 using ConfigurationService.Api.Extensions;
+using ConfigurationService.Api.Filters;
 using ConfigurationService.ServiceCollectionConfiguring;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,13 +41,13 @@ namespace ConfigurationService.Api
             services.AddCors(options =>
             {
                 var origins = Configuration.GetOrigins();
-                options.AddDefaultPolicy(
+                options.AddDefaultPolicy( 
                     builder =>
                     {
                         builder.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader();
                     });
             });
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(new HttpExceptionFilter()));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConfigurationService.Api", Version = "v1" });

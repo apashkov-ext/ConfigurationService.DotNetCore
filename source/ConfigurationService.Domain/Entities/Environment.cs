@@ -36,7 +36,18 @@ namespace ConfigurationService.Domain.Entities
 
         public OptionGroup GetRootOptionGroop()
         {
-            return _optionGroups.FirstOrDefault(x => x.Parent == null);
+            var root = _optionGroups.SingleOrDefault(x => x.Parent == null);
+            if (root == null)
+            {
+                throw new ApplicationException("The root option group cannot be null");
+            }
+            return root;
+        }
+
+        public void RemoveRootOptionGroup()
+        {
+            var root = GetRootOptionGroop();
+            _optionGroups.Remove(root);
         }
 
         private void SetMainOptionGroup()

@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConfigurationService.Persistence.Extensions
 {
-    internal static class OptionGroupCollectionExtensions
+    internal static class ProjectQueryableCollectionExtensions
     {
-        public static IQueryable<OptionGroup> OptionGroupsWithIncludedEntities(this IQueryable<OptionGroup> source)
+        public static IQueryable<Project> ProjectsWithIncludedEntities(this IQueryable<Project> source)
         {
             return source
-                .Include(x => x.Parent)
-                .Include(x => x.Environment)
+                .Include(x => x.Environments)
                 .ThenInclude(x => x.OptionGroups)
                 .ThenInclude(x => x.Options)
                 .AsSingleQuery();
