@@ -56,11 +56,6 @@ namespace ConfigurationService.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.Use(async (context, next) =>
-            {
-                await next.Invoke();              
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
