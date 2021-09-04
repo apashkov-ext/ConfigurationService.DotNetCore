@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 
@@ -54,9 +55,9 @@ namespace ConfigurationService.Api
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
-            if (env.IsDevelopment())
+            if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -70,6 +71,8 @@ namespace ConfigurationService.Api
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
             }
+
+            ChangeToken.OnChange(Configuration.GetReloadToken, lifetime.StopApplication);
 
             app.UseRouting();
             app.UseCors();
