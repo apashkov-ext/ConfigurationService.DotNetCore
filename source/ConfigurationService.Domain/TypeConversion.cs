@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
 

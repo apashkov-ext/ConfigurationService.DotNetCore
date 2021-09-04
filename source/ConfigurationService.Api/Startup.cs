@@ -7,10 +7,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.OpenApi.Models;
-using NLog.Extensions.Logging;
 
 namespace ConfigurationService.Api
 {
@@ -23,32 +21,15 @@ namespace ConfigurationService.Api
         {
             Configuration = configuration;
             _env = environment;
-
-            Configuration = new ConfigurationBuilder()
-                     .AddJsonFile("appsettings.json", false, true)
-                     .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", true, true)
-                     .Build();
+            Configuration = GetConfiguration();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.ClearProviders();
-                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
-                loggingBuilder.AddNLog(Configuration);
-            });
+            services.ConfigureLogging(Configuration);
             services.ConfigureApplicationServices();
-            services.AddCors(options =>
-            {
-                var origins = Configuration.GetOrigins();
-                options.AddDefaultPolicy( 
-                    builder =>
-                    {
-                        builder.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader();
-                    });
-            });
-            services.AddControllers(options => options.Filters.Add(new HttpExceptionFilter()));
+            services.ConfigureCors(Configuration);
+            services.AddControllers(options => options.Filters.Add(new ApplicationExceptionFilter()));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConfigurationService.Api", Version = "v1" });
@@ -81,6 +62,15 @@ namespace ConfigurationService.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private IConfiguration GetConfiguration()
+        {
+            var conf = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", true, true)
+                .Build();
+            return conf;
         }
     }
 }

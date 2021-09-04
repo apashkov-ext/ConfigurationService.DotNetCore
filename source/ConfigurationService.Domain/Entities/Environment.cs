@@ -44,12 +44,6 @@ namespace ConfigurationService.Domain.Entities
             return root;
         }
 
-        public void RemoveRootOptionGroup()
-        {
-            var root = GetRootOptionGroop();
-            _optionGroups.Remove(root);
-        }
-
         private void SetMainOptionGroup()
         {
             var g = OptionGroup.Create(new OptionGroupName(""), new Description(""), this);

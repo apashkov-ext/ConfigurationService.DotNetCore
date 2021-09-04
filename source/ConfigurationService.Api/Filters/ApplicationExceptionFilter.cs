@@ -5,7 +5,7 @@ using System.Net;
 
 namespace ConfigurationService.Api.Filters
 {
-    public class HttpExceptionFilter : IActionFilter, IOrderedFilter
+    public class ApplicationExceptionFilter : IActionFilter, IOrderedFilter
     {
         public int Order { get; } = int.MaxValue - 10;
 

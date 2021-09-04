@@ -12,7 +12,7 @@ namespace ConfigurationService.Api.Tests
     {
         protected override IWebHostBuilder CreateWebHostBuilder()
         {
-            return WebHost.CreateDefaultBuilder().UseStartup<Startup>();
+            return WebHost.CreateDefaultBuilder().UseEnvironment("Development").UseStartup<Startup>();
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)

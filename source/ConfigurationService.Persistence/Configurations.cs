@@ -69,7 +69,7 @@ namespace ConfigurationService.Persistence
             var json = await GetJsonString(file);
             var parsedTree = ParseTree(json);
 
-            originalTree.ReplaceNodes(parsedTree);
+            originalTree.Import(parsedTree);
             await _context.SaveChangesAsync();
         }
 

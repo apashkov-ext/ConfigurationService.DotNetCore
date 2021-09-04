@@ -14,7 +14,7 @@ namespace ConfigurationService.Persistence.ConfigImporting.Abstractions
         /// Perfoms a replace operation. The current tree nodes will be replaced by nodes from the source tree.
         /// </summary>
         /// <param name="source">Source tree.</param>
-        public void ReplaceNodes(Tree<T> source)
+        public void Import(Tree<T> source)
         {
             Replace(Root, source.Root);
         }

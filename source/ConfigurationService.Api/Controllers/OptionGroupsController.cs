@@ -22,6 +22,7 @@ namespace ConfigurationService.Api.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<OptionGroupDto>))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<OptionGroupDto>>> Get(string name)
         {
@@ -31,6 +32,7 @@ namespace ConfigurationService.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Produces(typeof(OptionGroupDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<OptionGroupDto>> Get(Guid id)
@@ -41,6 +43,7 @@ namespace ConfigurationService.Api.Controllers
         }
 
         [HttpPost]
+        [Produces(typeof(OptionGroupDto))]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

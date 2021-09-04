@@ -37,10 +37,5 @@ namespace ConfigurationService.Domain.Entities
             _environments.Add(e);
             return e;
         }
-
-        public void RemoveEnvironment(Environment env)
-        {
-            _environments.Remove(env);
-        }
     }
 }
