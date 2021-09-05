@@ -57,7 +57,7 @@ namespace ConfigurationService.Api.Tests
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             new ContextSetup<ConfigurationServiceContext>(context)
                 .Initialize()
-                .WithEntities(x => x.Projects, project)
+                .WithEntities(project)
                 .Save();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
@@ -82,10 +82,10 @@ namespace ConfigurationService.Api.Tests
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
             new ContextSetup<ConfigurationServiceContext>(context)
                 .Initialize()
-                .WithEntities(x => x.Projects, project)
-                .WithEntities(x => x.Environments, env)
-                .WithEntities(x => x.OptionGroups, group)
-                .WithEntities(x => x.Options, option)
+                .WithEntities(project)
+                .WithEntities(env)
+                .WithEntities(group)
+                .WithEntities(option)
                 .Save();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");

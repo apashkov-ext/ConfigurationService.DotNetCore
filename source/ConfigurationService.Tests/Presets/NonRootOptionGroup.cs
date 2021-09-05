@@ -9,12 +9,12 @@ namespace ConfigurationService.Tests.Presets
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            var p = new TestableProject(Guid.NewGuid(), TestLiterals.Project.Name.Correct, TestLiterals.Project.ApiKeys.Correct);
-            var env = new TestableEnvironment(Guid.NewGuid(), TestLiterals.Environment.Name.Correct, p);
+            var p = new TestableProject(Guid.NewGuid(), "TestProject", new Guid("d1509252-0769-4119-b6cb-7e7dff351384"));
+            var env = new TestableEnvironment(Guid.NewGuid(), "Dev", p);
             p.AddEnv(env);
             var group = new TestableOptionGroup(Guid.NewGuid(), 
-                TestLiterals.OptionGroup.Name.Correct, 
-                TestLiterals.OptionGroup.Description.Correct, 
+                "Validation", 
+                "Option group description", 
                 env, env.GetRootOptionGroop());
 
             yield return new object[] { group };

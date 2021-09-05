@@ -1,7 +1,6 @@
 ﻿using System;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain.Entities;
-using ConfigurationService.Tests;
 using ConfigurationService.Tests.Fixtures;
 using ConfigurationService.Tests.Presets;
 using Xunit;
@@ -13,9 +12,10 @@ namespace ConfigurationService.Persistence.Tests
         [Fact]
         public async void Add_NotExistedProject_Success()
         {
+            const string expectedName = "TestProject";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            var p = await new Projects(ctx).Add(TestLiterals.Project.Name.Correct);
-            Assert.Equal(p.Name.Value, TestLiterals.Project.Name.Correct);
+            var p = await new Projects(ctx).Add(expectedName);
+            Assert.Equal(p.Name.Value, expectedName);
         }
 
         [Theory]
@@ -71,7 +71,7 @@ namespace ConfigurationService.Persistence.Tests
         public async void GetByName_NotExistedProject_ReturnsEmptyCollection()
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            var result = await new Projects(ctx).Get(TestLiterals.Project.Name.Correct);
+            var result = await new Projects(ctx).Get("TestProject");
             Assert.Empty(result);
         }
 

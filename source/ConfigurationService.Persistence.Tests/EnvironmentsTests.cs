@@ -1,7 +1,6 @@
 ﻿using System;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain.Entities;
-using ConfigurationService.Tests;
 using ConfigurationService.Tests.Fixtures;
 using ConfigurationService.Tests.Presets;
 using Xunit;
@@ -15,9 +14,10 @@ namespace ConfigurationService.Persistence.Tests
         [ClassData(typeof(EmptyProject))]
         public async void Add_NotExistedEnv_Success(Project p)
         {
+            const string envName = "Dev";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
-            var env = await new Environments(ctx).AddAsync(p.Id, TestLiterals.Environment.Name.Correct);
-            Assert.Equal(env.Name.Value, TestLiterals.Environment.Name.Correct);
+            var env = await new Environments(ctx).AddAsync(p.Id, envName);
+            Assert.Equal(envName, env.Name.Value);
         }
 
         [Theory]

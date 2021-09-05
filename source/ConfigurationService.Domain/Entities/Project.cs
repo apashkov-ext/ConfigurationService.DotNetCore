@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ConfigurationService.Domain.Entities
 {
-    public class Project : Entity
+    public class Project : DomainEntity
     {
         public ProjectName Name { get; private set; }
         public ApiKey ApiKey { get; private set; }

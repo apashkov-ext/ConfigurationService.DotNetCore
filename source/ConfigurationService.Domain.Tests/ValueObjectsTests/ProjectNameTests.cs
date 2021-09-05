@@ -1,6 +1,5 @@
 ﻿using System;
 using ConfigurationService.Domain.ValueObjects;
-using ConfigurationService.Tests;
 using Xunit;
 
 namespace ConfigurationService.Domain.Tests.ValueObjectsTests
@@ -16,7 +15,7 @@ namespace ConfigurationService.Domain.Tests.ValueObjectsTests
         [InlineData("-proj")]
         [InlineData(null)]
         [InlineData("na me")]
-        [InlineData(TestLiterals.Project.Name.Incorrect)]
+        [InlineData("_Test_Project")]
         public void New_IncorrectNames_Exception(string name)
         {
             Assert.Throws<ApplicationException>(() => new ProjectName(name));
@@ -29,7 +28,7 @@ namespace ConfigurationService.Domain.Tests.ValueObjectsTests
         [InlineData("pRoj")]
         [InlineData("pRoj3")]
         [InlineData("pRoj_3--g")]
-        [InlineData(TestLiterals.Project.Name.Correct)]
+        [InlineData("TestProject")]
         public void New_CorrectNames_Success(string name)
         {
             var n = new ProjectName(name);

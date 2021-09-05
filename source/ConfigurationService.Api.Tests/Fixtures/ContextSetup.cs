@@ -2,6 +2,10 @@
 
 namespace ConfigurationService.Api.Tests
 {
+    /// <summary>
+    /// Setups context before data initialization.
+    /// </summary>
+    /// <typeparam name="TContext">Concrete type of the <see cref="DbContext"/>.</typeparam>
     internal class ContextSetup<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
@@ -11,6 +15,10 @@ namespace ConfigurationService.Api.Tests
             _context = context;
         }
 
+        /// <summary>
+        /// Runs clean initialization for the DbContext.
+        /// This action removes all data from the database.
+        /// </summary>
         public ContextInitializer<TContext> Initialize()
         {
             _context.Database.EnsureDeleted();

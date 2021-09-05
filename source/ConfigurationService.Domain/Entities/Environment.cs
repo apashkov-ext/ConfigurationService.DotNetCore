@@ -5,7 +5,7 @@ using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
 {
-    public class Environment : Entity
+    public class Environment : DomainEntity
     {
         public EnvironmentName Name { get; private set; }
         public bool IsDefault { get; }

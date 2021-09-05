@@ -8,9 +8,9 @@ namespace ConfigurationService.Persistence
 {
     internal static class EntityEntryCollectionExtensions
     {
-        public static IEnumerable<Entity> SelectEntityInstances(this IEnumerable<EntityEntry> source, EntityState state)
+        public static IEnumerable<DomainEntity> SelectEntityInstances(this IEnumerable<EntityEntry> source, EntityState state)
         {
-            return source.Where(x => x.State == state && x.Entity is Entity).Select(x => x.Entity as Entity);
+            return source.Where(x => x.State == state && x.Entity is DomainEntity).Select(x => x.Entity as DomainEntity);
         }
     }
 }

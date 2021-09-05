@@ -1,5 +1,4 @@
 ﻿using ConfigurationService.Domain.Entities;
-using ConfigurationService.Tests;
 using ConfigurationService.Tests.Presets;
 using Xunit;
 using Environment = ConfigurationService.Domain.Entities.Environment;
@@ -13,7 +12,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(EmptyProject))]
         public void Create_CorrectData_RootGroupNotNull(Project p)
         {
-            var env = Environment.Create(new EnvironmentName(TestLiterals.Project.Name.Correct), p);
+            var env = Environment.Create(new EnvironmentName("TestProject"), p);
             Assert.NotNull(env.GetRootOptionGroop());
         }
 
@@ -21,7 +20,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(EmptyProject))]
         public void Create_CorrectData_RootGroupNameIsEmptyString(Project p)
         {
-            var env = Environment.Create(new EnvironmentName(TestLiterals.Project.Name.Correct), p);
+            var env = Environment.Create(new EnvironmentName("TestProject"), p);
             Assert.Equal("", env.GetRootOptionGroop().Name.Value);
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
-using ConfigurationService.Tests;
 using ConfigurationService.Tests.Presets;
 using Xunit;
 using Environment = ConfigurationService.Domain.Entities.Environment;
@@ -15,8 +14,8 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         public void Create_CorrectData_ParentIsCorrect(Environment e)
         {
             var group = OptionGroup.Create(
-                new OptionGroupName(TestLiterals.OptionGroup.Name.Correct), 
-                new Description(TestLiterals.OptionGroup.Description.Correct), 
+                new OptionGroupName("Validation"), 
+                new Description("Option group description"), 
                 e, 
                 e.GetRootOptionGroop());
             Assert.Equal(e.GetRootOptionGroop(), group.Parent);
@@ -44,7 +43,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(NonRootOptionGroup))]
         public void AddNested_NotExisted_NameEqualsWithNewName(OptionGroup group)
         {
-            const string name = TestLiterals.OptionGroup.Name.Correct + "Nested"; 
+            const string name = "Validation" + "Nested"; 
             group.AddNestedGroup(new OptionGroupName(name), new Description("New Nested Group"));
             Assert.Contains(group.NestedGroups, x => x.Name.Value == name);
         }
@@ -53,7 +52,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(NonRootOptionGroup))]
         public void AddNested_NotExisted_ParrentIsCorrect(OptionGroup group)
         {
-            var nested = group.AddNestedGroup(new OptionGroupName(TestLiterals.OptionGroup.Name.Correct + "Nested"), new Description("New Nested Group"));
+            var nested = group.AddNestedGroup(new OptionGroupName("Validation" + "Nested"), new Description("New Nested Group"));
             Assert.Equal(group, nested.Parent);
         }
 
@@ -77,8 +76,8 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         {
             const string val = "Value";
             var option = group.AddOption(
-                new OptionName(TestLiterals.Option.Name.Correct),
-                new Description(TestLiterals.Option.Description.Correct),
+                new OptionName("Enabled"),
+                new Description("Option description"),
                 new OptionValue(val));
             Assert.Equal(val, option.Value.Value);
         }
@@ -88,10 +87,10 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         public void AddOption_NotExisted_NameIsCorrect(OptionGroup group)
         {
             var option = group.AddOption(
-                new OptionName(TestLiterals.Option.Name.Correct),
-                new Description(TestLiterals.Option.Description.Correct),
+                new OptionName("Enabled"),
+                new Description("Option description"),
                 new OptionValue("Value"));
-            Assert.Equal(TestLiterals.Option.Name.Correct, option.Name.Value);
+            Assert.Equal("Enabled", option.Name.Value);
         }
 
         [Theory]
@@ -100,7 +99,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         {
             const string val = "Value";
             Assert.Throws<ApplicationException>(() => group.AddOption(new OptionName(option.Name.Value), 
-                new Description(TestLiterals.Option.Description.Correct),
+                new Description("Option description"),
                 new OptionValue(val)));
         }
     }

@@ -5,7 +5,7 @@ using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
 {
-    public class OptionGroup : Entity
+    public class OptionGroup : DomainEntity
     {
         public OptionGroupName Name { get; private set; }
         public Description Description { get; private set; }

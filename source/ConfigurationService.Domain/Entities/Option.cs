@@ -3,7 +3,7 @@ using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
 {
-    public class Option : Entity
+    public class Option : DomainEntity
     {
         public OptionName Name { get; private set; }
         public Description Description { get; private set; }

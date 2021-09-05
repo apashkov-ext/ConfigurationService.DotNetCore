@@ -1,6 +1,5 @@
 ﻿using ConfigurationService.Domain.Entities;
 using ConfigurationService.Domain.ValueObjects;
-using ConfigurationService.Tests;
 using ConfigurationService.Tests.Presets;
 using Xunit;
 
@@ -12,20 +11,20 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(NonRootOptionGroup))]
         public void Create_CorrectData_NameIsCorrect(OptionGroup group)
         {
-            var option = Option.Create(new OptionName(TestLiterals.Option.Name.Correct), 
-                new Description(TestLiterals.Option.Description.Correct), 
+            var option = Option.Create(new OptionName("Enabled"), 
+                new Description("Option description"), 
                 new OptionValue("Value"), group);
-            Assert.Equal(TestLiterals.Option.Name.Correct, option.Name.Value);
+            Assert.Equal("Enabled", option.Name.Value);
         }
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
         public void Create_CorrectData_DescIsCorrect(OptionGroup group)
         {
-            var option = Option.Create(new OptionName(TestLiterals.Option.Name.Correct),
-                new Description(TestLiterals.Option.Description.Correct),
+            var option = Option.Create(new OptionName("Enabled"),
+                new Description("Option description"),
                 new OptionValue("Value"), group);
-            Assert.Equal(TestLiterals.Option.Description.Correct, option.Description.Value);
+            Assert.Equal("Option description", option.Description.Value);
         }
 
         [Theory]
@@ -33,8 +32,8 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         public void Create_CorrectData_ValueIsCorrect(OptionGroup group)
         {
             const string val = "Value";
-            var option = Option.Create(new OptionName(TestLiterals.Option.Name.Correct),
-                new Description(TestLiterals.Option.Description.Correct),
+            var option = Option.Create(new OptionName("Enabled"),
+                new Description("Option description"),
                 new OptionValue(val), group);
             Assert.Equal(val, option.Value.Value);
         }
@@ -56,14 +55,5 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
             option.UpdateDescription(new Description(desc));
             Assert.Equal(desc, option.Description.Value);
         }
-
-        //[Theory]
-        //[ClassData(typeof(NonRootOptionGroup))]
-        //public void UpdatValue_CorrectValue_ValueIsCorrect(OptionGroup group)
-        //{
-        //    const string val = "newVal";
-        //    option.up(new Description(desc));
-        //    Assert.Equal(desc, group.Description.Value);
-        //}
     }
 }

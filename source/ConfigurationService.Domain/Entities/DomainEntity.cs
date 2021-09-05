@@ -2,7 +2,10 @@
 
 namespace ConfigurationService.Domain.Entities
 {
-    public abstract class Entity
+    /// <summary>
+    /// Base class that represents the domain entity.
+    /// </summary>
+    public abstract class DomainEntity
     {
         public Guid Id { get; protected set; }
         public DateTime Created { get; private set; }
@@ -12,7 +15,7 @@ namespace ConfigurationService.Domain.Entities
 
         public override bool Equals(object obj)
         {
-            var other = obj as Entity;
+            var other = obj as DomainEntity;
 
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -22,7 +25,7 @@ namespace ConfigurationService.Domain.Entities
             return Id == other.Id;
         }
 
-        public static bool operator ==(Entity a, Entity b)
+        public static bool operator ==(DomainEntity a, DomainEntity b)
         {
             if (a is null && b is null)
                 return true;
@@ -33,7 +36,7 @@ namespace ConfigurationService.Domain.Entities
             return a.Equals(b);
         }
 
-        public static bool operator !=(Entity a, Entity b)
+        public static bool operator !=(DomainEntity a, DomainEntity b)
         {
             return !(a == b);
         }
