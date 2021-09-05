@@ -3,6 +3,9 @@ using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
 {
+    /// <summary>
+    /// Single option with type and value.
+    /// </summary>
     public class Option : DomainEntity
     {
         public OptionName Name { get; private set; }
@@ -47,6 +50,12 @@ namespace ConfigurationService.Domain.Entities
             {
                 Value = optionValue;
             }
+        }
+
+        public override string ToString()
+        {
+            var s = $"{nameof(Option)} {{ Id={Id}, Name={Name.Value}, Type={Value.Type}, Value={Value.Value} }}";
+            return s;
         }
     }
 }

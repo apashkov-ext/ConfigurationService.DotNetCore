@@ -82,5 +82,11 @@ namespace ConfigurationService.Domain.Entities
             _nestedGroups.Add(g);
             return g;
         }
+
+        public override string ToString()
+        {
+            var s = $"{nameof(OptionGroup)} {{ Id={Id}, Name={Name.Value} }}";
+            return s;
+        }
     }
 }

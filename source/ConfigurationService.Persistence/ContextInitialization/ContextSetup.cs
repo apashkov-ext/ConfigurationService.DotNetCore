@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ConfigurationService.Api.Tests
+namespace ConfigurationService.Persistence.ContextInitialization
 {
     /// <summary>
     /// Setups context before data initialization.
     /// </summary>
     /// <typeparam name="TContext">Concrete type of the <see cref="DbContext"/>.</typeparam>
-    internal class ContextSetup<TContext> where TContext : DbContext
+    public class ContextSetup<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
 

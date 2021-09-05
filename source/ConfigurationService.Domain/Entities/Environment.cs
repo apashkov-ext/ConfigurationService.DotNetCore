@@ -49,5 +49,11 @@ namespace ConfigurationService.Domain.Entities
             var g = OptionGroup.Create(new OptionGroupName(""), new Description(""), this);
             _optionGroups.Add(g);
         }
+
+        public override string ToString()
+        {
+            var s = $"{nameof(Environment)} {{ Id={Id}, Name={Name.Value} }}";
+            return s;
+        }
     }
 }

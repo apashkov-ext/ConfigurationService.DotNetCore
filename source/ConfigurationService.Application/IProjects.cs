@@ -7,9 +7,9 @@ namespace ConfigurationService.Application
 {
     public interface IProjects
     {
-        Task<IEnumerable<Project>> Get(string name);
-        Task<Project> Get(Guid id);
-        Task<Project> Add(string name);
-        Task Remove(Guid id);
+        Task<IEnumerable<Project>> GetAsync(string name);
+        Task<Project> GetAsync(Guid id);
+        Task<Project> AddAsync(string name);
+        Task RemoveAsync(Guid id);
     }
 }

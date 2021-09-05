@@ -20,7 +20,7 @@ namespace ConfigurationService.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Project>> Get(string name)
+        public async Task<IEnumerable<Project>> GetAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -41,7 +41,7 @@ namespace ConfigurationService.Persistence
             return list;
         }
 
-        public async Task<Project> Get(Guid id)
+        public async Task<Project> GetAsync(Guid id)
         {
             var project = await _context.Projects
                 .ProjectsWithIncludedEntities()
@@ -50,7 +50,7 @@ namespace ConfigurationService.Persistence
             return project ?? throw new NotFoundException("Project does not exist");
         }
 
-        public async Task<Project> Add(string name)
+        public async Task<Project> AddAsync(string name)
         {
             var projName = new ProjectName(name);
             var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
@@ -66,7 +66,7 @@ namespace ConfigurationService.Persistence
             return newProj;
         }
 
-        public async Task Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
             var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             if (project == null)

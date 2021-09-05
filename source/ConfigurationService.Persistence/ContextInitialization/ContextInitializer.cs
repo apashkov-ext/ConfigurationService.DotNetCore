@@ -1,13 +1,13 @@
 ﻿using ConfigurationService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConfigurationService.Api.Tests
+namespace ConfigurationService.Persistence.ContextInitialization
 {
     /// <summary>
     /// Contains methods for the database data initialization. 
     /// </summary>
     /// <typeparam name="TContext">Concrete type of the <see cref="DbContext"/>.</typeparam>
-    internal class ContextInitializer<TContext> where TContext : DbContext
+    public class ContextInitializer<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
 
