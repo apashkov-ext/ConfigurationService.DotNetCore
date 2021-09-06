@@ -20,7 +20,15 @@ namespace ConfigurationService.Api.Tests.DtoAssertions
             dto.IsEqualToModel(model);
         }
 
-        public static void CreatedProjectDtoIsEquivalentToModel(CreatedProjectDto dto, Project model)
+        public static void EnvironmentDtosAreEquivalentToModel(IEnumerable<EnvironmentDto> dtos, Environment model)
+        {
+            foreach (var dto in dtos)
+            {
+                EnvironmentDtoIsEquivalentToModel(dto, model);
+            }
+        }
+
+        public static void EnvironmentDtoIsEquivalentToModel(EnvironmentDto dto, Environment model)
         {
             dto.IsEqualToModel(model);
         }

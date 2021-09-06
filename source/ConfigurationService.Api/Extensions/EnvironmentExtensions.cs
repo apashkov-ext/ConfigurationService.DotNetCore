@@ -13,7 +13,6 @@ namespace ConfigurationService.Api.Extensions
                 ProjectId = source.Project.Id.ToString(),
                 Name = source.Name.Value,
                 OptionGroup = source.GetRootOptionGroop().ToDto()
-                //Preview = JsObject.Create(source.GetRootOptionGroop()).ToString()
             };
         }
     }
