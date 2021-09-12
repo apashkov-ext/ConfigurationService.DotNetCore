@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ConfigurationService.Domain.Exceptions;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -13,7 +13,7 @@ namespace ConfigurationService.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value))
             {
-                throw new ApplicationException($"Incorrect option name: {value}");
+                throw new InconsistentDataStateException($"Incorrect option name: {value}");
             }
 
             Value = value;

@@ -24,6 +24,8 @@ namespace ConfigurationService.Persistence.ContextInitialization
         public ContextInitializer<TContext> WithEntities<TEntity>(params TEntity[] entities)
             where TEntity : DomainEntity
         {
+            var toRemove = _context.Set<TEntity>();
+            _context.Set<TEntity>().RemoveRange(toRemove);
             _context.Set<TEntity>().AddRange(entities);
             return this;
         }

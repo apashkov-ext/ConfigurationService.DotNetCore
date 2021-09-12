@@ -1,5 +1,6 @@
 ﻿using System;
 using ConfigurationService.Domain.Entities;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 using ConfigurationService.Tests.Presets;
 using Xunit;
@@ -28,7 +29,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(ProjectWithEnvironment))]
         public void AddEnvironment_Existed_Exception(Project p, Environment e)
         {
-            Assert.Throws<ApplicationException>(() => p.AddEnvironment(new EnvironmentName(e.Name.Value)));
+            Assert.Throws<InconsistentDataStateException>(() => p.AddEnvironment(new EnvironmentName(e.Name.Value)));
         }
     }
 }

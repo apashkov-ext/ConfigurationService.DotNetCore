@@ -27,7 +27,8 @@ namespace ConfigurationService.Api.Controllers
         public async Task<ActionResult<IEnumerable<EnvironmentDto>>> Get(string name)
         {
             var envs = await _environments.GetAsync(name);
-            return Ok(envs.Select(x => x.ToDto()));
+            var dto = envs.Select(x => x.ToDto());
+            return Ok(dto);
         }
 
         [HttpGet("{id}")]

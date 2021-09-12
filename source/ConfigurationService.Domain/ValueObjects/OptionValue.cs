@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ConfigurationService.Domain.Entities;
+using ConfigurationService.Domain.Exceptions;
 
 namespace ConfigurationService.Domain.ValueObjects
 {
@@ -31,14 +31,14 @@ namespace ConfigurationService.Domain.ValueObjects
 
         public OptionValue(string[] value)
         {
-            if (value == null) throw new ApplicationException("Invalid array value");
+            if (value == null) throw new InconsistentDataStateException("Invalid array value");
             Value = string.Join(',', value);
             Type = OptionValueType.StringArray;
         }
 
         public OptionValue(int[] value)
         {
-            if (value == null) throw new ApplicationException("Invalid array value");
+            if (value == null) throw new InconsistentDataStateException("Invalid array value");
             Value = string.Join(',', value);
             Type = OptionValueType.NumberArray;
         }

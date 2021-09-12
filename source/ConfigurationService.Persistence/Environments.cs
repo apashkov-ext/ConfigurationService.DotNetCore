@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Environment = ConfigurationService.Domain.Entities.Environment;
@@ -22,6 +23,9 @@ namespace ConfigurationService.Persistence
 
         public async Task<IEnumerable<Environment>> GetAsync(string name)
         {
+            var e = _context.Environments.ToList();
+            var p = _context.Projects.ToList();
+
             if (string.IsNullOrEmpty(name))
             {
                 var all = await _context.Environments

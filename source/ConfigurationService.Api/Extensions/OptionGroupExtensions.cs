@@ -8,13 +8,15 @@ namespace ConfigurationService.Api.Extensions
     {
         public static OptionGroupDto ToDto(this OptionGroup source)
         {
+            var options = source.Options.Select(x => x.ToDto());
+            var nested = source.NestedGroups.Select(x => x.ToDto());
             return new OptionGroupDto
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
                 Description = source.Description.Value,
-                Options = source.Options.Select(x => x.ToDto()),
-                NestedGroups = source.NestedGroups.Select(x => x.ToDto()),
+                Options = options,
+                NestedGroups = nested,
                 Root = source.Parent == null
             };
         }

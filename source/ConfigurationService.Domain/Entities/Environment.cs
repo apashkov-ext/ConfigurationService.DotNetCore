@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
@@ -39,7 +40,7 @@ namespace ConfigurationService.Domain.Entities
             var root = _optionGroups.SingleOrDefault(x => x.Parent == null);
             if (root == null)
             {
-                throw new ApplicationException("The root option group cannot be null");
+                throw new InconsistentDataStateException("The root option group cannot be null");
             }
             return root;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 using Xunit;
 
@@ -18,7 +18,7 @@ namespace ConfigurationService.Domain.Tests.ValueObjectsTests
         [InlineData("na me")]
         public void New_IncorrectNames_Exception(string name)
         {
-            Assert.Throws<ApplicationException>(() => new OptionName(name));
+            Assert.Throws<InconsistentDataStateException>(() => new OptionName(name));
         }
 
         [Theory]

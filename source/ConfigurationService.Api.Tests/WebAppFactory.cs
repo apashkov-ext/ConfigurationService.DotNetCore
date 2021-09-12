@@ -4,12 +4,15 @@ using Microsoft.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
 using ConfigurationService.Persistence;
 
 namespace ConfigurationService.Api.Tests
 {
     public class WebAppFactory : WebApplicationFactory<Startup>
     {
+        private readonly string _dbName = $"Database-{Guid.NewGuid()}.db";
+
         protected override IWebHostBuilder CreateWebHostBuilder()
         {
             return WebHost.CreateDefaultBuilder().UseEnvironment("Development").UseStartup<Startup>();
@@ -28,7 +31,7 @@ namespace ConfigurationService.Api.Tests
 
                 services.AddDbContext<ConfigurationServiceContext>(options =>
                 {
-                    options.UseInMemoryDatabase("ConfigurationService.db");
+                    options.UseInMemoryDatabase(_dbName);
                 });
             });
         }

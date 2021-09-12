@@ -1,5 +1,6 @@
 ﻿using System;
 using ConfigurationService.Domain.Entities;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Tests.Fixtures;
 using ConfigurationService.Tests.Presets;
 using Xunit;
@@ -23,7 +24,7 @@ namespace ConfigurationService.Persistence.Tests
         public async void Add_ExistedProject_Exception(OptionGroup parent, OptionGroup nested)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent, nested)).Context;
-            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Add(parent.Id, nested.Name.Value, "Option group description"));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Add(parent.Id, nested.Name.Value, "Option group description"));
         }
 
         [Theory]

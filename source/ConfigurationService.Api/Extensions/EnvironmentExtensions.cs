@@ -7,12 +7,13 @@ namespace ConfigurationService.Api.Extensions
     {
         public static EnvironmentDto ToDto(this Environment source)
         {
+            var root = source.GetRootOptionGroop();
             return new EnvironmentDto
             {
                 Id = source.Id.ToString(),
                 ProjectId = source.Project.Id.ToString(),
                 Name = source.Name.Value,
-                OptionGroup = source.GetRootOptionGroop().ToDto()
+                OptionGroup = root.ToDto()
             };
         }
     }

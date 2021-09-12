@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConfigurationService.Application.Exceptions
+namespace ConfigurationService.Domain.Exceptions
 {
     public class InconsistentDataStateException : Exception
     {

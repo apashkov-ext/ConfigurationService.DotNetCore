@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConfigurationService.Domain.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace ConfigurationService.Domain.ValueObjects
@@ -11,7 +12,7 @@ namespace ConfigurationService.Domain.ValueObjects
         {
             if (value == Guid.Empty)
             {
-                throw new ApplicationException("Incorrect api key");
+                throw new InconsistentDataStateException("Incorrect api key");
             }
             Value = value;
         }
@@ -24,7 +25,7 @@ namespace ConfigurationService.Domain.ValueObjects
             }
             catch
             {
-                throw new ApplicationException("Incorrect api key");
+                throw new InconsistentDataStateException("Incorrect api key");
             }
         }
 

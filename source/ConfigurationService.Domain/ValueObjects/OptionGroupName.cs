@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ConfigurationService.Domain.Exceptions;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -13,7 +13,7 @@ namespace ConfigurationService.Domain.ValueObjects
         {
             if (value == null || value != string.Empty && !Regex.IsMatch(value))
             {
-                throw new ApplicationException($"Incorrect option group name: {value}");
+                throw new InconsistentDataStateException($"Incorrect option group name: {value}");
             }
 
             Value = value;

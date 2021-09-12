@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 
 namespace ConfigurationService.Domain.Entities
@@ -37,7 +37,7 @@ namespace ConfigurationService.Domain.Entities
         {
             if (_options.Any(x => x.Name == name))
             {
-                throw new ApplicationException("The group already contains option with the same name");
+                throw new InconsistentDataStateException("The group already contains option with the same name");
             }
 
             var o = Option.Create(name, description, value, this);
@@ -70,12 +70,12 @@ namespace ConfigurationService.Domain.Entities
         {
             if (_nestedGroups.Any(x => x.Name == name))
             {
-                throw new ApplicationException("This option group already contains nested group with the same name");
+                throw new InconsistentDataStateException("This option group already contains nested group with the same name");
             }
 
             if (name.Value == string.Empty)
             {
-                throw new ApplicationException("Invalid nested group name");
+                throw new InconsistentDataStateException("Invalid nested group name");
             }
 
             var g = Create(name, description, Environment, this);

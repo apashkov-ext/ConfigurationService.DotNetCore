@@ -2,6 +2,7 @@
 using ConfigurationService.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigurationService.Domain.Exceptions;
 
 namespace ConfigurationService.Domain.Entities
 {
@@ -30,7 +31,7 @@ namespace ConfigurationService.Domain.Entities
         {
             if (_environments.Any(x => x.Name == name))
             {
-                throw new ApplicationException("The project already contains environment with the same name");
+                throw new InconsistentDataStateException("The project already contains environment with the same name");
             }
 
             var e = Environment.Create(name, this);

@@ -1,4 +1,5 @@
 ﻿using ConfigurationService.Application.Exceptions;
+using ConfigurationService.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
@@ -38,15 +39,6 @@ namespace ConfigurationService.Api.Filters
                     context.Result = new ObjectResult(new { message = ex.Message })
                     {
                         StatusCode = (int)HttpStatusCode.UnprocessableEntity
-                    };
-                    context.ExceptionHandled = true;
-                    break;
-                
-                case InternalException ex:
-                
-                    context.Result = new ObjectResult(new { message = ex.Message })
-                    {
-                        StatusCode = (int)HttpStatusCode.InternalServerError
                     };
                     context.ExceptionHandled = true;
                     break;

@@ -1,6 +1,5 @@
 using Xunit;
 using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
 using ConfigurationService.Persistence;
 using ConfigurationService.Api.Dto;
 using ConfigurationService.Domain.Entities;
@@ -15,29 +14,19 @@ using ConfigurationService.Api.Tests.Extensions;
 
 namespace ConfigurationService.Api.Tests.Tests
 {
-    public class ProjectsControllerTests : IClassFixture<WebAppFactory>
+
+    public class ProjectsControllerTests : ControllerTests
     {
-        private readonly WebAppFactory _webAppFactory;
-        private readonly HttpClient _httpClient;
-
-        public ProjectsControllerTests(WebAppFactory webAppFactory)
-        {
-            _webAppFactory = webAppFactory;
-            _httpClient = webAppFactory.CreateClient();
-        }
-
         [Fact]
         public async void GetAll_NotExists_ReturnsEmptyArray()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize();
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context).Initialize();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
             var actual = await response.ParseContentAsync<IEnumerable<ProjectDto>>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -47,18 +36,18 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void GetAll_ExistsSingleWithoutHierarchy_ReturnsSingleWithoutHierarchy()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize()
-                .WithEntities(project)
-                .Save();
+
+            ActWithDbContext(context => 
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
+                    .Initialize()
+                    .WithEntities(project)
+                    .Save();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
             var actual = await response.ParseContentAsync<IEnumerable<ProjectDto>>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -69,24 +58,25 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void GetAll_ExistsSingleWithHierarchy_ReturnsSingleWithHierarchy()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
-            var group = env.OptionGroups.First();
+            var root = env.OptionGroups.First();
+            var group = root.AddNestedGroup(new OptionGroupName("NestedG"), new Description("Desc"));
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize()
-                .WithEntities(project)
-                .WithEntities(env)
-                .WithEntities(group)
-                .WithEntities(option)
-                .Save();
+
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
+                    .Initialize()
+                    .WithEntities(project)
+                    .WithEntities(env)
+                    .WithEntities(root, group)
+                    .WithEntities(option)
+                    .Save();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
             var actual = await response.ParseContentAsync<IEnumerable<ProjectDto>>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -97,15 +87,14 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void GetById_NotExists_Returns404()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize();
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
+                    .Initialize();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects/{Guid.NewGuid()}");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
 
             Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -113,24 +102,24 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void GetById_Exists_ReturnsWithHierarchy()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
             var group = env.OptionGroups.First();
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize()
-                .WithEntities(project)
-                .WithEntities(env)
-                .WithEntities(group)
-                .WithEntities(option)
-                .Save();
+
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
+                    .Initialize()
+                    .WithEntities(project)
+                    .WithEntities(env)
+                    .WithEntities(group)
+                    .WithEntities(option)
+                    .Save();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects/{project.Id}");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
             var actual = await response.ParseContentAsync<ProjectDto>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -140,15 +129,15 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void Post_Exists_Returns422()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
-            new ContextSetup<ConfigurationServiceContext>(context)
+
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
                 .Initialize()
                 .WithEntities(project)
                 .Save();
+            });
 
             var body = new
             {
@@ -159,7 +148,7 @@ namespace ConfigurationService.Api.Tests.Tests
             {
                 Content = RequestContentFactory.CreateJsonStringContent(body)
             };
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
 
             Assert.Equal(System.Net.HttpStatusCode.UnprocessableEntity, response.StatusCode);
         }
@@ -167,12 +156,11 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void Post_NotExists_Returns201AndCorrectResponse()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
-            new ContextSetup<ConfigurationServiceContext>(context)
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
                 .Initialize();
+            });
 
             var body = new
             {
@@ -183,7 +171,7 @@ namespace ConfigurationService.Api.Tests.Tests
             {
                 Content = RequestContentFactory.CreateJsonStringContent(body)
             };
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
             var actual = await response.ParseContentAsync<CreatedProjectDto>();
 
             Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -193,15 +181,14 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void Delete_NotExists_Returns404()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
-            new ContextSetup<ConfigurationServiceContext>(context)
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
                 .Initialize();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{Guid.NewGuid()}");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
 
             Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -209,18 +196,18 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void Delete_ExistsWithNoHierarchy_ReturnsNoContent()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize()
-                .WithEntities(project)
-                .Save();
 
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
+                    .Initialize()
+                    .WithEntities(project)
+                    .Save();
+            });
+                
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{project.Id}");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
 
             Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
         }
@@ -228,24 +215,24 @@ namespace ConfigurationService.Api.Tests.Tests
         [Fact]
         public async void Delete_ExistsWithFullHierarchy_ReturnsNoContent()
         {
-            var scopeFactory = _webAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
             var group = env.OptionGroups.First();
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
-            new ContextSetup<ConfigurationServiceContext>(context)
-                .Initialize()
-                .WithEntities(project)
-                .WithEntities(env)
-                .WithEntities(group)
-                .WithEntities(option)
-                .Save();
+
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationServiceContext>(context)
+                    .Initialize()
+                    .WithEntities(project)
+                    .WithEntities(env)
+                    .WithEntities(group)
+                    .WithEntities(option)
+                    .Save();
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{project.Id}");
-            var response = await _httpClient.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
 
             Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
         }
@@ -255,24 +242,22 @@ namespace ConfigurationService.Api.Tests.Tests
         {
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
 
-            var scopeFactory = _webAppFactory.Services;
-            using (var scp = scopeFactory.CreateScope())
+            ActWithDbContext(context =>
             {
-                var cont = scp.ServiceProvider.GetService<ConfigurationServiceContext>();
-                new ContextSetup<ConfigurationServiceContext>(cont)
+                new ContextSetup<ConfigurationServiceContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .Save();
-            }
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{project.Id}");
-            _ = await _httpClient.SendAsync(request);
+            _ = await HttpClient.SendAsync(request);
 
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-            var projects = context.Projects.ToList();
-
-            Assert.Empty(projects);
+            ActWithDbContext(context =>
+            {
+                var projects = context.Projects.ToList();
+                Assert.Empty(projects);
+            });
         }
 
         [Fact]
@@ -281,37 +266,36 @@ namespace ConfigurationService.Api.Tests.Tests
             var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
 
-            var group = env.OptionGroups.First();
+            var group = env.GetRootOptionGroop();
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
 
             var nestedGroup = group.AddNestedGroup(new OptionGroupName("Nested"), new Description("Some nested froup"));
             var nestedOption = nestedGroup.AddOption(new OptionName("SomeOpt"), new Description("Some nested option"), new OptionValue(888));
 
-            var scopeFactory = _webAppFactory.Services;
-            using (var scp = scopeFactory.CreateScope())
+            ActWithDbContext(context =>
             {
-                var cont = scp.ServiceProvider.GetService<ConfigurationServiceContext>();
-                new ContextSetup<ConfigurationServiceContext>(cont)
+                new ContextSetup<ConfigurationServiceContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group, nestedGroup)
                     .WithEntities(option, nestedOption)
                     .Save();
-            }
+            });
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{project.Id}");
-            _ = await _httpClient.SendAsync(request);
+            _ = await HttpClient.SendAsync(request);
 
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
-            var environments = context.Environments.ToList();
-            var groups = context.OptionGroups.ToList();
-            var options = context.Options.ToList();
+            ActWithDbContext(context =>
+            {
+                var environments = context.Environments.ToList();
+                var groups = context.OptionGroups.ToList();
+                var options = context.Options.ToList();
 
-            Assert.Empty(environments);
-            Assert.Empty(groups);
-            Assert.Empty(options);
+                Assert.Empty(environments);
+                Assert.Empty(groups);
+                Assert.Empty(options);
+            });
         }
     }
 }

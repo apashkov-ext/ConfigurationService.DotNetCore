@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ConfigurationService.Domain.Exceptions;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -13,7 +13,7 @@ namespace ConfigurationService.Domain.ValueObjects
         {
             if (value == null || Regex.IsMatch(value))
             {
-                throw new ApplicationException("Incorrect description");
+                throw new InconsistentDataStateException("Incorrect description");
             }
             Value = value;
         }

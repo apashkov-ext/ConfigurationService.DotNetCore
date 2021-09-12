@@ -1,5 +1,5 @@
-﻿using System;
-using ConfigurationService.Domain.Entities;
+﻿using ConfigurationService.Domain.Entities;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 using ConfigurationService.Tests.Presets;
 using Xunit;
@@ -60,14 +60,14 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         [ClassData(typeof(NonRootOptionGroupWithNested))]
         public void AddNested_Existed_Exception(OptionGroup parent, OptionGroup nested)
         {
-            Assert.Throws<ApplicationException>(() => parent.AddNestedGroup(new OptionGroupName(nested.Name.Value), new Description("New Nested Group")));
+            Assert.Throws<InconsistentDataStateException>(() => parent.AddNestedGroup(new OptionGroupName(nested.Name.Value), new Description("New Nested Group")));
         }
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
         public void AddNested_EmptyStringName_Exception(OptionGroup parent)
         {
-            Assert.Throws<ApplicationException>(() => parent.AddNestedGroup(new OptionGroupName(""), new Description("New Nested Group")));
+            Assert.Throws<InconsistentDataStateException>(() => parent.AddNestedGroup(new OptionGroupName(""), new Description("New Nested Group")));
         }
 
         [Theory]
@@ -98,7 +98,7 @@ namespace ConfigurationService.Domain.Tests.EntitiesTests
         public void AddOption_Existed_Exception(OptionGroup group, Option option)
         {
             const string val = "Value";
-            Assert.Throws<ApplicationException>(() => group.AddOption(new OptionName(option.Name.Value), 
+            Assert.Throws<InconsistentDataStateException>(() => group.AddOption(new OptionName(option.Name.Value), 
                 new Description("Option description"),
                 new OptionValue(val)));
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ConfigurationService.Application;
 using ConfigurationService.Application.Exceptions;
 using ConfigurationService.Domain.Entities;
+using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 using ConfigurationService.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;

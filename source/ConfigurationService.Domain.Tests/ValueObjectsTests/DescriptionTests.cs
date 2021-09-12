@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ConfigurationService.Domain.Exceptions;
 using ConfigurationService.Domain.ValueObjects;
 using Xunit;
 
@@ -11,7 +11,7 @@ namespace ConfigurationService.Domain.Tests.ValueObjectsTests
         [InlineData("   ")]
         public void New_IncorrectValues_Exception(string val)
         {
-            Assert.Throws<ApplicationException>(() => new Description(val));
+            Assert.Throws<InconsistentDataStateException>(() => new Description(val));
         }
 
         [Theory]
