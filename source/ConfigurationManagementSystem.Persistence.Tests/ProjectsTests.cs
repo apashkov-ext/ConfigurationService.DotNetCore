@@ -1,5 +1,6 @@
 ﻿using System;
 using ConfigurationManagementSystem.Application.Exceptions;
+using ConfigurationManagementSystem.Application.Pagination;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Tests.Fixtures;
 using ConfigurationManagementSystem.Tests.Presets;
@@ -63,16 +64,16 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         {
             const string search = "pRojeCt";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            var result = await new Projects(ctx).GetAsync(search);
-            Assert.Contains(result, x => x.Name.Value.StartsWith(search, StringComparison.InvariantCultureIgnoreCase));
+            var result = await new Projects(ctx).GetAsync(search, GetPaginationOptions());
+            Assert.Contains(result.Data, x => x.Name.Value.StartsWith(search, StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
         public async void GetByName_NotExistedProject_ReturnsEmptyCollection()
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            var result = await new Projects(ctx).GetAsync("TestProject");
-            Assert.Empty(result);
+            var result = await new Projects(ctx).GetAsync("TestProject", GetPaginationOptions());
+            Assert.Empty(result.Data);
         }
 
         [Theory]
@@ -80,8 +81,13 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void GetByName_EmptyString_ReturnsAllProjects(Project p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            var result = await new Projects(ctx).GetAsync("");
-            Assert.NotEmpty(result);
+            var result = await new Projects(ctx).GetAsync("", GetPaginationOptions());
+            Assert.NotEmpty(result.Data);
+        }
+
+        private static PaginationOptions GetPaginationOptions()
+        {
+            return new PaginationOptions(0, 100);
         }
     }
 }

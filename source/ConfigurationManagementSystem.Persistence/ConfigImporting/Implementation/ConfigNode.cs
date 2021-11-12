@@ -9,13 +9,13 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
 {
     public class ConfigNode : Node<OptionGroup>
     {
-        private readonly ConfigurationServiceContext _context;
+        private readonly ConfigurationManagementSystemContext _context;
         public override OptionGroup Value { get; }
 
         private readonly List<Node<OptionGroup>> _children = new List<Node<OptionGroup>>();
         public override IEnumerable<Node<OptionGroup>> Children => _children;
 
-        public ConfigNode(OptionGroup value, ConfigurationServiceContext context)
+        public ConfigNode(OptionGroup value, ConfigurationManagementSystemContext context)
         {
             _context = context;
             Value = value;
@@ -26,7 +26,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             }
         }
 
-        private ConfigNode(OptionGroup value, bool visited, ConfigurationServiceContext context)
+        private ConfigNode(OptionGroup value, bool visited, ConfigurationManagementSystemContext context)
         {
             _context = context;
             Value = value;

@@ -7,12 +7,12 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 {
     public abstract class ControllerTests : IDisposable
     {
-        protected readonly WebAppFactory<InMemoryContext> WebAppFactory;
+        protected readonly WebAppFactory WebAppFactory;
         protected readonly HttpClient HttpClient;
 
         public ControllerTests()
         {
-            WebAppFactory = new WebAppFactory<InMemoryContext>();
+            WebAppFactory = new WebAppFactory();
             HttpClient = WebAppFactory.CreateClient();
         }
 
@@ -21,11 +21,11 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             //WebAppFactory.Dispose();
         }
 
-        protected void ActWithDbContext(Action<ConfigurationServiceContext> action)
+        protected void ActWithDbContext(Action<ConfigurationManagementSystemContext> action)
         {
             var scopeFactory = WebAppFactory.Services;
             using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationServiceContext>();
+            var context = scope.ServiceProvider.GetService<ConfigurationManagementSystemContext>();
             action(context);
         }
     }

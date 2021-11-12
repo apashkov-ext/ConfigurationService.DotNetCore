@@ -5,11 +5,11 @@ namespace ConfigurationManagementSystem.Tests.Fixtures
 {
     public class DbContextFixture
     {
-        public ConfigurationServiceContext Context { get; }
+        public ConfigurationManagementSystemContext Context { get; }
 
-        public DbContextFixture(Action<TestContextConfigurator<ConfigurationServiceContext>> builder = null)
+        public DbContextFixture(Action<TestContextConfigurator<ConfigurationManagementSystemContext>> builder = null)
         {
-            var m = new MockedContext<ConfigurationServiceContext>(builder);
+            var m = new MockedContext<ConfigurationManagementSystemContext>(builder);
             Context = m.Object;
         }
     }

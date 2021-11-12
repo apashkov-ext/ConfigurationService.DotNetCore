@@ -7,7 +7,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
     {
         protected override Node<OptionGroup> Root { get; }
 
-        public ConfigTree(OptionGroup root, ConfigurationServiceContext context)
+        public ConfigTree(OptionGroup root, ConfigurationManagementSystemContext context)
         {
             Root = new ConfigNode(root, context);
         }

@@ -25,7 +25,7 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
             return allElements;
         }
 
-        public static void RemoveWithHierarchy(this OptionGroup group, ConfigurationServiceContext context)
+        public static void RemoveWithHierarchy(this OptionGroup group, ConfigurationManagementSystemContext context)
         {
             context.Options.RemoveRange(group.Options);
 

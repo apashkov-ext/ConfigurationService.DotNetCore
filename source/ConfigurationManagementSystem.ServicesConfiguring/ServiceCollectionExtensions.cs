@@ -13,7 +13,7 @@ namespace ConfigurationManagementSystem.ServicesConfiguring
             services.AddTransient<IEnvironments, Environments>();
             services.AddTransient<IOptionGroups, OptionGroups>();
             services.AddTransient<IOptions, Options>();
-            services.AddDbContext<ConfigurationServiceContext>(options =>
+            services.AddDbContext<ConfigurationManagementSystemContext>(options =>
             {
                 options.ConfigureSqlite();
             });

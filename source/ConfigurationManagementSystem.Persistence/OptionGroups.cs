@@ -14,9 +14,9 @@ namespace ConfigurationManagementSystem.Persistence
 {
     public class OptionGroups : IOptionGroups
     {
-        private readonly ConfigurationServiceContext _context;
+        private readonly ConfigurationManagementSystemContext _context;
 
-        public OptionGroups(ConfigurationServiceContext context)
+        public OptionGroups(ConfigurationManagementSystemContext context)
         {
             _context = context;
         }
@@ -71,14 +71,14 @@ namespace ConfigurationManagementSystem.Persistence
                 throw new NotFoundException("Option Group does not exist");
             }
 
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new InconsistentDataStateException("Invalid Option Group name");
-            }
-
             if (group.Environment.GetRootOptionGroop() == group)
             {
                 throw new InconsistentDataStateException("Root Option Group cannot be modified");
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new InconsistentDataStateException("Invalid Option Group name");
             }
 
             var newName = new OptionGroupName(name);

@@ -6,20 +6,20 @@ using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
 
 namespace ConfigurationManagementSystem.Persistence
 {
-    public class ConfigurationServiceContext : DbContext
+    public class ConfigurationManagementSystemContext : DbContext
     {
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Environment> Environments { get; set; }
         public virtual DbSet<OptionGroup> OptionGroups { get; set; }
         public virtual DbSet<Option> Options { get; set; }
 
-        public ConfigurationServiceContext() { }
+        public ConfigurationManagementSystemContext() { }
 
-        public ConfigurationServiceContext(DbContextOptions<ConfigurationServiceContext> options) : base(options)
+        public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options)
         {
             //Database.EnsureDeleted();
             Database.EnsureCreated();
-            DataSeeding.Seed(this);
+            //DataSeeding.Seed(this);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

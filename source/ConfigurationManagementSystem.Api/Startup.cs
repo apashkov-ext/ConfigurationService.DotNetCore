@@ -41,7 +41,8 @@ namespace ConfigurationManagementSystem.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
+
+            if (_env.IsProduction())
             {
                 // needs to pass headers to the reverse proxy.
                 app.UseForwardedHeaders(new ForwardedHeadersOptions

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using ConfigurationManagementSystem.Persistence;
 using Microsoft.AspNetCore;
@@ -9,51 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigurationManagementSystem.Api.Tests
 {
-    public abstract class DbContextVariant : IDisposable
+    public class WebAppFactory : WebApplicationFactory<Startup>
     {
-        public void Dispose()
-        {
-            DisposeInstance();
-        }
-
-        public abstract void ConfigureContext(IServiceCollection services);
-        protected abstract void DisposeInstance();
-    }
-
-    public class InMemoryContext : DbContextVariant
-    {
-        private readonly string _dbName = $"Database-{Guid.NewGuid()}.db";
-
-        public override void ConfigureContext(IServiceCollection services)
-        {
-            services.AddDbContext<ConfigurationServiceContext>(options =>
-            {
-                options.UseInMemoryDatabase(_dbName);
-            });
-        }
-
-        protected override void DisposeInstance()
-        {
-            return;
-        }
-    }
-
-    public class SqliteContext : DbContextVariant
-    {
-        public override void ConfigureContext(IServiceCollection services)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void DisposeInstance()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class WebAppFactory<TContextVariant> : WebApplicationFactory<Startup> where TContextVariant : DbContextVariant, new()
-    {
-        private readonly TContextVariant _contextVariant = new TContextVariant();
+        private readonly string _dbName = $"test-db-{Guid.NewGuid()}.db";
 
         protected override IWebHostBuilder CreateWebHostBuilder()
         {
@@ -65,25 +24,25 @@ namespace ConfigurationManagementSystem.Api.Tests
             base.ConfigureWebHost(builder);
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ConfigurationServiceContext>));
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ConfigurationManagementSystemContext>));
                 if (descriptor != null)
                 {
                     services.Remove(descriptor);
                 }
 
-                _contextVariant.ConfigureContext(services);
+                services.AddDbContext<ConfigurationManagementSystemContext>(options =>
+                {
+                    var path = GetDataSourcePath(_dbName);
+                    options.UseSqlite($"data source={path};foreign keys=true;");
+                });
             });
         }
 
-        public new void Dispose()
+        private static string GetDataSourcePath(string dbName)
         {
-            base.Dispose();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _contextVariant.Dispose();
-            base.Dispose(disposing);
+            var tempDir = Path.GetTempPath();
+            var dbPath = $"{tempDir}{dbName}";
+            return dbPath;
         }
     }
 }

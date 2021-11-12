@@ -8,7 +8,7 @@ namespace ConfigurationManagementSystem.Persistence
 {
     internal static class DataSeeding
     {
-        public static void Seed(ConfigurationServiceContext context)
+        public static void Seed(ConfigurationManagementSystemContext context)
         {
             if (context.Projects.Any())
             {

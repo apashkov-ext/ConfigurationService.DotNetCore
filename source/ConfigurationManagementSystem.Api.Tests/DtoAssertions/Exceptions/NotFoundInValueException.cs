@@ -9,7 +9,7 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions
 
         public static NotFoundInValueException Create(object expectedElement, Expression<Func<object>> actualPropertySelector)
         {
-            if (actualPropertySelector.Body is not MemberExpression outerMember)
+            if (!(actualPropertySelector.Body is MemberExpression outerMember))
             {
                 throw new ApplicationException("Invalid expression");
             }

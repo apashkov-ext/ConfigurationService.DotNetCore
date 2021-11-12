@@ -18,9 +18,9 @@ namespace ConfigurationManagementSystem.Persistence
 {
     public class Configurations : IConfigurations
     {
-        private readonly ConfigurationServiceContext _context;
+        private readonly ConfigurationManagementSystemContext _context;
 
-        public Configurations(ConfigurationServiceContext context)
+        public Configurations(ConfigurationManagementSystemContext context)
         {
             _context = context;
         }

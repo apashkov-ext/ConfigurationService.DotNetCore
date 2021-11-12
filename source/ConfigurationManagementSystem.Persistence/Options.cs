@@ -13,9 +13,9 @@ namespace ConfigurationManagementSystem.Persistence
 {
     public class Options : IOptions
     {
-        private readonly ConfigurationServiceContext _context;
+        private readonly ConfigurationManagementSystemContext _context;
 
-        public Options(ConfigurationServiceContext context)
+        public Options(ConfigurationManagementSystemContext context)
         {
             _context = context;
         }

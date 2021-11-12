@@ -22,7 +22,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize();
             });
 
@@ -45,7 +45,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -69,7 +69,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize();
             });
 
@@ -89,7 +89,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -118,7 +118,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -152,7 +152,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -190,7 +190,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                 var env = project.AddEnvironment(new EnvironmentName("Dev"));
                 var group = env.OptionGroups.First();
                 var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)

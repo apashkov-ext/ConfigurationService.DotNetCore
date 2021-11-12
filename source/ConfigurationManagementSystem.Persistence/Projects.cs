@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConfigurationManagementSystem.Application;
 using ConfigurationManagementSystem.Application.Exceptions;
+using ConfigurationManagementSystem.Application.Pagination;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
 using ConfigurationManagementSystem.Persistence.Extensions;
@@ -13,32 +13,33 @@ namespace ConfigurationManagementSystem.Persistence
 {
     public class Projects : IProjects
     {
-        private readonly ConfigurationServiceContext _context;
+        private readonly ConfigurationManagementSystemContext _context;
 
-        public Projects(ConfigurationServiceContext context)
+        public Projects(ConfigurationManagementSystemContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Project>> GetAsync(string name)
+        public Task<PagedList<Project>> GetAsync(string name, PaginationOptions paginationOptions)
         {
+            if (paginationOptions == null) throw new ArgumentNullException(nameof(paginationOptions));
+
+            var result = _context.Projects
+                .ProjectsWithIncludedEntities()
+                .AsNoTrackingWithIdentityResolution();
+
             if (string.IsNullOrEmpty(name))
             {
-                var all =  await _context.Projects
-                    .ProjectsWithIncludedEntities()
-                    .AsNoTrackingWithIdentityResolution()
-                    .ToListAsync();
+                var all = result.ToPagedList(paginationOptions);
 
-                return all;
+                return Task.FromResult(all);
             }
 
-            var list = await _context.Projects
-                .ProjectsWithIncludedEntities()
-                .AsNoTrackingWithIdentityResolution()
+            var filtered = result
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
-                .ToListAsync();
+                .ToPagedList(paginationOptions);
 
-            return list;
+            return Task.FromResult(filtered);
         }
 
         public async Task<Project> GetAsync(Guid id)

@@ -32,7 +32,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void UpdateNonRootGroup_EmptyName_Exception(OptionGroup g)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, g)).Context;
-            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(g.Id, "", "desc"));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Update(g.Id, "", "desc"));
         }
 
         [Theory]
@@ -56,7 +56,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void UpdateRootGroup_CorrectName_Exception(OptionGroup root)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, root)).Context;
-            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(root.Id, "OptGrName", "desc"));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Update(root.Id, "OptGrName", "desc"));
         }
     }
 }

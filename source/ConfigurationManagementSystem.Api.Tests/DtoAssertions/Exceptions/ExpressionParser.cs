@@ -7,14 +7,14 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions
     {
         public static MemberExpressionInfo ParseMemberExpression(MemberExpression member)
         {
-            PropertyInfo outerProp = (PropertyInfo)member.Member;
-            MemberExpression innerMember = (MemberExpression)member.Expression;
-            FieldInfo innerField = (FieldInfo)innerMember.Member;
-            ConstantExpression ce = (ConstantExpression)innerMember.Expression;
+            var outerProp = (PropertyInfo)member.Member;
+            var innerMember = (MemberExpression)member.Expression;
+            var innerField = (FieldInfo)innerMember.Member;
+            var ce = (ConstantExpression)innerMember.Expression;
 
             var innerObj = ce.Value;
             var outerObj = innerField.GetValue(innerObj);
-            object value = outerProp.GetValue(outerObj, null);
+            var value = outerProp.GetValue(outerObj, null);
 
             var info = new MemberExpressionInfo(outerProp.Name, value, innerField.FieldType.Name);
             return info;

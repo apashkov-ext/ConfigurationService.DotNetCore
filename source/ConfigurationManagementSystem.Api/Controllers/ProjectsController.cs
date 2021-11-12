@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Application;
+using ConfigurationManagementSystem.Application.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,12 +22,15 @@ namespace ConfigurationManagementSystem.Api.Controllers
             _projects = projectsReader;
         }
 
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ProjectDto>>> Get(string name)
+        public async Task<ActionResult<PagedResponseDto<ProjectDto>>> Get([FromQuery] GetRequestOptions options)
         {
-            var projects = await _projects.GetAsync(name);
-            var result = projects.Select(x => x.ToDto()).ToList();
+            var pOpt = new PaginationOptions(options.Offset ?? 0, options.Limit ?? 20);
+            var projects = await _projects.GetAsync(options.Name, pOpt);
+            var result = projects.ToPagedResponseDto(ProjectExtensions.ToDto);
+
             return Ok(result);
         }
 

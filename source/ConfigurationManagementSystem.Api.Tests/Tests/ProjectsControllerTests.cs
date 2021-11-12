@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using ConfigurationManagementSystem.Api.Dto;
@@ -18,19 +17,34 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
     public class ProjectsControllerTests : ControllerTests
     {
         [Fact]
-        public async void GetAll_NotExists_ReturnsEmptyArray()
+        public async void GetAll_Empty_ReturnsCorrectType()
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context).Initialize();
+                new ContextSetup<ConfigurationManagementSystemContext>(context).Initialize();
             });
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/projects");
             var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<IEnumerable<ProjectDto>>();
+            var actual = await response.ParseContentAsync<PagedResponseDto<ProjectDto>>();
+
+            Assert.IsType<PagedResponseDto<ProjectDto>>(actual);
+        }
+
+        [Fact]
+        public async void GetAll_NotExists_ReturnsEmptyResponse()
+        {
+            ActWithDbContext(context =>
+            {
+                new ContextSetup<ConfigurationManagementSystemContext>(context).Initialize();
+            });
+
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/projects");
+            var response = await HttpClient.SendAsync(request);
+            var actual = await response.ParseContentAsync<PagedResponseDto<ProjectDto>>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Empty(actual);
+            Assert.Empty(actual.Data);
         }
 
         [Fact]
@@ -40,19 +54,19 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context => 
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .Save();
             });
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/projects");
             var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<IEnumerable<ProjectDto>>();
+            var actual = await response.ParseContentAsync<PagedResponseDto<ProjectDto>>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Single(actual);
-            Assertions.ProjectDtosAreEquivalentToModel(actual, project);
+            Assert.Single(actual.Data);
+            Assertions.ProjectDtosAreEquivalentToModel(actual.Data, project);
         }
 
         [Fact]
@@ -66,7 +80,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -75,13 +89,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                     .Save();
             });
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/projects");
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/projects");
             var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<IEnumerable<ProjectDto>>();
+            var actual = await response.ParseContentAsync<PagedResponseDto<ProjectDto>>();
 
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Single(actual);
-            Assertions.ProjectDtosAreEquivalentToModel(actual, project);
+            Assert.Single(actual.Data);
+            Assertions.ProjectDtosAreEquivalentToModel(actual.Data, project);
         }
 
         [Fact]
@@ -89,7 +103,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize();
             });
 
@@ -109,7 +123,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -133,7 +147,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Initialize()
                 .WithEntities(project)
                 .Save();
@@ -144,7 +158,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                 name = "TestProject"
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"api/projects")
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/projects")
             {
                 Content = RequestContentFactory.CreateJsonStringContent(body)
             };
@@ -158,7 +172,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Initialize();
             });
 
@@ -167,7 +181,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                 name = "TestProject"
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"api/projects")
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/projects")
             {
                 Content = RequestContentFactory.CreateJsonStringContent(body)
             };
@@ -183,7 +197,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Initialize();
             });
 
@@ -200,7 +214,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .Save();
@@ -222,7 +236,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -244,14 +258,14 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .Save();
             });
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{project.Id}");
-            _ = await HttpClient.SendAsync(request);
+            await HttpClient.SendAsync(request);
 
             ActWithDbContext(context =>
             {
@@ -269,12 +283,12 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             var group = env.GetRootOptionGroop();
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
 
-            var nestedGroup = group.AddNestedGroup(new OptionGroupName("Nested"), new Description("Some nested froup"));
+            var nestedGroup = group.AddNestedGroup(new OptionGroupName("Nested"), new Description("Some nested group"));
             var nestedOption = nestedGroup.AddOption(new OptionName("SomeOpt"), new Description("Some nested option"), new OptionValue(888));
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationServiceContext>(context)
+                new ContextSetup<ConfigurationManagementSystemContext>(context)
                     .Initialize()
                     .WithEntities(project)
                     .WithEntities(env)
@@ -284,7 +298,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             });
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/projects/{project.Id}");
-            _ = await HttpClient.SendAsync(request);
+            await HttpClient.SendAsync(request);
 
             ActWithDbContext(context =>
             {
