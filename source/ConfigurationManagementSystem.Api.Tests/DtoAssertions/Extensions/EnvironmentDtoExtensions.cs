@@ -1,12 +1,12 @@
 ﻿using ConfigurationManagementSystem.Api.Dto;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions;
 
 namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
 {
     internal static class EnvironmentDtoExtensions
     {
-        public static void IsEqualToModel(this EnvironmentDto dto, Environment model)
+        public static void IsEqualToModel(this EnvironmentDto dto, Configuration model)
         {
             var id = model.Id.ToString();
             if (!dto.Id.Equals(id, System.StringComparison.OrdinalIgnoreCase))

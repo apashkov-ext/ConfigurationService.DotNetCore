@@ -8,7 +8,7 @@ using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Exceptions;
 using ConfigurationManagementSystem.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Persistence
 {
@@ -21,7 +21,7 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Environment>> GetAsync(string name)
+        public async Task<IEnumerable<Configuration>> GetAsync(string name)
         {
             var e = _context.Environments.ToList();
             var p = _context.Projects.ToList();
@@ -45,13 +45,13 @@ namespace ConfigurationManagementSystem.Persistence
             return list;
         }
 
-        public async Task<Environment> GetAsync(Guid id)
+        public async Task<Configuration> GetAsync(Guid id)
         {
             var env = await _context.Environments.EnvironmentsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             return env ?? throw new NotFoundException("Environment does not exist");
         }
 
-        public async Task<Environment> AddAsync(Guid projectId, string name)
+        public async Task<Configuration> AddAsync(Guid projectId, string name)
         {
             var proj = await _context.Projects.Include(x => x.Environments).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == projectId);
             if (proj == null)

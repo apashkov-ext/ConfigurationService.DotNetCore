@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {
-    internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
+    internal class ProjectConfiguration : IEntityTypeConfiguration<Domain.Entities.Application>
     {
-        public void Configure(EntityTypeBuilder<Project> builder)
+        public void Configure(EntityTypeBuilder<Domain.Entities.Application> builder)
         {
             builder.ToTable("Projects").HasKey(x => x.Id);
             builder.Property(x => x.Created).IsRequired();

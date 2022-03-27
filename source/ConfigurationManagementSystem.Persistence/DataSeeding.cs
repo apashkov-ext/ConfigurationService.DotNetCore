@@ -15,7 +15,7 @@ namespace ConfigurationManagementSystem.Persistence
                 return;
             }
 
-            var p = Project.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")));
+            var p = Domain.Entities.Application.Create(new ProjectName("mars"), new ApiKey(Guid.Parse("22a71687-4249-4a20-8353-02fa6cd70187")));
             var dev = p.AddEnvironment(new EnvironmentName("dev"));
             p.AddEnvironment(new EnvironmentName("last"));
             var devRootGroup = dev.GetRootOptionGroop();

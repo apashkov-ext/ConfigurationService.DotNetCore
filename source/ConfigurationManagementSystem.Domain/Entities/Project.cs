@@ -5,35 +5,35 @@ using ConfigurationManagementSystem.Domain.ValueObjects;
 
 namespace ConfigurationManagementSystem.Domain.Entities
 {
-    public class Project : DomainEntity
+    public class Application : DomainEntity
     {
         public ProjectName Name { get; private set; }
         public ApiKey ApiKey { get; private set; }
 
-        protected readonly List<Environment> _environments = new List<Environment>();
-        public IEnumerable<Environment> Environments => _environments;
+        protected readonly List<Configuration> _environments = new List<Configuration>();
+        public IEnumerable<Configuration> Environments => _environments;
 
-        protected Project() { }
+        protected Application() { }
 
-        protected Project(ProjectName name, ApiKey apiKey)
+        protected Application(ProjectName name, ApiKey apiKey)
         {
             Name = name;
             ApiKey = apiKey;
         }
 
-        public static Project Create(ProjectName name, ApiKey apiKey)
+        public static Application Create(ProjectName name, ApiKey apiKey)
         {
-            return new Project(name, apiKey);
+            return new Application(name, apiKey);
         }
 
-        public Environment AddEnvironment(EnvironmentName name)
+        public Configuration AddEnvironment(EnvironmentName name)
         {
             if (_environments.Any(x => x.Name == name))
             {
                 throw new InconsistentDataStateException("The project already contains environment with the same name");
             }
 
-            var e = Environment.Create(name, this);
+            var e = Configuration.Create(name, this);
             _environments.Add(e);
             return e;
         }

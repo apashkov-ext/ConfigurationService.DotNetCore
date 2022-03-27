@@ -4,7 +4,7 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class ProjectExtensions
     {
-        public static void RemoveWithHierarchy(this Project project, ConfigurationManagementSystemContext context)
+        public static void RemoveWithHierarchy(this Domain.Entities.Application project, ConfigurationManagementSystemContext context)
         {
             foreach (var env in project.Environments)
             {

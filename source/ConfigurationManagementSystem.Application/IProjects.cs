@@ -7,9 +7,9 @@ namespace ConfigurationManagementSystem.Application
 {
     public interface IProjects
     {
-        Task<PagedList<Project>> GetAsync(string name, PaginationOptions paginationOptions);
-        Task<Project> GetAsync(Guid id);
-        Task<Project> AddAsync(string name);
+        Task<PagedList<Domain.Entities.Application>> GetAsync(string name, PaginationOptions paginationOptions);
+        Task<Domain.Entities.Application> GetAsync(Guid id);
+        Task<Domain.Entities.Application> AddAsync(string name);
         Task RemoveAsync(Guid id);
     }
 }

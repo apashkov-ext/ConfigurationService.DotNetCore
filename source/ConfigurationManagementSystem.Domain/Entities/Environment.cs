@@ -6,18 +6,18 @@ using ConfigurationManagementSystem.Domain.ValueObjects;
 
 namespace ConfigurationManagementSystem.Domain.Entities
 {
-    public class Environment : DomainEntity
+    public class Configuration : DomainEntity
     {
         public EnvironmentName Name { get; private set; }
         public bool IsDefault { get; }
-        public Project Project { get; }
+        public Application Project { get; }
 
         private readonly List<OptionGroup> _optionGroups = new List<OptionGroup>();
         public IEnumerable<OptionGroup> OptionGroups => _optionGroups;
 
-        protected Environment() {}
+        protected Configuration() {}
 
-        protected Environment(EnvironmentName name, Project project, bool isDefault)
+        protected Configuration(EnvironmentName name, Application project, bool isDefault)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Project = project ?? throw new ArgumentNullException(nameof(project));
@@ -25,9 +25,9 @@ namespace ConfigurationManagementSystem.Domain.Entities
             SetMainOptionGroup();
         }
 
-        public static Environment Create(EnvironmentName name, Project project)
+        public static Configuration Create(EnvironmentName name, Application project)
         {
-            return new Environment(name, project, false);
+            return new Configuration(name, project, false);
         }
 
         public void UpdateName(EnvironmentName name)
@@ -53,7 +53,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
 
         public override string ToString()
         {
-            var s = $"{nameof(Environment)} {{ Id={Id}, Name={Name.Value} }}";
+            var s = $"{nameof(Configuration)} {{ Id={Id}, Name={Name.Value} }}";
             return s;
         }
     }

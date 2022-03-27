@@ -2,14 +2,14 @@
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Persistence.ContextConfiguration;
 using Microsoft.EntityFrameworkCore;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Persistence
 {
     public class ConfigurationManagementSystemContext : DbContext
     {
-        public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<Environment> Environments { get; set; }
+        public virtual DbSet<Domain.Entities.Application> Projects { get; set; }
+        public virtual DbSet<Configuration> Environments { get; set; }
         public virtual DbSet<OptionGroup> OptionGroups { get; set; }
         public virtual DbSet<Option> Options { get; set; }
 

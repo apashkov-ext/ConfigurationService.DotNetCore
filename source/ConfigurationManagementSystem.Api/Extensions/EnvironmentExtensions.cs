@@ -1,11 +1,11 @@
 ﻿using ConfigurationManagementSystem.Api.Dto;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Api.Extensions
 {
     internal static class EnvironmentExtensions
     {
-        public static EnvironmentDto ToDto(this Environment source)
+        public static EnvironmentDto ToDto(this Configuration source)
         {
             var root = source.GetRootOptionGroop();
             return new EnvironmentDto

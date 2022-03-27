@@ -21,7 +21,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void Add_ExistedProject_Exception(Project p)
+        public async void Add_ExistedProject_Exception(Domain.Entities.Application p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
             await Assert.ThrowsAsync<AlreadyExistsException>(() => new Projects(ctx).AddAsync(p.Name.Value));
@@ -29,7 +29,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void Remove_ExistedProject_Success(Project p)
+        public async void Remove_ExistedProject_Success(Domain.Entities.Application p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
             await new Projects(ctx).RemoveAsync(p.Id);
@@ -44,7 +44,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void GetById_ExistedProject_Success(Project p)
+        public async void GetById_ExistedProject_Success(Domain.Entities.Application p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
             var proj = await new Projects(ctx).GetAsync(p.Id);
@@ -60,7 +60,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(Project p)
+        public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(Domain.Entities.Application p)
         {
             const string search = "pRojeCt";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
@@ -78,7 +78,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void GetByName_EmptyString_ReturnsAllProjects(Project p)
+        public async void GetByName_EmptyString_ReturnsAllProjects(Domain.Entities.Application p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
             var result = await new Projects(ctx).GetAsync("", GetPaginationOptions());

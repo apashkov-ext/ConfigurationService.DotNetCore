@@ -3,7 +3,7 @@ using ConfigurationManagementSystem.Domain.Exceptions;
 using ConfigurationManagementSystem.Domain.ValueObjects;
 using ConfigurationManagementSystem.Tests.Presets;
 using Xunit;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 {
@@ -11,7 +11,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
     {
         [Theory]
         [ClassData(typeof(ValidEnvironment))]
-        public void Create_CorrectData_ParentIsCorrect(Environment e)
+        public void Create_CorrectData_ParentIsCorrect(Configuration e)
         {
             var group = OptionGroup.Create(
                 new OptionGroupName("Validation"), 

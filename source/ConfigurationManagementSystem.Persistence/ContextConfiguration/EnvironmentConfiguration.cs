@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {
-    internal class EnvironmentConfiguration : IEntityTypeConfiguration<Environment>
+    internal class EnvironmentConfiguration : IEntityTypeConfiguration<Configuration>
     {
-        public void Configure(EntityTypeBuilder<Environment> builder)
+        public void Configure(EntityTypeBuilder<Configuration> builder)
         {
             builder.ToTable("Environments").HasKey(x => x.Id);
             builder.Property(x => x.Created).IsRequired();

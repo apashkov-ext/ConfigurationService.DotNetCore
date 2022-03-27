@@ -5,7 +5,7 @@ using ConfigurationManagementSystem.Domain.Exceptions;
 using ConfigurationManagementSystem.Tests.Fixtures;
 using ConfigurationManagementSystem.Tests.Presets;
 using Xunit;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Persistence.Tests
 {
@@ -13,7 +13,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
     {
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void Add_NotExistedEnv_Success(Project p)
+        public async void Add_NotExistedEnv_Success(Domain.Entities.Application p)
         {
             const string envName = "Dev";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
@@ -23,7 +23,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(ProjectWithEnvironment))]
-        public async void Add_ExistedEnv_Exception(Project p, Environment e)
+        public async void Add_ExistedEnv_Exception(Domain.Entities.Application p, Configuration e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments, e)).Context;
             await Assert.ThrowsAsync<InconsistentDataStateException>(() => new Environments(ctx).AddAsync(p.Id, e.Name.Value));
@@ -31,7 +31,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void Add_IncorrectName_Exception(Project p)
+        public async void Add_IncorrectName_Exception(Domain.Entities.Application p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
             await Assert.ThrowsAsync<ApplicationException>(() => new Environments(ctx).AddAsync(p.Id, "123"));
@@ -39,7 +39,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(ProjectWithEnvironment))]
-        public async void Remove_ExistedEnv_Success(Project p, Environment e)
+        public async void Remove_ExistedEnv_Success(Domain.Entities.Application p, Configuration e)
         {
             var ctx = new DbContextFixture(x => 
                 x.WithSet(s => s.Projects, p)
@@ -52,7 +52,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(EmptyProject))]
-        public async void Remove_NotExistedEnv_Exception(Project p)
+        public async void Remove_NotExistedEnv_Exception(Domain.Entities.Application p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p).WithSet(s => s.Environments)).Context;
             await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).RemoveAsync(Guid.NewGuid()));
@@ -60,7 +60,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(ValidEnvironment))]
-        public async void GetById_ExistedEnv_ReturnsEnv(Environment e)
+        public async void GetById_ExistedEnv_ReturnsEnv(Configuration e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
             var env = await new Environments(ctx).GetAsync(e.Id);
@@ -76,7 +76,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(ValidEnvironment))]
-        public async void Update_NotExistedEnv_Exception(Environment e)
+        public async void Update_NotExistedEnv_Exception(Configuration e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments)).Context;
             await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).UpdateAsync(e.Id, "NewEnv"));
@@ -84,7 +84,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(ValidEnvironment))]
-        public async void Update_ExistedEnvCorrectName_Success(Environment e)
+        public async void Update_ExistedEnvCorrectName_Success(Configuration e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
             await new Environments(ctx).UpdateAsync(e.Id, "NewEnv");
@@ -92,7 +92,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
 
         [Theory]
         [ClassData(typeof(ValidEnvironment))]
-        public async void Update_AlreadyExistedName_Exception(Environment e)
+        public async void Update_AlreadyExistedName_Exception(Configuration e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Environments, e)).Context;
             await Assert.ThrowsAsync<InconsistentDataStateException>(() => new Environments(ctx).UpdateAsync(e.Id, e.Name.Value));

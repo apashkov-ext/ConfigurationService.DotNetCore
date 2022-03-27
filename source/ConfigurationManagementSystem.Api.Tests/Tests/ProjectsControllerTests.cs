@@ -50,7 +50,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void GetAll_ExistsSingleWithoutHierarchy_ReturnsSingleWithoutHierarchy()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
 
             ActWithDbContext(context => 
             {
@@ -72,7 +72,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void GetAll_ExistsSingleWithHierarchy_ReturnsSingleWithHierarchy()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
             var root = env.OptionGroups.First();
             var group = root.AddNestedGroup(new OptionGroupName("NestedG"), new Description("Desc"));
@@ -116,7 +116,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void GetById_Exists_ReturnsWithHierarchy()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
             var group = env.OptionGroups.First();
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
@@ -143,7 +143,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void Post_Exists_Returns422()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
 
             ActWithDbContext(context =>
             {
@@ -210,7 +210,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void Delete_ExistsWithNoHierarchy_ReturnsNoContent()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
 
             ActWithDbContext(context =>
             {
@@ -229,7 +229,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void Delete_ExistsWithFullHierarchy_ReturnsNoContent()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
             var group = env.OptionGroups.First();
             var option = group.AddOption(new OptionName("OptionName"), new Description(""), new OptionValue(true));
@@ -254,7 +254,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void Delete_Exists_RemovesEntityFromContext()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
 
             ActWithDbContext(context =>
             {
@@ -277,7 +277,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void Delete_ExistsWithFullHierarchy_RemovesAllDependentEntities()
         {
-            var project = Project.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var project = Domain.Entities.Application.Create(new ProjectName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddEnvironment(new EnvironmentName("Dev"));
 
             var group = env.GetRootOptionGroop();

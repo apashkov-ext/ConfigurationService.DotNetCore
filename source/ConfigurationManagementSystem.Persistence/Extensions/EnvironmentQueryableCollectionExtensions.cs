@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class EnvironmentQueryableCollectionExtensions
     {
-        public static IQueryable<Environment> EnvironmentsWithIncludedEntities(this IQueryable<Environment> source)
+        public static IQueryable<Configuration> EnvironmentsWithIncludedEntities(this IQueryable<Configuration> source)
         {
             return source
                 .Include(x => x.OptionGroups)

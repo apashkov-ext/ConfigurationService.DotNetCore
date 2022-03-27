@@ -1,13 +1,13 @@
 ﻿using System;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
-using Environment = ConfigurationManagementSystem.Domain.Entities.Environment;
+using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
 
 namespace ConfigurationManagementSystem.Tests.Stubs
 {
     internal class TestableOptionGroup : OptionGroup
     {
-        public TestableOptionGroup(Guid id, string name, string desc, Environment env, OptionGroup parent) 
+        public TestableOptionGroup(Guid id, string name, string desc, Configuration env, OptionGroup parent) 
             : base(new OptionGroupName(name), new Description(desc), env, parent)
         {
             Id = id;

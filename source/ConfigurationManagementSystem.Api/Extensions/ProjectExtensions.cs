@@ -6,7 +6,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
 {
     internal static class ProjectExtensions
     {
-        public static ProjectDto ToDto(this Project source)
+        public static ProjectDto ToDto(this Domain.Entities.Application source)
         {
             return new ProjectDto
             {
@@ -16,7 +16,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
             };
         }
 
-        public static CreatedProjectDto ToCreatedProjectDto(this Project source)
+        public static CreatedProjectDto ToCreatedProjectDto(this Domain.Entities.Application source)
         {
             return new CreatedProjectDto
             {

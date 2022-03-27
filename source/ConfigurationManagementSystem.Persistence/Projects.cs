@@ -20,7 +20,7 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public Task<PagedList<Project>> GetAsync(string name, PaginationOptions paginationOptions)
+        public Task<PagedList<Domain.Entities.Application>> GetAsync(string name, PaginationOptions paginationOptions)
         {
             if (paginationOptions == null) throw new ArgumentNullException(nameof(paginationOptions));
 
@@ -42,7 +42,7 @@ namespace ConfigurationManagementSystem.Persistence
             return Task.FromResult(filtered);
         }
 
-        public async Task<Project> GetAsync(Guid id)
+        public async Task<Domain.Entities.Application> GetAsync(Guid id)
         {
             var project = await _context.Projects
                 .ProjectsWithIncludedEntities()
@@ -51,7 +51,7 @@ namespace ConfigurationManagementSystem.Persistence
             return project ?? throw new NotFoundException("Project does not exist");
         }
 
-        public async Task<Project> AddAsync(string name)
+        public async Task<Domain.Entities.Application> AddAsync(string name)
         {
             var projName = new ProjectName(name);
             var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
@@ -60,7 +60,7 @@ namespace ConfigurationManagementSystem.Persistence
                 throw new AlreadyExistsException("Projects with the same name already exists");
             }
 
-            var newProj = Project.Create(new ProjectName(name), new ApiKey(Guid.NewGuid()));
+            var newProj = Domain.Entities.Application.Create(new ProjectName(name), new ApiKey(Guid.NewGuid()));
             await _context.Projects.AddAsync(newProj);
             await _context.SaveChangesAsync();
 

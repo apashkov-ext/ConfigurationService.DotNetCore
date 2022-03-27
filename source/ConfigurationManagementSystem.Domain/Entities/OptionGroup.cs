@@ -10,7 +10,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
         public OptionGroupName Name { get; private set; }
         public Description Description { get; private set; }
         public OptionGroup Parent { get; }
-        public Environment Environment { get; }
+        public Configuration Environment { get; }
 
         protected readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
         public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
@@ -20,7 +20,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
 
         protected OptionGroup() { }
 
-        protected OptionGroup(OptionGroupName name, Description description, Environment environment, OptionGroup parent)
+        protected OptionGroup(OptionGroupName name, Description description, Configuration environment, OptionGroup parent)
         {
             Name = name;
             Description = description;
@@ -28,7 +28,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
             Parent = parent;
         }
 
-        public static OptionGroup Create(OptionGroupName name, Description description, Environment environment, OptionGroup parent = null)
+        public static OptionGroup Create(OptionGroupName name, Description description, Configuration environment, OptionGroup parent = null)
         {
             return new OptionGroup(name, description, environment, parent);
         }

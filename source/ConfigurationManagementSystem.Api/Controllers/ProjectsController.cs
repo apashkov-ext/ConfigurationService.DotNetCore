@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
