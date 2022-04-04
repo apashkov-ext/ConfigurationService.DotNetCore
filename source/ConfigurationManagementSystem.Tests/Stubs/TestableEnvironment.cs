@@ -1,13 +1,13 @@
 ﻿using System;
 using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Entities;
-using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
+using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Tests.Stubs
 {
-    internal class TestableEnvironment : Configuration
+    internal class TestableEnvironment : ConfigurationEntity
     {
-        public TestableEnvironment(Guid id, string name, Domain.Entities.Application project) : base(new EnvironmentName(name), project, false)
+        public TestableEnvironment(Guid id, string name, Domain.Entities.ApplicationEntity project) : base(new ConfigurationName(name), project, false)
         {
             Id = id;
         }

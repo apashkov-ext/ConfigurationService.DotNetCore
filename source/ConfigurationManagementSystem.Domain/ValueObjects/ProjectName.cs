@@ -4,16 +4,16 @@ using ConfigurationManagementSystem.Domain.Exceptions;
 
 namespace ConfigurationManagementSystem.Domain.ValueObjects
 {
-    public class ProjectName : ValueObject
+    public class ApplicationName : ValueObject
     {
         private static readonly Regex Regex = new Regex("^[a-zA-Z]+[\\w_-]*$");
         public string Value { get; }
 
-        public ProjectName(string value)
+        public ApplicationName(string value)
         {
             if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value))
             {
-                throw new InconsistentDataStateException($"Incorrect project name: {value}");
+                throw new InconsistentDataStateException($"Incorrect application name: {value}");
             }
 
             Value = value;

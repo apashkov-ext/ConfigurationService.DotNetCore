@@ -1,32 +1,100 @@
-﻿using System;
+﻿using ConfigurationManagementSystem.Application;
+using System.Net;
 using System.Net.Http;
-using ConfigurationManagementSystem.Persistence;
-using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Api.Tests.Tests
 {
-    public abstract class ControllerTests : IDisposable
+    public abstract class ControllerTests : IntegrationTests
     {
-        protected readonly WebAppFactory WebAppFactory;
         protected readonly HttpClient HttpClient;
 
         public ControllerTests()
         {
-            WebAppFactory = new WebAppFactory();
             HttpClient = WebAppFactory.CreateClient();
         }
 
-        public void Dispose()
+        protected Task<ControllerResponse> GetAsync(string endpoint)
         {
-            //WebAppFactory.Dispose();
+            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            return SendAsync(request);
         }
 
-        protected void ActWithDbContext(Action<ConfigurationManagementSystemContext> action)
+        protected Task<ControllerResponseData<T>> GetAsync<T>(string endpoint)
         {
-            var scopeFactory = WebAppFactory.Services;
-            using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<ConfigurationManagementSystemContext>();
-            action(context);
+            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            return SendAsync<T>(request);
+        }
+
+        protected Task<ControllerResponse> PostAsync(string endpoint, object body)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+            {
+                Content = RequestContentFactory.CreateJsonStringContent(body)
+            };
+            return SendAsync(request);
+        }
+
+        protected Task<ControllerResponseData<T>> PostAsync<T>(string endpoint, object body)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+            {
+                Content = RequestContentFactory.CreateJsonStringContent(body)
+            };
+            return SendAsync<T>(request);
+        }
+
+        protected Task<ControllerResponse> DeleteAsync(string endpoint)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, endpoint);
+            return SendAsync(request);
+        }
+
+        public override void Dispose()
+        {
+            HttpClient.Dispose();
+            base.Dispose();
+        }
+
+        private async Task<ControllerResponse> SendAsync(HttpRequestMessage request)
+        {
+            var response = await HttpClient.SendAsync(request);
+            return new ControllerResponse(response.StatusCode);
+        }
+
+        private async Task<ControllerResponseData<T>> SendAsync<T>(HttpRequestMessage request)
+        {
+            var response = await HttpClient.SendAsync(request);
+            var parsed = await ParseContentAsync<T>(response);
+            return new ControllerResponseData<T>(parsed, response.StatusCode);
+        }
+
+        private static async Task<T> ParseContentAsync<T>(HttpResponseMessage response)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var dto = JsonSerializer.Deserialize<T>(json, SerializerOptions.JsonSerializerOptions);
+            return dto;
+        }
+    }
+
+    public class ControllerResponse
+    {
+        public HttpStatusCode StatusCode { get; }
+
+        public ControllerResponse(HttpStatusCode statusCode)
+        {
+            StatusCode = statusCode;
+        }
+    }
+
+    public class ControllerResponseData<T> : ControllerResponse
+    {
+        public T ResponseData { get; }
+
+        public ControllerResponseData(T data, HttpStatusCode statusCode) : base(statusCode)
+        {
+            ResponseData = data;
         }
     }
 }

@@ -8,7 +8,7 @@ using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Exceptions;
 using ConfigurationManagementSystem.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
+using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Persistence
 {
@@ -21,14 +21,14 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Configuration>> GetAsync(string name)
+        public async Task<IEnumerable<ConfigurationEntity>> GetAsync(string name)
         {
-            var e = _context.Environments.ToList();
-            var p = _context.Projects.ToList();
+            var e = _context.Configurations.ToList();
+            var p = _context.Applications.ToList();
 
             if (string.IsNullOrEmpty(name))
             {
-                var all = await _context.Environments
+                var all = await _context.Configurations
                     .EnvironmentsWithIncludedEntities()
                     .AsNoTrackingWithIdentityResolution()
                     .ToListAsync();
@@ -36,7 +36,7 @@ namespace ConfigurationManagementSystem.Persistence
                 return all;
             }
 
-            var list = await _context.Environments
+            var list = await _context.Configurations
                 .EnvironmentsWithIncludedEntities()
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
                 .AsNoTrackingWithIdentityResolution()
@@ -45,21 +45,21 @@ namespace ConfigurationManagementSystem.Persistence
             return list;
         }
 
-        public async Task<Configuration> GetAsync(Guid id)
+        public async Task<ConfigurationEntity> GetAsync(Guid id)
         {
-            var env = await _context.Environments.EnvironmentsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
+            var env = await _context.Configurations.EnvironmentsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             return env ?? throw new NotFoundException("Environment does not exist");
         }
 
-        public async Task<Configuration> AddAsync(Guid projectId, string name)
+        public async Task<ConfigurationEntity> AddAsync(Guid projectId, string name)
         {
-            var proj = await _context.Projects.Include(x => x.Environments).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == projectId);
+            var proj = await _context.Applications.Include(x => x.Configurations).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == projectId);
             if (proj == null)
             {
                 throw new NotFoundException("Project does not exist");
             }
 
-            var env = proj.AddEnvironment(new EnvironmentName(name));
+            var env = proj.AddConfiguration(new ConfigurationName(name));
             await _context.SaveChangesAsync();
 
             return env;
@@ -67,10 +67,10 @@ namespace ConfigurationManagementSystem.Persistence
 
         public async Task UpdateAsync(Guid id, string name)
         {
-            var envName = new EnvironmentName(name);
-            var env = await _context.Environments
-                .Include(x => x.Project)
-                .ThenInclude(x => x.Environments)
+            var envName = new ConfigurationName(name);
+            var env = await _context.Configurations
+                .Include(x => x.Application)
+                .ThenInclude(x => x.Configurations)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (env == null)
@@ -78,7 +78,7 @@ namespace ConfigurationManagementSystem.Persistence
                 throw new NotFoundException("Environment does not exist");
             }
 
-            if (env.Project.Environments.Any(x => x.Name == envName))
+            if (env.Application.Configurations.Any(x => x.Name == envName))
             {
                 throw new InconsistentDataStateException("Environment with the same name already exists in this project");
             }
@@ -89,8 +89,8 @@ namespace ConfigurationManagementSystem.Persistence
 
         public async Task RemoveAsync(Guid id)
         {
-            var env = await _context.Environments
-                .Include(x => x.Project)
+            var env = await _context.Configurations
+                .Include(x => x.Application)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (env == null)

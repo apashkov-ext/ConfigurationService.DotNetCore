@@ -9,23 +9,21 @@ namespace ConfigurationManagementSystem.Domain.Entities
     public class Option : DomainEntity
     {
         public OptionName Name { get; private set; }
-        public Description Description { get; private set; }
         public OptionValue Value { get; private set; }
         public OptionGroup OptionGroup { get; }
 
         protected Option() { }
 
-        protected Option(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
+        protected Option(OptionName name, OptionValue value, OptionGroup optionGroup)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? throw new ArgumentNullException(nameof(description));
             Value = value ?? throw new ArgumentNullException(nameof(value));
             OptionGroup = optionGroup ?? throw new ArgumentNullException(nameof(optionGroup));
         }
 
-        public static Option Create(OptionName name, Description description, OptionValue value, OptionGroup optionGroup)
+        public static Option Create(OptionName name, OptionValue value, OptionGroup optionGroup)
         {
-            return new Option(name, description, value, optionGroup);
+            return new Option(name, value, optionGroup);
         }
 
         public void UpdateName(OptionName name)
@@ -33,14 +31,6 @@ namespace ConfigurationManagementSystem.Domain.Entities
             if (Name != name)
             {
                 Name = name;
-            }
-        }
-
-        public void UpdateDescription(Description description)
-        {
-            if (Description != description)
-            {
-                Description = description;
             }
         }
 

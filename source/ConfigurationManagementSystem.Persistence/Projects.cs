@@ -11,21 +11,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConfigurationManagementSystem.Persistence
 {
-    public class Projects : IProjects
+    public class Applications : IApplications
     {
         private readonly ConfigurationManagementSystemContext _context;
 
-        public Projects(ConfigurationManagementSystemContext context)
+        public Applications(ConfigurationManagementSystemContext context)
         {
             _context = context;
         }
 
-        public Task<PagedList<Domain.Entities.Application>> GetAsync(string name, PaginationOptions paginationOptions)
+        public Task<PagedList<ApplicationEntity>> GetAsync(string name, PaginationOptions paginationOptions)
         {
             if (paginationOptions == null) throw new ArgumentNullException(nameof(paginationOptions));
 
-            var result = _context.Projects
-                .ProjectsWithIncludedEntities()
+            var result = _context.Applications
+                .ApplicationsWithIncludedEntities()
                 .AsNoTrackingWithIdentityResolution();
 
             if (string.IsNullOrEmpty(name))
@@ -42,26 +42,26 @@ namespace ConfigurationManagementSystem.Persistence
             return Task.FromResult(filtered);
         }
 
-        public async Task<Domain.Entities.Application> GetAsync(Guid id)
+        public async Task<ApplicationEntity> GetAsync(Guid id)
         {
-            var project = await _context.Projects
-                .ProjectsWithIncludedEntities()
+            var project = await _context.Applications
+                .ApplicationsWithIncludedEntities()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return project ?? throw new NotFoundException("Project does not exist");
+            return project ?? throw new NotFoundException("Application does not exist");
         }
 
-        public async Task<Domain.Entities.Application> AddAsync(string name)
+        public async Task<ApplicationEntity> AddAsync(string name)
         {
-            var projName = new ProjectName(name);
-            var existed = await _context.Projects.FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
+            var projName = new ApplicationName(name);
+            var existed = await _context.Applications.FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
             if (existed != null)
             {
-                throw new AlreadyExistsException("Projects with the same name already exists");
+                throw new AlreadyExistsException("Application with the same name already exists");
             }
 
-            var newProj = Domain.Entities.Application.Create(new ProjectName(name), new ApiKey(Guid.NewGuid()));
-            await _context.Projects.AddAsync(newProj);
+            var newProj = Domain.Entities.ApplicationEntity.Create(new ApplicationName(name), new ApiKey(Guid.NewGuid()));
+            await _context.Applications.AddAsync(newProj);
             await _context.SaveChangesAsync();
 
             return newProj;
@@ -69,10 +69,10 @@ namespace ConfigurationManagementSystem.Persistence
 
         public async Task RemoveAsync(Guid id)
         {
-            var project = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
+            var project = await _context.Applications.ApplicationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             if (project == null)
             {
-                throw new NotFoundException("Project does not exist");
+                throw new NotFoundException("Application does not exist");
             }
 
             project.RemoveWithHierarchy(_context);

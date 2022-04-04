@@ -7,8 +7,8 @@ namespace ConfigurationManagementSystem.Api.Extensions
     {
         public static string[] GetOrigins(this IConfiguration config)
         {
-            var section = config?["Origins"];
-            var splitted = section?.Split(";", StringSplitOptions.RemoveEmptyEntries);
+            var value = config?["Web.Origins"];
+            var splitted = value?.Split(";", StringSplitOptions.RemoveEmptyEntries);
             var hosts = splitted ?? Array.Empty<string>();
             return hosts;
         }

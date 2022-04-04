@@ -1,5 +1,6 @@
 ﻿using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Persistence.ConfigImporting.Abstractions;
+using System.Collections.Generic;
 
 namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementation
 {

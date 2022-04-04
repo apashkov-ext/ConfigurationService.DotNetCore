@@ -9,17 +9,16 @@ namespace ConfigurationManagementSystem.Tests.Presets
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            var p = new TestableProject(Guid.NewGuid(), "TestProject", Guid.NewGuid());
+            var p = new TestableApplication(Guid.NewGuid(), "TestProject", Guid.NewGuid());
             var env = new TestableEnvironment(Guid.NewGuid(), "Dev", p);
-            p.AddEnv(env);
+            p.AddConfig(env);
 
             var group = new TestableOptionGroup(Guid.NewGuid(),
                 "Validation",
-                "Option group description",
                 env, env.GetRootOptionGroop());
-            var option = new TestableOption(Guid.NewGuid(), "OptionName", "Option description", "Value", group);
+            var option = new TestableOption(Guid.NewGuid(), "OptionName", "Value", group);
             group.AddOption(option);
-            var option2 = new TestableOption(Guid.NewGuid(), "SecondOptionName", "Option description", "Value", group);
+            var option2 = new TestableOption(Guid.NewGuid(), "SecondOptionName", "Value", group);
             group.AddOption(option2);
 
             yield return new object[] { option, option2 };

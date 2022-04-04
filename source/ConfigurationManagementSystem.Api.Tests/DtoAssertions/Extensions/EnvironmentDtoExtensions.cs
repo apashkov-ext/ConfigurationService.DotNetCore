@@ -1,12 +1,12 @@
 ﻿using ConfigurationManagementSystem.Api.Dto;
-using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
+using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions;
 
 namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
 {
     internal static class EnvironmentDtoExtensions
     {
-        public static void IsEqualToModel(this EnvironmentDto dto, Configuration model)
+        public static void IsEqualToModel(this ConfigurationDto dto, ConfigurationEntity model)
         {
             var id = model.Id.ToString();
             if (!dto.Id.Equals(id, System.StringComparison.OrdinalIgnoreCase))
@@ -19,10 +19,10 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
                 throw UnexpectedPropertyValueException.Create(model.Name.Value, () => dto.Name);
             }
 
-            var projId = model.Project.Id.ToString();
-            if (!dto.ProjectId.Equals(projId, System.StringComparison.OrdinalIgnoreCase))
+            var projId = model.Application.Id.ToString();
+            if (!dto.ApplicationId.Equals(projId, System.StringComparison.OrdinalIgnoreCase))
             {
-                throw UnexpectedPropertyValueException.Create(projId, () => dto.ProjectId);
+                throw UnexpectedPropertyValueException.Create(projId, () => dto.ApplicationId);
             }
 
             var root = model.GetRootOptionGroop();

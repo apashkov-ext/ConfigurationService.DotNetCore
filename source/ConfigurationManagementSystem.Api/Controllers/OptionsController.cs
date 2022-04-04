@@ -46,7 +46,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<OptionDto>> Create(CreateOptionDto body)
         {
-            var o = await _options.AddAsync(body.OptionGroup, body.Name, body.Description, body.Value, body.Type);
+            var o = await _options.AddAsync(body.OptionGroup, body.Name, body.Value, body.Type);
             return CreatedAtAction(nameof(Get), new {id = o.Id}, o.ToDto());
         }
 
@@ -55,7 +55,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(Guid id, UpdateOptionDto body)
         {
-            await _options.UpdateAsync(id, body.Name, body.Description, body.Value);
+            await _options.UpdateAsync(id, body.Name, body.Value);
             return NoContent();
         }
 

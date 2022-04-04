@@ -57,7 +57,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
                 }
                 else
                 {
-                    Value.AddOption(valueOption.Name, valueOption.Description, valueOption.Value);
+                    Value.AddOption(valueOption.Name, valueOption.Value);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
 
         public override Node<OptionGroup> AddChild(OptionGroup value)
         {
-            var group = Value.AddNestedGroup(value.Name, value.Description);
+            var group = Value.AddNestedGroup(value.Name);
             AddOptions(group, value.Options);
 
             var child = new ConfigNode(group, true, _context);
@@ -109,7 +109,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
         {
             foreach (var sourceOption in options)
             {
-                group.AddOption(sourceOption.Name, sourceOption.Description, sourceOption.Value);
+                group.AddOption(sourceOption.Name, sourceOption.Value);
             }
         }
     }

@@ -14,74 +14,74 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void Add_NotExistedProject_Success()
         {
             const string expectedName = "TestProject";
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            var p = await new Projects(ctx).AddAsync(expectedName);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications)).Context;
+            var p = await new Applications(ctx).AddAsync(expectedName);
             Assert.Equal(p.Name.Value, expectedName);
         }
 
         [Theory]
-        [ClassData(typeof(EmptyProject))]
-        public async void Add_ExistedProject_Exception(Domain.Entities.Application p)
+        [ClassData(typeof(EmptyApplication))]
+        public async void Add_ExistedProject_Exception(ApplicationEntity p)
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            await Assert.ThrowsAsync<AlreadyExistsException>(() => new Projects(ctx).AddAsync(p.Name.Value));
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications, p)).Context;
+            await Assert.ThrowsAsync<AlreadyExistsException>(() => new Applications(ctx).AddAsync(p.Name.Value));
         }
 
         [Theory]
-        [ClassData(typeof(EmptyProject))]
-        public async void Remove_ExistedProject_Success(Domain.Entities.Application p)
+        [ClassData(typeof(EmptyApplication))]
+        public async void Remove_ExistedProject_Success(ApplicationEntity p)
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            await new Projects(ctx).RemoveAsync(p.Id);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications, p)).Context;
+            await new Applications(ctx).RemoveAsync(p.Id);
         }
 
         [Fact]
         public async void Remove_NotExistedProject_Exception()
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Projects(ctx).RemoveAsync(Guid.NewGuid()));
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Applications(ctx).RemoveAsync(Guid.NewGuid()));
         }
 
         [Theory]
-        [ClassData(typeof(EmptyProject))]
-        public async void GetById_ExistedProject_Success(Domain.Entities.Application p)
+        [ClassData(typeof(EmptyApplication))]
+        public async void GetById_ExistedProject_Success(ApplicationEntity p)
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            var proj = await new Projects(ctx).GetAsync(p.Id);
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications, p)).Context;
+            var proj = await new Applications(ctx).GetAsync(p.Id);
             Assert.Equal(proj, p);
         }
 
         [Fact]
         public async void GetById_NotExistedProject_Exception()
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Projects(ctx).GetAsync(Guid.NewGuid()));
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications)).Context;
+            await Assert.ThrowsAsync<NotFoundException>(() => new Applications(ctx).GetAsync(Guid.NewGuid()));
         }
 
         [Theory]
-        [ClassData(typeof(EmptyProject))]
-        public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(Domain.Entities.Application p)
+        [ClassData(typeof(EmptyApplication))]
+        public async void GetByName_ExistedProject_ReturnsCollectionWithTheProject(ApplicationEntity p)
         {
-            const string search = "pRojeCt";
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            var result = await new Projects(ctx).GetAsync(search, GetPaginationOptions());
+            const string search = "aPPlicaTion";
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications, p)).Context;
+            var result = await new Applications(ctx).GetAsync(search, GetPaginationOptions());
             Assert.Contains(result.Data, x => x.Name.Value.StartsWith(search, StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
         public async void GetByName_NotExistedProject_ReturnsEmptyCollection()
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects)).Context;
-            var result = await new Projects(ctx).GetAsync("TestProject", GetPaginationOptions());
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications)).Context;
+            var result = await new Applications(ctx).GetAsync("TestProject", GetPaginationOptions());
             Assert.Empty(result.Data);
         }
 
         [Theory]
-        [ClassData(typeof(EmptyProject))]
-        public async void GetByName_EmptyString_ReturnsAllProjects(Domain.Entities.Application p)
+        [ClassData(typeof(EmptyApplication))]
+        public async void GetByName_EmptyString_ReturnsAllProjects(ApplicationEntity p)
         {
-            var ctx = new DbContextFixture(x => x.WithSet(s => s.Projects, p)).Context;
-            var result = await new Projects(ctx).GetAsync("", GetPaginationOptions());
+            var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications, p)).Context;
+            var result = await new Applications(ctx).GetAsync("", GetPaginationOptions());
             Assert.NotEmpty(result.Data);
         }
 

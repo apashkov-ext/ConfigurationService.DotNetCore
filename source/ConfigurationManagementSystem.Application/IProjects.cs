@@ -5,11 +5,11 @@ using ConfigurationManagementSystem.Domain.Entities;
 
 namespace ConfigurationManagementSystem.Application
 {
-    public interface IProjects
+    public interface IApplications
     {
-        Task<PagedList<Domain.Entities.Application>> GetAsync(string name, PaginationOptions paginationOptions);
-        Task<Domain.Entities.Application> GetAsync(Guid id);
-        Task<Domain.Entities.Application> AddAsync(string name);
+        Task<PagedList<ApplicationEntity>> GetAsync(string name, PaginationOptions paginationOptions);
+        Task<ApplicationEntity> GetAsync(Guid id);
+        Task<ApplicationEntity> AddAsync(string name);
         Task RemoveAsync(Guid id);
     }
 }

@@ -21,11 +21,6 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
                 throw UnexpectedPropertyValueException.Create(model.Name.Value, () => dto.Name);
             }
 
-            if (dto.Description != model.Description.Value)
-            {
-                throw UnexpectedPropertyValueException.Create(model.Description.Value, () => dto.Name);
-            }
-
             var val = new JsonValueParser(dto.Value, dto.Type).Parse();
             var optionValue = TypeConversion.GetOptionValue(val, dto.Type);
             if (model.Value != optionValue)

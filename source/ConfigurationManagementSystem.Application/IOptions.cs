@@ -9,8 +9,8 @@ namespace ConfigurationManagementSystem.Application
     {
         Task<IEnumerable<Option>> GetAsync(string name);
         Task<Option> GetAsync(Guid id);
-        Task<Option> AddAsync(Guid optionGroup, string name, string description, object value, OptionValueType type);
-        Task UpdateAsync(Guid id, string name, string description, object value);
+        Task<Option> AddAsync(Guid optionGroup, string name, object value, OptionValueType type);
+        Task UpdateAsync(Guid id, string name, object value);
         Task RemoveAsync(Guid id);
     }
 }

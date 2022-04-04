@@ -13,7 +13,6 @@ namespace ConfigurationManagementSystem.Api.Dto
 
         [Required]
         public string Name { get; set; }
-        public string Description { get; set; }
         public OptionValueType Type { get; set; }
 
         [JsonPropertyName("value")]

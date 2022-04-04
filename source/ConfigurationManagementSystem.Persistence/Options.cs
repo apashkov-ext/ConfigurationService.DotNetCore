@@ -41,7 +41,7 @@ namespace ConfigurationManagementSystem.Persistence
             return o ?? throw new NotFoundException("Option does not exist");
         }
 
-        public async Task<Option> AddAsync(Guid optionGroup, string name, string description, object value, OptionValueType type)
+        public async Task<Option> AddAsync(Guid optionGroup, string name, object value, OptionValueType type)
         {
             var group = await _context.OptionGroups.Include(x => x.Options)
                 .AsSingleQuery()
@@ -53,14 +53,14 @@ namespace ConfigurationManagementSystem.Persistence
             }
 
             var optionValue = TypeConversion.GetOptionValue(value, type);
-            var option = group.AddOption(new OptionName(name), new Description(description ?? ""), optionValue);
+            var option = group.AddOption(new OptionName(name), optionValue);
 
             await _context.SaveChangesAsync();
 
             return option;
         }
 
-        public async Task UpdateAsync(Guid id, string name, string description, object value)
+        public async Task UpdateAsync(Guid id, string name, object value)
         {
             var option = await _context.Options
                 .Include(x => x.OptionGroup)
@@ -84,7 +84,6 @@ namespace ConfigurationManagementSystem.Persistence
                 option.UpdateName(newName);
             }
 
-            option.UpdateDescription(new Description(description));
             option.UpdateValue(TypeConversion.GetOptionValue(value, option.Value.Type));
 
             await _context.SaveChangesAsync();

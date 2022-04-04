@@ -7,28 +7,28 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions
 {
     internal static class Assertions
     {
-        public static void ProjectDtosAreEquivalentToModel(IEnumerable<ProjectDto> dtos, Domain.Entities.Application model)
+        public static void ApplicationDtosAreEquivalentToModel(IEnumerable<ApplicationDto> dtos, Domain.Entities.ApplicationEntity model)
         {
             foreach (var dto in dtos)
             {
-                ProjectDtoIsEquivalentToModel(dto, model);
+                ApplicationDtoIsEquivalentToModel(dto, model);
             }
         }
 
-        public static void ProjectDtoIsEquivalentToModel(ProjectDto dto, Domain.Entities.Application model)
+        public static void ApplicationDtoIsEquivalentToModel(ApplicationDto dto, Domain.Entities.ApplicationEntity model)
         {
             dto.IsEqualToModel(model);
         }
 
-        public static void EnvironmentDtosAreEquivalentToModel(IEnumerable<EnvironmentDto> dtos, Configuration model)
+        public static void ConfigurationDtosAreEquivalentToModel(IEnumerable<ConfigurationDto> dtos, ConfigurationEntity model)
         {
             foreach (var dto in dtos)
             {
-                EnvironmentDtoIsEquivalentToModel(dto, model);
+                ConfigurationDtoIsEquivalentToModel(dto, model);
             }
         }
 
-        public static void EnvironmentDtoIsEquivalentToModel(EnvironmentDto dto, Configuration model)
+        public static void ConfigurationDtoIsEquivalentToModel(ConfigurationDto dto, ConfigurationEntity model)
         {
             dto.IsEqualToModel(model);
         }

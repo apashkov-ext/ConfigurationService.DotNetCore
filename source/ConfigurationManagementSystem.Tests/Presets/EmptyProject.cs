@@ -5,12 +5,12 @@ using ConfigurationManagementSystem.Tests.Stubs;
 
 namespace ConfigurationManagementSystem.Tests.Presets
 {
-    public class EmptyProject : IEnumerable<object[]>
+    public class EmptyApplication : IEnumerable<object[]>
     {
         private static readonly Random Rand = new Random();
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[]{ new TestableProject(Guid.NewGuid(), $"Project{ProjectNamePostfix()}", Guid.NewGuid()) };
+            yield return new object[]{ new TestableApplication(Guid.NewGuid(), $"Application{ApplicationNamePostfix()}", Guid.NewGuid()) };
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -18,7 +18,7 @@ namespace ConfigurationManagementSystem.Tests.Presets
             return GetEnumerator();
         }
 
-        private static string ProjectNamePostfix()
+        private static string ApplicationNamePostfix()
         {
             return $"{(char) Rand.Next(65, 91)}{(char) Rand.Next(97, 123)}{(char)Rand.Next(97, 123)}";
         }

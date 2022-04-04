@@ -4,14 +4,14 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class ProjectExtensions
     {
-        public static void RemoveWithHierarchy(this Domain.Entities.Application project, ConfigurationManagementSystemContext context)
+        public static void RemoveWithHierarchy(this Domain.Entities.ApplicationEntity project, ConfigurationManagementSystemContext context)
         {
-            foreach (var env in project.Environments)
+            foreach (var env in project.Configurations)
             {
                 env.RemoveWithHierarchy(context);
             }
 
-            context.Projects.Remove(project);
+            context.Applications.Remove(project);
         }
     }
 }

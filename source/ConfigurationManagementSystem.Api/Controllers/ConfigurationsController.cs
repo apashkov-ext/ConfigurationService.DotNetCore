@@ -1,50 +1,73 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using ConfigurationManagementSystem.Api.Dto;
+using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Application;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConfigurationManagementSystem.Api.Controllers
 {
-    [Route("api/configurations")]
     [ApiController]
+    [Route("api/configurations")]
+    [Produces("application/json")]
     public class ConfigurationsController : ControllerBase
     {
-        private readonly IConfigurations _configurations;
+        private readonly IEnvironments _environments;
 
-        public ConfigurationsController(IConfigurations configurations)
+        public ConfigurationsController(IEnvironments environments)
         {
-            _configurations = configurations;
+            _environments = environments;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<object>> GetConfig(string projName, string envName, [FromHeader] string apiKey)
+        public async Task<ActionResult<IEnumerable<ConfigurationDto>>> Get(string name)
         {
-            var config = await _configurations.GetItem(projName, envName, apiKey);
-            var response = JsObject.Create(config);
-            return Ok(response);
+            var envs = await _environments.GetAsync(name);
+            var dto = envs.Select(x => x.ToDto());
+            return Ok(dto);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ConfigurationDto>> Get(Guid id)
+        {
+            var env = await _environments.GetAsync(id);
+            return Ok(env.ToDto());
         }
 
         [HttpPost]
-        [RequestSizeLimit(10 * 1024 * 1024)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Import(Guid projId, string envName)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult<ConfigurationDto>> Create(CreateConfigurationDto body)
         {
-            var file = Request.Form.Files[0];
-            if (file.Length <= 0)
-            {
-                return BadRequest();
-            }
+            var created = await _environments.AddAsync(body.Application, body.Name);
+            var dto = created.ToDto();
+            return CreatedAtAction(nameof(Get), new { envId = created.Id }, dto);
+        }
 
-            await using var stream = new MemoryStream();
-            await file.CopyToAsync(stream);
-            await _configurations.Import(projId, envName, stream.ToArray());
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ConfigurationDto>> Update(Guid id, UpdateConfigurationDto body)
+        {
+            await _environments.UpdateAsync(id, body.Name);
+            return NoContent();
+        }
 
-            return Ok();
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            await _environments.RemoveAsync(id);
+            return NoContent();
         }
     }
 }

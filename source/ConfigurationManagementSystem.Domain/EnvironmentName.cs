@@ -4,16 +4,16 @@ using System.Text.RegularExpressions;
 
 namespace ConfigurationManagementSystem.Domain
 {
-    public class EnvironmentName : ValueObject
+    public class ConfigurationName : ValueObject
     {
         private static readonly Regex Regex = new Regex("^[a-zA-Z][\\w_-]+$");
         public string Value { get; }
 
-        public EnvironmentName(string value)
+        public ConfigurationName(string value)
         {
             if (!Regex.IsMatch(value))
             {
-                throw new ApplicationException("Incorrect environment name");
+                throw new ApplicationException("Incorrect configuration name");
             }
 
             Value = value;

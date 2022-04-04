@@ -9,8 +9,8 @@ namespace ConfigurationManagementSystem.Application
     {
         Task<IEnumerable<OptionGroup>> Get(string name);
         Task<OptionGroup> Get(Guid id);
-        Task<OptionGroup> Add(Guid parent, string name, string description);
-        Task Update(Guid id, string name, string description);
+        Task<OptionGroup> Add(Guid parent, string name);
+        Task Update(Guid id, string name);
         Task Remove(Guid id);
     }
 }

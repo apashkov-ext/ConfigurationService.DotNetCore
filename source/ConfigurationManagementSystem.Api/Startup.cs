@@ -26,8 +26,10 @@ namespace ConfigurationManagementSystem.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureLogging(Configuration);
-            services.ConfigureApplicationServices();
+            services.ConfigureApplicationServices(Configuration);
             services.ConfigureCors(Configuration);
+            services.ConfigureAuthentication(Configuration);
+            
             services.AddControllers(options => options.Filters.Add(new ApplicationExceptionFilter()));
             services.AddSwaggerGen(c =>
             {
@@ -44,7 +46,7 @@ namespace ConfigurationManagementSystem.Api
 
             if (_env.IsProduction())
             {
-                // needs to pass headers to the reverse proxy.
+                // Needs to pass headers to the reverse proxy.
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -58,6 +60,7 @@ namespace ConfigurationManagementSystem.Api
 
             app.UseRouting();
             app.UseCors();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

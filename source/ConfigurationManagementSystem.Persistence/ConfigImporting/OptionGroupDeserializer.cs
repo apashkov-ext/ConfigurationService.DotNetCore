@@ -11,7 +11,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting
         public static OptionGroup DeserializeFromJson(string json)
         {
             var doc = JsonDocument.Parse(json);
-            var rootGroup = OptionGroup.Create(new OptionGroupName(""), new Description(""), null);
+            var rootGroup = OptionGroup.Create(new OptionGroupName(""), null);
             FillGroup(rootGroup, doc.RootElement);
             return rootGroup;
         }
@@ -26,14 +26,14 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting
                     continue;
                 }
              
-                var created = parent.AddNestedGroup(new OptionGroupName(p.Name), new Description(""));
+                var created = parent.AddNestedGroup(new OptionGroupName(p.Name));
                 FillGroup(created, p.Value);
             }
         }
 
         private static void AddOption(OptionGroup group, JsonProperty prop)
         {
-            group.AddOption(new OptionName(prop.Name), new Description(""), GetOptionValue(prop));
+            group.AddOption(new OptionName(prop.Name), GetOptionValue(prop));
         }
 
         private static OptionValue GetOptionValue(JsonProperty prop)

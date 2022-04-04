@@ -10,7 +10,7 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
         {
             return source
                 .Include(x => x.Parent)
-                .Include(x => x.Environment)
+                .Include(x => x.Configuration)
                 .ThenInclude(x => x.OptionGroups)
                 .ThenInclude(x => x.Options)
                 .AsSingleQuery();

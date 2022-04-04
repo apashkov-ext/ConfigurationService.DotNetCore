@@ -1,19 +1,19 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
+using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class EnvironmentQueryableCollectionExtensions
     {
-        public static IQueryable<Configuration> EnvironmentsWithIncludedEntities(this IQueryable<Configuration> source)
+        public static IQueryable<ConfigurationEntity> EnvironmentsWithIncludedEntities(this IQueryable<ConfigurationEntity> source)
         {
             return source
                 .Include(x => x.OptionGroups)
                 //.ThenInclude(x => x.Parent)
                 //.ThenInclude(x => x.NestedGroups)
                 .ThenInclude(x => x.Options)
-                .Include(x => x.Project)
+                .Include(x => x.Application)
                 .AsSingleQuery();
         }
     }

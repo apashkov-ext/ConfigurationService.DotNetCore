@@ -50,7 +50,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<OptionGroupDto>> Create(CreateOptionGroupDto body)
         {
-            var group = await _optionGroups.Add(body.Parent, body.Name, body.Description);
+            var group = await _optionGroups.Add(body.Parent, body.Name);
             var dto = group.ToDto();
             return CreatedAtAction(nameof(Get), new {id = group.Id}, dto);
         }
@@ -61,7 +61,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Update(Guid id, UpdateOptionGroupDto body)
         {
-            await _optionGroups.Update(id, body.Name, body.Description);
+            await _optionGroups.Update(id, body.Name);
             return NoContent();
         }
 

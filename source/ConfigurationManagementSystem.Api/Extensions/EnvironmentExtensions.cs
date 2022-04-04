@@ -1,17 +1,17 @@
 ﻿using ConfigurationManagementSystem.Api.Dto;
-using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
+using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Api.Extensions
 {
     internal static class EnvironmentExtensions
     {
-        public static EnvironmentDto ToDto(this Configuration source)
+        public static ConfigurationDto ToDto(this ConfigurationEntity source)
         {
             var root = source.GetRootOptionGroop();
-            return new EnvironmentDto
+            return new ConfigurationDto
             {
                 Id = source.Id.ToString(),
-                ProjectId = source.Project.Id.ToString(),
+                ApplicationId = source.Application.Id.ToString(),
                 Name = source.Name.Value,
                 OptionGroup = root.ToDto()
             };

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConfigurationManagementSystem.Application\ConfigurationManagementSystem.Application.csproj" />
+    <ProjectReference Include="..\ConfigurationManagementSystem.Tests\ConfigurationManagementSystem.Tests.csproj" />
   </ItemGroup>
 
 </Project>

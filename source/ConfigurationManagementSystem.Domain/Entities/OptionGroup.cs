@@ -8,9 +8,8 @@ namespace ConfigurationManagementSystem.Domain.Entities
     public class OptionGroup : DomainEntity
     {
         public OptionGroupName Name { get; private set; }
-        public Description Description { get; private set; }
         public OptionGroup Parent { get; }
-        public Configuration Environment { get; }
+        public ConfigurationEntity Configuration { get; }
 
         protected readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
         public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
@@ -20,27 +19,26 @@ namespace ConfigurationManagementSystem.Domain.Entities
 
         protected OptionGroup() { }
 
-        protected OptionGroup(OptionGroupName name, Description description, Configuration environment, OptionGroup parent)
+        protected OptionGroup(OptionGroupName name, ConfigurationEntity configuration, OptionGroup parent)
         {
             Name = name;
-            Description = description;
-            Environment = environment;
+            Configuration = configuration;
             Parent = parent;
         }
 
-        public static OptionGroup Create(OptionGroupName name, Description description, Configuration environment, OptionGroup parent = null)
+        public static OptionGroup Create(OptionGroupName name, ConfigurationEntity configuration, OptionGroup parent = null)
         {
-            return new OptionGroup(name, description, environment, parent);
+            return new OptionGroup(name, configuration, parent);
         }
 
-        public Option AddOption(OptionName name, Description description, OptionValue value)
+        public Option AddOption(OptionName name, OptionValue value)
         {
             if (_options.Any(x => x.Name == name))
             {
                 throw new InconsistentDataStateException("The group already contains option with the same name");
             }
 
-            var o = Option.Create(name, description, value, this);
+            var o = Option.Create(name, value, this);
             _options.Add(o);
             return o;
         }
@@ -48,6 +46,11 @@ namespace ConfigurationManagementSystem.Domain.Entities
         public void RemoveOption(Option option)
         {
             _options.Remove(option);
+        }
+
+        public void RemoveOptions(IEnumerable<Option> options)
+        {
+            _options.RemoveAll(x => options.Contains(x));
         }
 
         public void UpdateName(OptionGroupName name)
@@ -58,15 +61,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
             }
         }
 
-        public void UpdateDescription(Description description)
-        {
-            if (Description != description)
-            {
-                Description = description;
-            }
-        }
-
-        public OptionGroup AddNestedGroup(OptionGroupName name, Description description)
+        public OptionGroup AddNestedGroup(OptionGroupName name)
         {
             if (_nestedGroups.Any(x => x.Name == name))
             {
@@ -78,7 +73,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
                 throw new InconsistentDataStateException("Invalid nested group name");
             }
 
-            var g = Create(name, description, Environment, this);
+            var g = Create(name, Configuration, this);
             _nestedGroups.Add(g);
             return g;
         }

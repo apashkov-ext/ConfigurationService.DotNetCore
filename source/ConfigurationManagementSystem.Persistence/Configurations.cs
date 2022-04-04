@@ -25,23 +25,23 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public async Task<OptionGroup> GetItem(string project, string environment, string apiKey)
+        public async Task<OptionGroup> GetItem(string app, string environment, string apiKey)
         {
-            var projName = new ProjectName(project);
-            var envName = new EnvironmentName(environment);
+            var projName = new ApplicationName(app);
+            var envName = new ConfigurationName(environment);
             if (string.IsNullOrWhiteSpace(apiKey))
             {
                 throw new NotFoundException("Project does not exist");
             }
             var key = new ApiKey(apiKey);
 
-            var proj = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
+            var proj = await _context.Applications.ApplicationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
             if (proj == null || proj.ApiKey.Value != key.Value)
             {
                 throw new NotFoundException("Project does not exist");
             }
 
-            var env = proj.Environments.FirstOrDefault(x => x.Name.Value == envName.Value);
+            var env = proj.Configurations.FirstOrDefault(x => x.Name.Value == envName.Value);
             if (env == null)
             {
                 throw new NotFoundException("Configuration does not exist");
@@ -52,14 +52,14 @@ namespace ConfigurationManagementSystem.Persistence
 
         public async Task Import(Guid project, string environment, byte[] file)
         {
-            var envName = new EnvironmentName(environment);
-            var proj = await _context.Projects.ProjectsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == project);
+            var envName = new ConfigurationName(environment);
+            var proj = await _context.Applications.ApplicationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == project);
             if (proj == null)
             {
                 throw new NotFoundException("Project does not exist");
             }
 
-            var env = proj.Environments.FirstOrDefault(x => x.Name.Value == envName.Value);
+            var env = proj.Configurations.FirstOrDefault(x => x.Name.Value == envName.Value);
             if (env == null)
             {
                 throw new NotFoundException("Configuration does not exist");

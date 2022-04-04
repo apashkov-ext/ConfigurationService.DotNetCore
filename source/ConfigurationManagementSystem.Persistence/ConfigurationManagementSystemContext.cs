@@ -2,22 +2,23 @@
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Persistence.ContextConfiguration;
 using Microsoft.EntityFrameworkCore;
-using Configuration = ConfigurationManagementSystem.Domain.Entities.Configuration;
+using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Persistence
 {
     public class ConfigurationManagementSystemContext : DbContext
     {
-        public virtual DbSet<Domain.Entities.Application> Projects { get; set; }
-        public virtual DbSet<Configuration> Environments { get; set; }
+        public virtual DbSet<ApplicationEntity> Applications { get; set; }
+        public virtual DbSet<ConfigurationEntity> Configurations { get; set; }
         public virtual DbSet<OptionGroup> OptionGroups { get; set; }
         public virtual DbSet<Option> Options { get; set; }
+        public virtual DbSet<UserEntity> Users { get; set; }
 
         public ConfigurationManagementSystemContext() { }
 
         public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated();
             //DataSeeding.Seed(this);
         }
@@ -26,10 +27,11 @@ namespace ConfigurationManagementSystem.Persistence
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder
-                .ApplyConfiguration(new ProjectConfiguration())
-                .ApplyConfiguration(new EnvironmentConfiguration())
+                .ApplyConfiguration(new ApplicationConfiguration())
+                .ApplyConfiguration(new ConfigurationEntityConfiguration())
                 .ApplyConfiguration(new OptionGroupConfiguration())
-                .ApplyConfiguration(new OptionConfiguration());
+                .ApplyConfiguration(new OptionConfiguration())
+                .ApplyConfiguration(new UserEntityConfiguration());
         }
 
         public override int SaveChanges()

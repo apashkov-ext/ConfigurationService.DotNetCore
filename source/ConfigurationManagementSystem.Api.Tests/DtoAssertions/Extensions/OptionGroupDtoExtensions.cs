@@ -21,11 +21,6 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
                 throw UnexpectedPropertyValueException.Create(model.Name.Value, () => dto.Name);
             }
 
-            if (dto.Description != model.Description.Value)
-            {
-                throw UnexpectedPropertyValueException.Create(model.Description.Value, () => dto.Name);
-            }
-
             var isRoot = model.Parent == null;
             if (isRoot != dto.Root)
             {

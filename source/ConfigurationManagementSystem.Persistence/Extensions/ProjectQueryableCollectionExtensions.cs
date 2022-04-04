@@ -6,10 +6,14 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class ProjectQueryableCollectionExtensions
     {
-        public static IQueryable<Domain.Entities.Application> ProjectsWithIncludedEntities(this IQueryable<Domain.Entities.Application> source)
+        /// <summary>
+        /// Returns Applications included full hierarchy.
+        /// </summary>
+        /// <param name="source"></param>
+        public static IQueryable<ApplicationEntity> ApplicationsWithIncludedEntities(this IQueryable<ApplicationEntity> source)
         {
             return source
-                .Include(x => x.Environments)
+                .Include(x => x.Configurations)
                 .ThenInclude(x => x.OptionGroups)
                 .ThenInclude(x => x.Options)
                 .AsSingleQuery();

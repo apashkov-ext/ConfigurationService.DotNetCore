@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ConfigurationManagementSystem.Api\ConfigurationManagementSystem.Api.csproj" />
     <ProjectReference Include="..\ConfigurationManagementSystem.Persistence\ConfigurationManagementSystem.Persistence.csproj" />
+    <ProjectReference Include="..\ConfigurationManagementSystem.Tests\ConfigurationManagementSystem.Tests.csproj" />
   </ItemGroup>
 
 </Project>

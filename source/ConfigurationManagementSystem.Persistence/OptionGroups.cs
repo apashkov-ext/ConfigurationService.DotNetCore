@@ -44,7 +44,7 @@ namespace ConfigurationManagementSystem.Persistence
             return group ?? throw new NotFoundException("Option Group does not exist");
         }
 
-        public async Task<OptionGroup> Add(Guid parent, string name, string description)
+        public async Task<OptionGroup> Add(Guid parent, string name)
         {
             var parentGroup = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == parent);
             if (parentGroup == null)
@@ -52,16 +52,16 @@ namespace ConfigurationManagementSystem.Persistence
                 throw new NotFoundException("Parent Option Group does not exist");
             }
 
-            var nestedGroup = parentGroup.AddNestedGroup(new OptionGroupName(name), new Description(description ?? ""));
+            var nestedGroup = parentGroup.AddNestedGroup(new OptionGroupName(name));
             await _context.SaveChangesAsync();
 
             return nestedGroup;
         }
 
-        public async Task Update(Guid id, string name, string description)
+        public async Task Update(Guid id, string name)
         {
             var group = await _context.OptionGroups
-                .Include(x => x.Environment)
+                .Include(x => x.Configuration)
                 .ThenInclude(x => x.OptionGroups)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -71,7 +71,7 @@ namespace ConfigurationManagementSystem.Persistence
                 throw new NotFoundException("Option Group does not exist");
             }
 
-            if (group.Environment.GetRootOptionGroop() == group)
+            if (group.Configuration.GetRootOptionGroop() == group)
             {
                 throw new InconsistentDataStateException("Root Option Group cannot be modified");
             }
@@ -89,7 +89,6 @@ namespace ConfigurationManagementSystem.Persistence
             }
 
             group.UpdateName(newName);
-            group.UpdateDescription(new Description(description));
 
             await _context.SaveChangesAsync();
         }
@@ -97,7 +96,7 @@ namespace ConfigurationManagementSystem.Persistence
         public async Task Remove(Guid id)
         {
             var group = await _context.OptionGroups
-                .Include(x => x.Environment)
+                .Include(x => x.Configuration)
                 .ThenInclude(x => x.OptionGroups)
                 .ThenInclude(x => x.Options)
                 .AsSingleQuery()
@@ -107,7 +106,7 @@ namespace ConfigurationManagementSystem.Persistence
                 throw new NotFoundException("Option Group does not exist");
             }
 
-            var root = group.Environment.GetRootOptionGroop();
+            var root = group.Configuration.GetRootOptionGroop();
             if (group == root)
             {
                 throw new InconsistentDataStateException("The root Option Group cannot be deleted");

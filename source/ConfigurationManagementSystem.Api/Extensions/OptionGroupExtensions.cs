@@ -14,7 +14,6 @@ namespace ConfigurationManagementSystem.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
-                Description = source.Description.Value,
                 Options = options,
                 NestedGroups = nested,
                 Root = source.Parent == null

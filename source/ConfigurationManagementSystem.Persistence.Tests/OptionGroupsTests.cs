@@ -15,7 +15,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         {
             const string name = "Validation";
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent)).Context;
-            var g = await new OptionGroups(ctx).Add(parent.Id, name, "Option group description");
+            var g = await new OptionGroups(ctx).Add(parent.Id, name);
             Assert.Equal(name, g.Name.Value);
         }
 
@@ -24,7 +24,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void Add_ExistedProject_Exception(OptionGroup parent, OptionGroup nested)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent, nested)).Context;
-            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Add(parent.Id, nested.Name.Value, "Option group description"));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Add(parent.Id, nested.Name.Value));
         }
 
         [Theory]
@@ -32,7 +32,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void UpdateNonRootGroup_EmptyName_Exception(OptionGroup g)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, g)).Context;
-            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Update(g.Id, "", "desc"));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Update(g.Id, ""));
         }
 
         [Theory]
@@ -40,7 +40,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void UpdateNonRootGroup_CorrectName_Success(OptionGroup g)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, g)).Context;
-            await new OptionGroups(ctx).Update(g.Id, "OptGrName", "desc");
+            await new OptionGroups(ctx).Update(g.Id, "OptGrName");
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void UpdateNonRootGroup_OtherGroupWithTheSameNameExists_Exception(OptionGroup parent, OptionGroup nested, OptionGroup nested2)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, parent, nested, nested2)).Context;
-            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(nested2.Id, nested.Name.Value, "desc"));
+            await Assert.ThrowsAsync<ApplicationException>(() => new OptionGroups(ctx).Update(nested2.Id, nested.Name.Value));
         }
 
         [Theory]
@@ -56,7 +56,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void UpdateRootGroup_CorrectName_Exception(OptionGroup root)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.OptionGroups, root)).Context;
-            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Update(root.Id, "OptGrName", "desc"));
+            await Assert.ThrowsAsync<InconsistentDataStateException>(() => new OptionGroups(ctx).Update(root.Id, "OptGrName"));
         }
     }
 }
