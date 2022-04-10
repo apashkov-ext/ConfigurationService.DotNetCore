@@ -26,7 +26,7 @@ namespace ConfigurationManagementSystem.Application.Stories.GetApplicationByIdSt
                 ? await _getApplicationByIdWithHierarchyQuery.ExecuteAsync(id)
                 : await _getApplicationByIdWithoutHierarchyQuery.ExecuteAsync(id);
 
-            return app ?? throw new NotFoundException("Project does not exist");
+            return app ?? throw new EntityNotFoundException("Project does not exist");
         }
     }
 }

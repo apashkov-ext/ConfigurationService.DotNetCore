@@ -12,12 +12,15 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
             builder.Property(x => x.Created).IsRequired();
             builder.Property(x => x.Modified).IsRequired();
 
-            builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
+            builder.OwnsOne(x => x.Name, y =>
+            {
+                y.Property(p => p.Value).HasColumnName("Name");
+                y.HasIndex(i => i.Value);
+            });
+
             builder.HasOne(x => x.Application).WithMany(x => x.Configurations);
             builder.HasMany(x => x.OptionGroups).WithOne(x => x.Configuration);
             builder.Navigation(x => x.OptionGroups).HasField("_optionGroups").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
-
-            builder.HasIndex(x => x.Name);
         }
     }
 }

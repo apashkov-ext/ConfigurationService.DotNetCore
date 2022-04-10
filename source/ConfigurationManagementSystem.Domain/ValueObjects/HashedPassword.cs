@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace ConfigurationManagementSystem.Domain.ValueObjects
 {
-    public class Password : ValueObject
+    public class HashedPassword : ValueObject
     {
         public string Value { get; }
 
-        public Password(string value)
+        public HashedPassword(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new InconsistentDataStateException($"Incorrect password: {value}");
+                throw new InconsistentDataStateException($"Incorrect password hash");
             }
 
             Value = value;

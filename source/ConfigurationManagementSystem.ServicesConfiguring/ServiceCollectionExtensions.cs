@@ -56,7 +56,7 @@ namespace ConfigurationManagementSystem.ServicesConfiguring
                 }
 
                 var config = section.Get(type);
-                services.AddSingleton(config);
+                services.AddSingleton(type, config);
             }
         }
     }

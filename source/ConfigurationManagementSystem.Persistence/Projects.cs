@@ -48,7 +48,7 @@ namespace ConfigurationManagementSystem.Persistence
                 .ApplicationsWithIncludedEntities()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return project ?? throw new NotFoundException("Application does not exist");
+            return project ?? throw new EntityNotFoundException("Application does not exist");
         }
 
         public async Task<ApplicationEntity> AddAsync(string name)
@@ -72,7 +72,7 @@ namespace ConfigurationManagementSystem.Persistence
             var project = await _context.Applications.ApplicationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             if (project == null)
             {
-                throw new NotFoundException("Application does not exist");
+                throw new EntityNotFoundException("Application does not exist");
             }
 
             project.RemoveWithHierarchy(_context);

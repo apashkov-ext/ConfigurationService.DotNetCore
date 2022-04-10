@@ -39,7 +39,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void Remove_NotExistedProject_Exception()
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Applications(ctx).RemoveAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => new Applications(ctx).RemoveAsync(Guid.NewGuid()));
         }
 
         [Theory]
@@ -55,7 +55,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void GetById_NotExistedProject_Exception()
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Applications(ctx).GetAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => new Applications(ctx).GetAsync(Guid.NewGuid()));
         }
 
         [Theory]

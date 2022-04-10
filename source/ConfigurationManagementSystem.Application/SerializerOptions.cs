@@ -4,7 +4,7 @@ namespace ConfigurationManagementSystem.Application
 {
     public static class SerializerOptions
     {
-        public static JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
+        public static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             AllowTrailingCommas = true

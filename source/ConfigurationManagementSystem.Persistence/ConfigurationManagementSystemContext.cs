@@ -18,8 +18,8 @@ namespace ConfigurationManagementSystem.Persistence
 
         public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
             //DataSeeding.Seed(this);
         }
 

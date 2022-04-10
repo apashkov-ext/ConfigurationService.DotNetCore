@@ -55,7 +55,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void Remove_NotExistedEnv_Exception(Domain.Entities.ApplicationEntity p)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Applications, p).WithSet(s => s.Configurations)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).RemoveAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => new Environments(ctx).RemoveAsync(Guid.NewGuid()));
         }
 
         [Theory]
@@ -71,7 +71,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void GetById_NotExistedEnv_Exception()
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Configurations)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).GetAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => new Environments(ctx).GetAsync(Guid.NewGuid()));
         }
 
         [Theory]
@@ -79,7 +79,7 @@ namespace ConfigurationManagementSystem.Persistence.Tests
         public async void Update_NotExistedEnv_Exception(ConfigurationEntity e)
         {
             var ctx = new DbContextFixture(x => x.WithSet(s => s.Configurations)).Context;
-            await Assert.ThrowsAsync<NotFoundException>(() => new Environments(ctx).UpdateAsync(e.Id, "NewEnv"));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => new Environments(ctx).UpdateAsync(e.Id, "NewEnv"));
         }
 
         [Theory]

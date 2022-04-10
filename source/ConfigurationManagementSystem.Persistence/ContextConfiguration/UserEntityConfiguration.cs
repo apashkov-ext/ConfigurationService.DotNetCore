@@ -12,11 +12,16 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
             builder.Property(x => x.Created).IsRequired();
             builder.Property(x => x.Modified).IsRequired();
 
-            builder.OwnsOne(x => x.Username).Property(x => x.Value).HasColumnName("Username");
-            builder.OwnsOne(x => x.PasswordHash).Property(x => x.Value).HasColumnName("PasswordHash");
-
-            builder.HasIndex(x => x.Username);
-            builder.HasIndex(x => x.PasswordHash);
+            builder.OwnsOne(x => x.Username, y =>
+            {
+                y.Property(p => p.Value).IsRequired().HasColumnName("Username");
+                y.HasIndex(i => i.Value);
+            });
+            builder.OwnsOne(x => x.PasswordHash, y =>
+            {
+                y.Property(p => p.Value).IsRequired().HasColumnName("PasswordHash");
+                y.HasIndex(i => i.Value);
+            });
         }
     }
 }

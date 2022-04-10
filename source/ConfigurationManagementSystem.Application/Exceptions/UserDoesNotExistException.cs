@@ -4,11 +4,11 @@ using System.Runtime.Serialization;
 namespace ConfigurationManagementSystem.Application.Exceptions
 {
     [Serializable]
-    public class UserDoesNotExistException : Exception
+    public class UserNotFoundException : Exception
     {
-        public UserDoesNotExistException() { }
-        public UserDoesNotExistException(string message) : base(message) { }
-        public UserDoesNotExistException(string message, Exception inner) : base(message, inner) { }
-        protected UserDoesNotExistException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public UserNotFoundException() { }
+        public UserNotFoundException(string message) : base(message) { }
+        public UserNotFoundException(string message, Exception inner) : base(message, inner) { }
+        protected UserNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

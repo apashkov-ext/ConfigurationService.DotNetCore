@@ -2,40 +2,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using NLog.Extensions.Logging;
 using System;
 using System.Text;
 
-namespace ConfigurationManagementSystem.Api.Extensions
+namespace ConfigurationManagementSystem.Api.Extensions.ServiceCollection
 {
-    internal static class ServiceCollectionExtensions
+    internal static partial class ServiceCollectionExtensions
     {
-        public static void ConfigureLogging(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.ClearProviders();
-                loggingBuilder.AddConfiguration(configuration.GetSection("Logging"));
-                loggingBuilder.AddNLog(configuration);
-            });
-        }
-
-        public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        var origins = configuration.GetOrigins();
-                        builder.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader();
-                    });
-            });
-        }
-
-        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var secSection = configuration.GetSection(nameof(SecuritySection)).Get<SecuritySection>();
             services.AddAuthentication(opt =>
@@ -57,6 +32,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secSection.SymmetricSecurityKey))
                 };
             });
+            return services;
         }
     }
 }

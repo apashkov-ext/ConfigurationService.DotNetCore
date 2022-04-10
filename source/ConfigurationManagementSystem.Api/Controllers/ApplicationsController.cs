@@ -36,7 +36,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResponseDto<ApplicationDto>>> Get([FromQuery] GetRequestOptions options)
         {
-            var pOpt = new PaginationOptions(options.Offset ?? 0, options.Limit ?? 20);
+            var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
             var apps = await _getApplicationsStory.ExecuteAsync(options.Name, pOpt, options.Hierarchy ?? false);
             var result = apps.ToPagedResponseDto(ApplicationExtensions.ToDto);
 

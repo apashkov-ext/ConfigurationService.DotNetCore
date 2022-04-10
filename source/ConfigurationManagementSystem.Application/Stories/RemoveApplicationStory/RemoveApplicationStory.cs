@@ -25,7 +25,7 @@ namespace ConfigurationManagementSystem.Application.Stories.RemoveApplicationSto
 
         public async Task ExecuteAsync(Guid id)
         {
-            var application = await _getApplicationByIdWithHierarchyQuery.ExecuteAsync(id) ?? throw new NotFoundException("Project does not exist");
+            var application = await _getApplicationByIdWithHierarchyQuery.ExecuteAsync(id) ?? throw new EntityNotFoundException("Project does not exist");
 
             var configs = application.Configurations;
             var groups = application.Configurations.SelectMany(x => GetOptionGroupsDeep(x.GetRootOptionGroop()));

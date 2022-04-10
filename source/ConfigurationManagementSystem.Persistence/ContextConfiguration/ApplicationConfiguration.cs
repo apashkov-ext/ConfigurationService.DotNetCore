@@ -12,13 +12,16 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
             builder.Property(x => x.Created).IsRequired();
             builder.Property(x => x.Modified).IsRequired();
 
-            builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
+            builder.OwnsOne(x => x.Name, y =>
+            {
+                y.Property(p => p.Value).HasColumnName("Name");
+                y.HasIndex(i => i.Value);
+            });
+
             builder.OwnsOne(x => x.ApiKey).Property(x => x.Value).HasColumnName("ApiKey");
 
             builder.HasMany(x => x.Configurations).WithOne(x => x.Application); 
             builder.Navigation(x => x.Configurations).HasField("_configurations").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
-
-            builder.HasIndex(x => x.Name);
         }
     }
 }

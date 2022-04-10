@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net.Http;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions;
-using ConfigurationManagementSystem.Api.Tests.Extensions;
 using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
@@ -25,7 +24,8 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             var actual = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
 
-            Assert.IsType<PagedResponseDto<ApplicationDto>>(actual);
+            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+            Assert.Empty(actual.ResponseData.Data);
         }
 
         [Fact]

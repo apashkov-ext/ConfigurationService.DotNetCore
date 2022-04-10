@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Application;
+using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Application.Stories.GetConfigurationsStory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,19 +16,24 @@ namespace ConfigurationManagementSystem.Api.Controllers
     public class ConfigurationsController : ControllerBase
     {
         private readonly IEnvironments _environments;
+        private readonly GetConfigurationsStory _getConfigurationsStory;
 
-        public ConfigurationsController(IEnvironments environments)
+        public ConfigurationsController(IEnvironments environments,
+            GetConfigurationsStory getConfigurationsStory)
         {
             _environments = environments;
+            _getConfigurationsStory = getConfigurationsStory;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ConfigurationDto>>> Get(string name)
+        public async Task<ActionResult<PagedResponseDto<ConfigurationDto>>> Get([FromQuery] GetRequestOptions options)
         {
-            var envs = await _environments.GetAsync(name);
-            var dto = envs.Select(x => x.ToDto());
-            return Ok(dto);
+            var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
+            var configs = await _getConfigurationsStory.ExecuteAsync(options.Name, pOpt, options.Hierarchy ?? false);
+            var result = configs.ToPagedResponseDto(ConfigurationEntityExtensions.ToDto);
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

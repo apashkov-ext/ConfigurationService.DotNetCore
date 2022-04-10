@@ -26,12 +26,10 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                     .Initialize();
             });
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/configurations");
-            var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<IEnumerable<ConfigurationDto>>();
+            var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations");
 
-            Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Empty(actual);
+            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+            Assert.Empty(actual.ResponseData.Data);
         }
 
         [Fact]
@@ -53,15 +51,12 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                     .WithEntities(option)
                     .Commit();
             });
-            
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/configurations");
-            var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<IEnumerable<ConfigurationDto>>();
-            var actualList = actual.ToList();
 
-            Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Single(actualList);
-            Assertions.ConfigurationDtosAreEquivalentToModel(actualList, env);
+            var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations?hierarchy=true");
+
+            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+            Assert.Single(actual.ResponseData.Data);
+            Assertions.ConfigurationDtosAreEquivalentToModel(actual.ResponseData.Data, env);
         }
 
         [Fact]

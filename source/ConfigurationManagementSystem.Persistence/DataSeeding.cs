@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ConfigurationManagementSystem.Application.Stories.SignInStory;
 using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
@@ -37,7 +38,7 @@ namespace ConfigurationManagementSystem.Persistence
 
             context.Applications.AddRange(p);
 
-            var user = UserEntity.Create(new Username("Aleksey"), new Password("Qwerty1"));
+            var user = UserEntity.Create(new Username("Aleksey"), PasswordHasher.HashPassword("Qwerty1"));
             context.Users.Add(user);
 
             context.SaveChanges();

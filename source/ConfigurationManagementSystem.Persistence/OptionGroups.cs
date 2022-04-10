@@ -41,7 +41,7 @@ namespace ConfigurationManagementSystem.Persistence
         public async Task<OptionGroup> Get(Guid id)
         {
             var group = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
-            return group ?? throw new NotFoundException("Option Group does not exist");
+            return group ?? throw new EntityNotFoundException("Option Group does not exist");
         }
 
         public async Task<OptionGroup> Add(Guid parent, string name)
@@ -49,7 +49,7 @@ namespace ConfigurationManagementSystem.Persistence
             var parentGroup = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == parent);
             if (parentGroup == null)
             {
-                throw new NotFoundException("Parent Option Group does not exist");
+                throw new EntityNotFoundException("Parent Option Group does not exist");
             }
 
             var nestedGroup = parentGroup.AddNestedGroup(new OptionGroupName(name));
@@ -68,7 +68,7 @@ namespace ConfigurationManagementSystem.Persistence
 
             if (group == null)
             {
-                throw new NotFoundException("Option Group does not exist");
+                throw new EntityNotFoundException("Option Group does not exist");
             }
 
             if (group.Configuration.GetRootOptionGroop() == group)
@@ -103,7 +103,7 @@ namespace ConfigurationManagementSystem.Persistence
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (group == null)
             {
-                throw new NotFoundException("Option Group does not exist");
+                throw new EntityNotFoundException("Option Group does not exist");
             }
 
             var root = group.Configuration.GetRootOptionGroop();

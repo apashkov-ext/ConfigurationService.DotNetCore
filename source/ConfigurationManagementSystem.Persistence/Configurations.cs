@@ -31,20 +31,20 @@ namespace ConfigurationManagementSystem.Persistence
             var envName = new ConfigurationName(environment);
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                throw new NotFoundException("Project does not exist");
+                throw new EntityNotFoundException("Project does not exist");
             }
             var key = new ApiKey(apiKey);
 
             var proj = await _context.Applications.ApplicationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Name.Value == projName.Value);
             if (proj == null || proj.ApiKey.Value != key.Value)
             {
-                throw new NotFoundException("Project does not exist");
+                throw new EntityNotFoundException("Project does not exist");
             }
 
             var env = proj.Configurations.FirstOrDefault(x => x.Name.Value == envName.Value);
             if (env == null)
             {
-                throw new NotFoundException("Configuration does not exist");
+                throw new EntityNotFoundException("Configuration does not exist");
             }
 
             return env.GetRootOptionGroop();
@@ -56,13 +56,13 @@ namespace ConfigurationManagementSystem.Persistence
             var proj = await _context.Applications.ApplicationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == project);
             if (proj == null)
             {
-                throw new NotFoundException("Project does not exist");
+                throw new EntityNotFoundException("Project does not exist");
             }
 
             var env = proj.Configurations.FirstOrDefault(x => x.Name.Value == envName.Value);
             if (env == null)
             {
-                throw new NotFoundException("Configuration does not exist");
+                throw new EntityNotFoundException("Configuration does not exist");
             }
 
             var originalTree = new ConfigTree(env.GetRootOptionGroop(), _context);

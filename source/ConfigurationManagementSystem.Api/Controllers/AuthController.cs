@@ -20,7 +20,6 @@ namespace ConfigurationManagementSystem.Api.Controllers
         public async Task<IActionResult> SignIn(SignInDto request)
         {
             var token = await _signInStory.ExecuteAsync(request.Username, request.Password);
-
             return Ok(new { token });
         }
     }

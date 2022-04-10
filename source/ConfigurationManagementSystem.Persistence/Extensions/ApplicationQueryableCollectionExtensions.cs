@@ -4,12 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConfigurationManagementSystem.Persistence.Extensions
 {
-    internal static class ProjectQueryableCollectionExtensions
+    internal static class ApplicationQueryableCollectionExtensions
     {
         /// <summary>
         /// Returns Applications included full hierarchy.
         /// </summary>
-        /// <param name="source"></param>
         public static IQueryable<ApplicationEntity> ApplicationsWithIncludedEntities(this IQueryable<ApplicationEntity> source)
         {
             return source

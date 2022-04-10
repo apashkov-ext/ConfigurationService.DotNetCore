@@ -15,5 +15,10 @@ namespace ConfigurationManagementSystem.Application.Pagination
             Offset = offset;
             Limit = limit;
         }
+
+        public static PaginationOptions Create(int? offset, int? limit)
+        {
+            return new(offset ?? 0, limit ?? 20);
+        }
     }
 }

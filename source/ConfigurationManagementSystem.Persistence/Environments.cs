@@ -29,7 +29,7 @@ namespace ConfigurationManagementSystem.Persistence
             if (string.IsNullOrEmpty(name))
             {
                 var all = await _context.Configurations
-                    .EnvironmentsWithIncludedEntities()
+                    .ConfigurationsWithIncludedEntities()
                     .AsNoTrackingWithIdentityResolution()
                     .ToListAsync();
 
@@ -37,7 +37,7 @@ namespace ConfigurationManagementSystem.Persistence
             }
 
             var list = await _context.Configurations
-                .EnvironmentsWithIncludedEntities()
+                .ConfigurationsWithIncludedEntities()
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
@@ -47,8 +47,8 @@ namespace ConfigurationManagementSystem.Persistence
 
         public async Task<ConfigurationEntity> GetAsync(Guid id)
         {
-            var env = await _context.Configurations.EnvironmentsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
-            return env ?? throw new NotFoundException("Environment does not exist");
+            var env = await _context.Configurations.ConfigurationsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
+            return env ?? throw new EntityNotFoundException("Environment does not exist");
         }
 
         public async Task<ConfigurationEntity> AddAsync(Guid projectId, string name)
@@ -56,7 +56,7 @@ namespace ConfigurationManagementSystem.Persistence
             var proj = await _context.Applications.Include(x => x.Configurations).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == projectId);
             if (proj == null)
             {
-                throw new NotFoundException("Project does not exist");
+                throw new EntityNotFoundException("Project does not exist");
             }
 
             var env = proj.AddConfiguration(new ConfigurationName(name));
@@ -75,7 +75,7 @@ namespace ConfigurationManagementSystem.Persistence
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (env == null)
             {
-                throw new NotFoundException("Environment does not exist");
+                throw new EntityNotFoundException("Environment does not exist");
             }
 
             if (env.Application.Configurations.Any(x => x.Name == envName))
@@ -95,7 +95,7 @@ namespace ConfigurationManagementSystem.Persistence
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (env == null)
             {
-                throw new NotFoundException("Environment does not exist");
+                throw new EntityNotFoundException("Environment does not exist");
             }
 
             env.RemoveWithHierarchy(_context);

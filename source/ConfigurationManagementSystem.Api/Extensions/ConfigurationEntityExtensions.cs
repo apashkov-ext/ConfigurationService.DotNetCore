@@ -3,7 +3,7 @@ using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.Config
 
 namespace ConfigurationManagementSystem.Api.Extensions
 {
-    internal static class EnvironmentExtensions
+    internal static class ConfigurationEntityExtensions
     {
         public static ConfigurationDto ToDto(this ConfigurationEntity source)
         {

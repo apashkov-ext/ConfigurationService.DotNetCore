@@ -1,8 +1,11 @@
 using ConfigurationManagementSystem.Api.Extensions;
-using ConfigurationManagementSystem.Api.Filters;
+using ConfigurationManagementSystem.Api.Extensions.ServiceCollection;
+using ConfigurationManagementSystem.Api.Middleware;
 using ConfigurationManagementSystem.ServicesConfiguring;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,25 +28,22 @@ namespace ConfigurationManagementSystem.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureLogging(Configuration);
-            services.ConfigureApplicationServices(Configuration);
-            services.ConfigureCors(Configuration);
-            services.ConfigureAuthentication(Configuration);
-            
-            services.AddControllers(options => options.Filters.Add(new ApplicationExceptionFilter()));
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConfigurationService.Api", Version = "v1" });
-            });
+            services
+                .ConfigureExceptionHandling()
+                .ConfigureLogging(Configuration)
+                .ConfigureApplicationServices(Configuration)
+                .ConfigureCors(Configuration)
+                .ConfigureAuthentication(Configuration)
+                .AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConfigurationService.Api", Version = "v1" });
+                })
+                .AddControllers()
+                .ConfigureApiBehavior();
         }
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
-            if (_env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             if (_env.IsProduction())
             {
                 // Needs to pass headers to the reverse proxy.
@@ -58,14 +58,16 @@ namespace ConfigurationManagementSystem.Api
 
             ChangeToken.OnChange(Configuration.GetReloadToken, lifetime.StopApplication);
 
-            app.UseRouting();
-            app.UseCors();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app
+                .UseMiddleware<ExceptionHandlingMiddleware>()
+                .UseRouting()
+                .UseCors()
+                .UseAuthentication()
+                .UseAuthorization()
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
         }
     }
 }

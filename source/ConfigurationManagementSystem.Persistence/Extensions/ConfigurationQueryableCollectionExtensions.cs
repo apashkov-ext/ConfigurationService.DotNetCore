@@ -4,14 +4,12 @@ using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.Config
 
 namespace ConfigurationManagementSystem.Persistence.Extensions
 {
-    internal static class EnvironmentQueryableCollectionExtensions
+    internal static class ConfigurationQueryableCollectionExtensions
     {
-        public static IQueryable<ConfigurationEntity> EnvironmentsWithIncludedEntities(this IQueryable<ConfigurationEntity> source)
+        public static IQueryable<ConfigurationEntity> ConfigurationsWithIncludedEntities(this IQueryable<ConfigurationEntity> source)
         {
             return source
                 .Include(x => x.OptionGroups)
-                //.ThenInclude(x => x.Parent)
-                //.ThenInclude(x => x.NestedGroups)
                 .ThenInclude(x => x.Options)
                 .Include(x => x.Application)
                 .AsSingleQuery();

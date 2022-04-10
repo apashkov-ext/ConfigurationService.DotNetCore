@@ -18,9 +18,11 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
             builder.HasOne(x => x.Parent).WithMany(x => x.NestedGroups).IsRequired(false);
             builder.Navigation(x => x.NestedGroups).HasField("_nestedGroups").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
 
-            builder.OwnsOne(x => x.Name).Property(x => x.Value).HasColumnName("Name");
-
-            builder.HasIndex(x => x.Name);
+            builder.OwnsOne(x => x.Name, y =>
+            {
+                y.Property(p => p.Value).HasColumnName("Name");
+                y.HasIndex(i => i.Value);
+            });
         }
     }
 }

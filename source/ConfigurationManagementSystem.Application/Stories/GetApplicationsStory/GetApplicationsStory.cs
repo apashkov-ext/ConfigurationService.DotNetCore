@@ -1,5 +1,4 @@
 ﻿using ConfigurationManagementSystem.Application.Pagination;
-using ConfigurationManagementSystem.Application.Stories;
 using ConfigurationManagementSystem.Application.Stories.Framework;
 using ConfigurationManagementSystem.Domain.Entities;
 using System;

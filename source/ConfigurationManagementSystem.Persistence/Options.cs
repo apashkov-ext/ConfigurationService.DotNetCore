@@ -38,7 +38,7 @@ namespace ConfigurationManagementSystem.Persistence
         public async Task<Option> GetAsync(Guid id)
         {
             var o = await _context.Options.FindAsync(id);
-            return o ?? throw new NotFoundException("Option does not exist");
+            return o ?? throw new EntityNotFoundException("Option does not exist");
         }
 
         public async Task<Option> AddAsync(Guid optionGroup, string name, object value, OptionValueType type)
@@ -49,7 +49,7 @@ namespace ConfigurationManagementSystem.Persistence
 
             if (group == null)
             {
-                throw new NotFoundException("Option group does not exist");
+                throw new EntityNotFoundException("Option group does not exist");
             }
 
             var optionValue = TypeConversion.GetOptionValue(value, type);
@@ -70,7 +70,7 @@ namespace ConfigurationManagementSystem.Persistence
 
             if (option == null)
             {
-                throw new NotFoundException("Option does not exist");
+                throw new EntityNotFoundException("Option does not exist");
             }
 
             var newName = new OptionName(name);
@@ -94,7 +94,7 @@ namespace ConfigurationManagementSystem.Persistence
             var option = await _context.Options.Include(x => x.OptionGroup).AsSingleQuery().FirstOrDefaultAsync(x => x.Id == id);
             if (option == null)
             {
-                throw new NotFoundException("Option does not exist");
+                throw new EntityNotFoundException("Option does not exist");
             }
 
             option.OptionGroup.RemoveOption(option);

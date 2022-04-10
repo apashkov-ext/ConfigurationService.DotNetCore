@@ -9,28 +9,28 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace ConfigurationManagementSystem.Application.Stories.SignInStory
 {
     [UserStory]
     public class SignInStory
     {
-        private readonly GetUserByCredentialsQuery _getUserByCredentialsQuery;
+        private readonly GetUserByUsernameQuery _getUserByUsernameQuery;
         private readonly SecuritySection _securitySection;
 
-        public SignInStory(GetUserByCredentialsQuery getUserByCredentialsQuery, SecuritySection securitySection)
+        public SignInStory(GetUserByUsernameQuery getUserByUsernameQuery, 
+            SecuritySection securitySection)
         {
-            _getUserByCredentialsQuery = getUserByCredentialsQuery;
+            _getUserByUsernameQuery = getUserByUsernameQuery;
             _securitySection = securitySection;
         }
 
         public async Task<string> ExecuteAsync(string username, string password)
         {
             var usern = new Username(username);
-            var pass = new Password(BCryptNet.HashPassword(password, _securitySection.Salt));
 
-            var user = await _getUserByCredentialsQuery.ExecuteAsync(usern, pass) ?? throw new UserDoesNotExistException($"User not found: {usern}");
+            var user = await _getUserByUsernameQuery.ExecuteAsync(usern) ?? throw new UserNotFoundException($"User not found");
+            PasswordVerifier.VerifyPassword(password, user.PasswordHash);
 
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securitySection.SymmetricSecurityKey));
             var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
