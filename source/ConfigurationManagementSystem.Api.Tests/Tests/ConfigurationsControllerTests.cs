@@ -68,10 +68,9 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                     .Initialize();
             });
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/configurations/{Guid.NewGuid()}");
-            var response = await HttpClient.SendAsync(request);
+            var actual = await GetAsync<ConfigurationDto>($"api/configurations/{Guid.NewGuid()}");
 
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, actual.StatusCode);
         }
 
         [Fact]
@@ -91,23 +90,21 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                     .WithEntities(group)
                     .WithEntities(option)
                     .Commit();
-            }); 
+            });
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/configurations/{env.Id}");
-            var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<ConfigurationDto>();
+            var actual = await GetAsync<ConfigurationDto>($"api/configurations/{env.Id}");
 
-            Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assertions.ConfigurationDtoIsEquivalentToModel(actual, env);
+            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+            Assertions.ConfigurationDtoIsEquivalentToModel(actual.ResponseData, env);
         }
 
         [Fact]
         public async void Post_ExistsWithTheSameName_Returns422()
         {
-            const string envName = "SomeEnv";
+            const string configName = "SomeConfig";
 
-            var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
-            var env = project.AddConfiguration(new ConfigurationName(envName));
+            var project = ApplicationEntity.Create(new ApplicationName("TestApp"), new ApiKey(Guid.NewGuid()));
+            var env = project.AddConfiguration(new ConfigurationName(configName));
             var group = env.OptionGroups.First();
             var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
 
@@ -125,16 +122,12 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             var body = new
             {
                 application = project.Id.ToString(),
-                name = envName
+                name = configName
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/configurations")
-            {
-                Content = RequestContentFactory.CreateJsonStringContent(body)
-            };
-            var response = await HttpClient.SendAsync(request);
+            var actual = await PostAsync<ConfigurationDto>($"api/configurations", body);
 
-            Assert.Equal(System.Net.HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.UnprocessableEntity, actual.StatusCode);
         }
 
         [Fact]
