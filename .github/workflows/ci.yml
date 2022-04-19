@@ -37,14 +37,14 @@ jobs:
         with:
           name: sources
       - run: dotnet build
-      - name: run tests for ConfigurationService.Api
-        run: dotnet test "ConfigurationService.Api.Tests/ConfigurationService.Api.Tests.csproj" --no-build --no-restore 
+      - name: run tests for Api
+        run: dotnet test "ConfigurationManagementSystem.Api.Tests/ConfigurationManagementSystem.Api.Tests.csproj" --no-build --no-restore 
         
-      - name: run tests for ConfigurationService.Domain
-        run: dotnet test "ConfigurationService.Domain.Tests/ConfigurationService.Domain.Tests.csproj" --no-build --no-restore  
+      - name: run tests for Domain
+        run: dotnet test "ConfigurationManagementSystem.Domain.Tests/ConfigurationManagementSystem.Domain.Tests.csproj" --no-build --no-restore  
         
-      - name: run tests for ConfigurationService.Persistence
-        run: dotnet test "ConfigurationService.Persistence.Tests/ConfigurationService.Persistence.Tests.csproj" --no-build --no-restore
+      - name: run tests for Persistence
+        run: dotnet test "ConfigurationManagementSystem.Persistence.Tests/ConfigurationManagementSystem.Persistence.Tests.csproj" --no-build --no-restore
 
   publish:
     needs: tests
@@ -55,7 +55,7 @@ jobs:
           name: sources
           
       - name: publish
-        run: dotnet publish "ConfigurationService.Api/ConfigurationService.Api.csproj" -c Release -p:UseAppHost=false -o artifact     
+        run: dotnet publish "ConfigurationManagementSystem.Api/ConfigurationManagementSystem.Api.csproj" -c Release -p:UseAppHost=false -o artifact     
       
       - uses: actions/upload-artifact@v2
         with:
