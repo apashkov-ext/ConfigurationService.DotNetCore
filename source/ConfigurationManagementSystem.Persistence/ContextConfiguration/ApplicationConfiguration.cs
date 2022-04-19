@@ -1,6 +1,7 @@
 ﻿using ConfigurationManagementSystem.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {
@@ -9,8 +10,8 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
         public void Configure(EntityTypeBuilder<ApplicationEntity> builder)
         {
             builder.ToTable("Applications").HasKey(x => x.Id);
-            builder.Property(x => x.Created).IsRequired();
-            builder.Property(x => x.Modified).IsRequired();
+            builder.Property(x => x.Created).DateTimeConversion().IsRequired();
+            builder.Property(x => x.Modified).DateTimeConversion().IsRequired();
 
             builder.OwnsOne(x => x.Name, y =>
             {
@@ -20,7 +21,7 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 
             builder.OwnsOne(x => x.ApiKey).Property(x => x.Value).HasColumnName("ApiKey");
 
-            builder.HasMany(x => x.Configurations).WithOne(x => x.Application); 
+            builder.HasMany(x => x.Configurations).WithOne(x => x.Application);
             builder.Navigation(x => x.Configurations).HasField("_configurations").UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
         }
     }

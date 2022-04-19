@@ -1,4 +1,5 @@
 ﻿using ConfigurationManagementSystem.Application.Exceptions;
+using ConfigurationManagementSystem.Application.Stories.Commands;
 using ConfigurationManagementSystem.Application.Stories.Framework;
 using ConfigurationManagementSystem.Application.Stories.GetApplicationByIdStory;
 using ConfigurationManagementSystem.Domain.Entities;
@@ -28,7 +29,7 @@ namespace ConfigurationManagementSystem.Application.Stories.RemoveApplicationSto
             var application = await _getApplicationByIdWithHierarchyQuery.ExecuteAsync(id) ?? throw new EntityNotFoundException("Project does not exist");
 
             var configs = application.Configurations;
-            var groups = application.Configurations.SelectMany(x => GetOptionGroupsDeep(x.GetRootOptionGroop()));
+            var groups = application.Configurations.SelectMany(x => x.GetRootOptionGroop().GetOptionGroupsDeep());
             var options = groups.SelectMany(x => x.Options);
             var entities = new DomainEntity[] { application }.AsEnumerable()
                 .Concat(configs)
@@ -36,20 +37,6 @@ namespace ConfigurationManagementSystem.Application.Stories.RemoveApplicationSto
                 .Concat(options);
 
             await _deleteEntitiesCommand.ExecuteAsync(entities);
-        }
-
-        private IEnumerable<OptionGroup> GetOptionGroupsDeep(OptionGroup root)
-        {
-            yield return root;
-
-            foreach(var group in root.NestedGroups)
-            {
-                var groups = GetOptionGroupsDeep(group);
-                foreach(var g in groups)
-                {
-                    yield return g;
-                }
-            }
         }
     }
 }

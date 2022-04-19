@@ -26,16 +26,14 @@ namespace ConfigurationManagementSystem.Application.Stories.AddApplicationStory
 
         public async Task<ApplicationEntity> ExecuteAsync(string name)
         {
-            var projName = new ApplicationName(name);
-            var existed = await _getApplicationByNameQuery.ExecuteAsync(projName);
+            var appName = new ApplicationName(name);
+            var existed = await _getApplicationByNameQuery.ExecuteAsync(appName);
             if (existed != null)
             {
                 throw new AlreadyExistsException("Application with the same name already exists");
             }
 
-            var newProj = ApplicationEntity.Create(projName, new ApiKey(Guid.NewGuid()));
-            var id = await _createApplicationCommand.ExecuteAsync(newProj);
-
+            var id = await _createApplicationCommand.ExecuteAsync(appName, new ApiKey(Guid.NewGuid()));
             return await _getApplicationByIdWithoutHierarchyQuery.ExecuteAsync(id);
         }
     }

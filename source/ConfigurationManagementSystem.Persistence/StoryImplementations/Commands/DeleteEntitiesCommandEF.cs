@@ -1,10 +1,10 @@
-﻿using ConfigurationManagementSystem.Application.Stories.RemoveApplicationStory;
+﻿using ConfigurationManagementSystem.Application.Stories.Commands;
 using ConfigurationManagementSystem.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConfigurationManagementSystem.Persistence.StoryImplementations.DeleteApplication
+namespace ConfigurationManagementSystem.Persistence.StoryImplementations.Commands
 {
     public class DeleteEntitiesCommandEF : DeleteEntitiesCommand
     {

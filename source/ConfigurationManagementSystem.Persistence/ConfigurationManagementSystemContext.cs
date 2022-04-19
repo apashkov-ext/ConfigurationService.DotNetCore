@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Persistence.ContextConfiguration;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +13,7 @@ namespace ConfigurationManagementSystem.Persistence
         public virtual DbSet<ApplicationEntity> Applications { get; set; }
         public virtual DbSet<ConfigurationEntity> Configurations { get; set; }
         public virtual DbSet<OptionGroup> OptionGroups { get; set; }
-        public virtual DbSet<Option> Options { get; set; }
+        public virtual DbSet<OptionEntity> Options { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
 
         public ConfigurationManagementSystemContext() { }
@@ -30,17 +32,27 @@ namespace ConfigurationManagementSystem.Persistence
                 .ApplyConfiguration(new ApplicationConfiguration())
                 .ApplyConfiguration(new ConfigurationEntityConfiguration())
                 .ApplyConfiguration(new OptionGroupConfiguration())
-                .ApplyConfiguration(new OptionConfiguration())
+                .ApplyConfiguration(new OptionEntityConfiguration())
                 .ApplyConfiguration(new UserEntityConfiguration());
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimestamp();
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         public override int SaveChanges()
         {
-            var now = DateTime.Now;
+            UpdateTimestamp();
+            return base.SaveChanges();
+        }
+
+        private void UpdateTimestamp()
+        {
+            var now = DateTime.UtcNow;
             UpdateTimestampForCreated(now);
             UpdateTimestampForModified(now);
-
-            return base.SaveChanges();
         }
 
         private void UpdateTimestampForCreated(DateTime stamp)

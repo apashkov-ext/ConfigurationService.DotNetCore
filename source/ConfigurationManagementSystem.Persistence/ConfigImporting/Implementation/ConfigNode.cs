@@ -45,7 +45,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
                 return;
             }
 
-            var notVisitedOptions = new List<Option>(Value.Options);
+            var notVisitedOptions = new List<OptionEntity>(Value.Options);
 
             foreach (var valueOption in value.Options)
             {
@@ -100,12 +100,12 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             return _children.FirstOrDefault(x => x.Value.Name.Value.Equals(value.Name.Value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private static void UpdateOption(Option dest, Option source)
+        private static void UpdateOption(OptionEntity dest, OptionEntity source)
         {
             dest.UpdateValue(source.Value);
         }
 
-        private static void AddOptions(OptionGroup group, IEnumerable<Option> options)
+        private static void AddOptions(OptionGroup group, IEnumerable<OptionEntity> options)
         {
             foreach (var sourceOption in options)
             {

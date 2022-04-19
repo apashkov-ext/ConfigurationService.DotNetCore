@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
@@ -9,12 +10,12 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
         public void Configure(EntityTypeBuilder<ConfigurationEntity> builder)
         {
             builder.ToTable("Configurations").HasKey(x => x.Id);
-            builder.Property(x => x.Created).IsRequired();
-            builder.Property(x => x.Modified).IsRequired();
+            builder.Property(x => x.Created).DateTimeConversion().IsRequired();
+            builder.Property(x => x.Modified).DateTimeConversion().IsRequired();
 
             builder.OwnsOne(x => x.Name, y =>
             {
-                y.Property(p => p.Value).HasColumnName("Name");
+                y.Property(p => p.Value).IsRequired().HasColumnName("Name");
                 y.HasIndex(i => i.Value);
             });
 

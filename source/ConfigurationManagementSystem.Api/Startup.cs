@@ -3,9 +3,7 @@ using ConfigurationManagementSystem.Api.Extensions.ServiceCollection;
 using ConfigurationManagementSystem.Api.Middleware;
 using ConfigurationManagementSystem.ServicesConfiguring;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +26,7 @@ namespace ConfigurationManagementSystem.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .ConfigureExceptionHandling()
+            services.ConfigureExceptionHandling()
                 .ConfigureLogging(Configuration)
                 .ConfigureApplicationServices(Configuration)
                 .ConfigureCors(Configuration)
@@ -58,7 +55,7 @@ namespace ConfigurationManagementSystem.Api
 
             ChangeToken.OnChange(Configuration.GetReloadToken, lifetime.StopApplication);
 
-            app
+            app.UseHttpLogging()
                 .UseMiddleware<ExceptionHandlingMiddleware>()
                 .UseRouting()
                 .UseCors()

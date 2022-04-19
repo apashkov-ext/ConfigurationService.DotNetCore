@@ -13,7 +13,7 @@ namespace ConfigurationManagementSystem.Tests.Stubs
             Id = id;
         }
 
-        public void AddOption(Option option)
+        public void AddOption(OptionEntity option)
         {
             _options.Add(option);
         }

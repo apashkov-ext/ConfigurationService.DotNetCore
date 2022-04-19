@@ -2,9 +2,12 @@
 using System.Threading.Tasks;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
-using ConfigurationManagementSystem.Application;
 using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Application.Stories.AddConfigurationStory;
+using ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory;
 using ConfigurationManagementSystem.Application.Stories.GetConfigurationsStory;
+using ConfigurationManagementSystem.Application.Stories.RemoveConfigurationStory;
+using ConfigurationManagementSystem.Application.Stories.UpdateConfigurationStory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,13 +18,22 @@ namespace ConfigurationManagementSystem.Api.Controllers
     [Produces("application/json")]
     public class ConfigurationsController : ControllerBase
     {
-        private readonly IEnvironments _environments;
+        private readonly GetConfigurationByIdStory _getConfigurationByIdStory;
+        private readonly AddConfigurationStory _addConfigurationStory;
+        private readonly UpdateConfigurationStory _updateConfigurationStory;
+        private readonly RemoveConfigurationStory _removeConfigurationStory;
         private readonly GetConfigurationsStory _getConfigurationsStory;
 
-        public ConfigurationsController(IEnvironments environments,
-            GetConfigurationsStory getConfigurationsStory)
+        public ConfigurationsController(GetConfigurationsStory getConfigurationsStory,
+            GetConfigurationByIdStory getConfigurationByIdStory,
+            AddConfigurationStory addConfigurationStory,
+            UpdateConfigurationStory updateConfigurationStory,
+            RemoveConfigurationStory removeConfigurationStory)
         {
-            _environments = environments;
+            _getConfigurationByIdStory = getConfigurationByIdStory;
+            _addConfigurationStory = addConfigurationStory;
+            _updateConfigurationStory = updateConfigurationStory;
+            _removeConfigurationStory = removeConfigurationStory;
             _getConfigurationsStory = getConfigurationsStory;
         }
 
@@ -39,10 +51,10 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ConfigurationDto>> Get(Guid id)
+        public async Task<ActionResult<ConfigurationDto>> Get(Guid id, bool? hierarchy)
         {
-            var env = await _environments.GetAsync(id);
-            return Ok(env.ToDto());
+            var config = await _getConfigurationByIdStory.ExecuteAsync(id, hierarchy ?? false);
+            return Ok(config.ToDto());
         }
 
         [HttpPost]
@@ -51,9 +63,9 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<ConfigurationDto>> Create(CreateConfigurationDto body)
         {
-            var created = await _environments.AddAsync(body.Application, body.Name);
+            var created = await _addConfigurationStory.ExecuteAsync(body.Application, body.Name);
             var dto = created.ToDto();
-            return CreatedAtAction(nameof(Get), new { envId = created.Id }, dto);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, dto);
         }
 
         [HttpPut("{id}")]
@@ -62,7 +74,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ConfigurationDto>> Update(Guid id, UpdateConfigurationDto body)
         {
-            await _environments.UpdateAsync(id, body.Name);
+            await _updateConfigurationStory.ExecuteAsync(id, body.Name);
             return NoContent();
         }
 
@@ -71,7 +83,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(Guid id)
         {
-            await _environments.RemoveAsync(id);
+            await _removeConfigurationStory.ExecuteAsync(id);
             return NoContent();
         }
     }

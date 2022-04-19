@@ -1,14 +1,20 @@
 ﻿using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ConfigurationManagementSystem.ServicesConfiguring
 {
     internal static class DbContextOptionsBuilderExtensions
     {
-        public static DbContextOptionsBuilder ConfigureSqlServerLocal(this DbContextOptionsBuilder optionsBuilder)
+        public static DbContextOptionsBuilder ConfigureSqlServerLocal(this DbContextOptionsBuilder optionsBuilder, IConfiguration configuration)
         {
-            return optionsBuilder.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=ConfigurationStorage;");
+            return optionsBuilder.UseSqlServer(configuration.GetConnectionString("mssqllocaldb"));
+        }
+
+        public static DbContextOptionsBuilder ConfigurePostgres(this DbContextOptionsBuilder optionsBuilder, IConfiguration configuration)
+        {
+            return optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgres"));
         }
 
         public static DbContextOptionsBuilder ConfigureSqlite(this DbContextOptionsBuilder optionsBuilder)

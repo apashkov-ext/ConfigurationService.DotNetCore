@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ConfigurationManagementSystem.Api.Attributes;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Application.Pagination;

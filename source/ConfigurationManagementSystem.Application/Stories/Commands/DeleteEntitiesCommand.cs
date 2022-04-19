@@ -3,7 +3,7 @@ using ConfigurationManagementSystem.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConfigurationManagementSystem.Application.Stories.RemoveApplicationStory
+namespace ConfigurationManagementSystem.Application.Stories.Commands
 {
     [Command]
     public abstract class DeleteEntitiesCommand

@@ -6,7 +6,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
 {
     internal static class OptionExtensions
     {
-        public static OptionDto ToDto(this Option source)
+        public static OptionDto ToDto(this OptionEntity source)
         {
             return new OptionDto
             {

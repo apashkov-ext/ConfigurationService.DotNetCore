@@ -14,4 +14,8 @@
     <ProjectReference Include="..\ConfigurationManagementSystem.Domain\ConfigurationManagementSystem.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="StoryImplementations\RemoveConfigurationStory\" />
+  </ItemGroup>
+
 </Project>

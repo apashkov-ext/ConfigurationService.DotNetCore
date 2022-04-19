@@ -2,16 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {
-    internal class OptionConfiguration : IEntityTypeConfiguration<Option>
+    internal class OptionEntityConfiguration : IEntityTypeConfiguration<OptionEntity>
     {
-        public void Configure(EntityTypeBuilder<Option> builder)
+        public void Configure(EntityTypeBuilder<OptionEntity> builder)
         {
             builder.ToTable("Options").HasKey(x => x.Id);
-            builder.Property(x => x.Created).IsRequired();
-            builder.Property(x => x.Modified).IsRequired();
+            builder.Property(x => x.Created).DateTimeConversion().IsRequired();
+            builder.Property(x => x.Modified).DateTimeConversion().IsRequired();
 
             builder.HasOne(x => x.OptionGroup).WithMany(x => x.Options);
 

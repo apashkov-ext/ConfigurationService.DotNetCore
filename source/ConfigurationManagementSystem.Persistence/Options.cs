@@ -20,7 +20,7 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<Option>> GetAsync(string name)
+        public async Task<IEnumerable<OptionEntity>> GetAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -35,13 +35,13 @@ namespace ConfigurationManagementSystem.Persistence
             return list;
         }
 
-        public async Task<Option> GetAsync(Guid id)
+        public async Task<OptionEntity> GetAsync(Guid id)
         {
             var o = await _context.Options.FindAsync(id);
             return o ?? throw new EntityNotFoundException("Option does not exist");
         }
 
-        public async Task<Option> AddAsync(Guid optionGroup, string name, object value, OptionValueType type)
+        public async Task<OptionEntity> AddAsync(Guid optionGroup, string name, object value, OptionValueType type)
         {
             var group = await _context.OptionGroups.Include(x => x.Options)
                 .AsSingleQuery()

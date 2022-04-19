@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
 namespace ConfigurationManagementSystem.Api.Extensions.ServiceCollection
@@ -9,11 +9,17 @@ namespace ConfigurationManagementSystem.Api.Extensions.ServiceCollection
     {
         public static IServiceCollection ConfigureLogging(this IServiceCollection services, IConfiguration configuration)
         {
-            return services.AddLogging(loggingBuilder =>
+            return services.AddHttpLogging(logging =>
             {
-                loggingBuilder.ClearProviders();
-                loggingBuilder.AddConfiguration(configuration.GetSection("Logging"));
-                loggingBuilder.AddNLog(configuration);
+                logging.LoggingFields = HttpLoggingFields.All;
+                logging.RequestHeaders.Add("My-Request-Header");
+                logging.ResponseHeaders.Add("My-Response-Header");
+                logging.MediaTypeOptions.AddText("application/javascript");
+                logging.RequestBodyLogLimit = 4096;
+                logging.ResponseBodyLogLimit = 4096;
+            }).AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddNLog(new NLogLoggingConfiguration(configuration.GetSection("NLog")));
             });
         }
     }

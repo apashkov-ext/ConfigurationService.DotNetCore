@@ -14,8 +14,8 @@ namespace ConfigurationManagementSystem.Domain.Entities
         protected readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
         public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
 
-        protected readonly List<Option> _options = new List<Option>();
-        public IEnumerable<Option> Options => _options;
+        protected readonly List<OptionEntity> _options = new List<OptionEntity>();
+        public IEnumerable<OptionEntity> Options => _options;
 
         protected OptionGroup() { }
 
@@ -31,24 +31,24 @@ namespace ConfigurationManagementSystem.Domain.Entities
             return new OptionGroup(name, configuration, parent);
         }
 
-        public Option AddOption(OptionName name, OptionValue value)
+        public OptionEntity AddOption(OptionName name, OptionValue value)
         {
             if (_options.Any(x => x.Name == name))
             {
                 throw new InconsistentDataStateException("The group already contains option with the same name");
             }
 
-            var o = Option.Create(name, value, this);
+            var o = OptionEntity.Create(name, value, this);
             _options.Add(o);
             return o;
         }
 
-        public void RemoveOption(Option option)
+        public void RemoveOption(OptionEntity option)
         {
             _options.Remove(option);
         }
 
-        public void RemoveOptions(IEnumerable<Option> options)
+        public void RemoveOptions(IEnumerable<OptionEntity> options)
         {
             _options.RemoveAll(x => options.Contains(x));
         }
@@ -76,6 +76,25 @@ namespace ConfigurationManagementSystem.Domain.Entities
             var g = Create(name, Configuration, this);
             _nestedGroups.Add(g);
             return g;
+        }
+
+        public IEnumerable<OptionGroup> GetOptionGroupsDeep()
+        {
+            return GetOptionGroupsDeep(this);
+        }
+
+        private IEnumerable<OptionGroup> GetOptionGroupsDeep(OptionGroup root)
+        {
+            yield return root;
+
+            foreach (var group in root.NestedGroups)
+            {
+                var groups = GetOptionGroupsDeep(group);
+                foreach (var g in groups)
+                {
+                    yield return g;
+                }
+            }
         }
 
         public override string ToString()

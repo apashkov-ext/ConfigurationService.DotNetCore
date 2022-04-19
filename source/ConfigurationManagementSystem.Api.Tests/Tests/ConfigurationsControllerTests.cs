@@ -74,7 +74,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         }
 
         [Fact]
-        public async void GetById_Exists_ReturnsDto()
+        public async void GetByIdWithHierarchy__Exists_ReturnsDto()
         {
             var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
             var env = project.AddConfiguration(new ConfigurationName("Dev"));
@@ -92,7 +92,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                     .Commit();
             });
 
-            var actual = await GetAsync<ConfigurationDto>($"api/configurations/{env.Id}");
+            var actual = await GetAsync<ConfigurationDto>($"api/configurations/{env.Id}?hierarchy=true");
 
             Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
             Assertions.ConfigurationDtoIsEquivalentToModel(actual.ResponseData, env);

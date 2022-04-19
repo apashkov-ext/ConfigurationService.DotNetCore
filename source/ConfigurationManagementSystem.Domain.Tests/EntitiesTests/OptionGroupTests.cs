@@ -83,7 +83,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroupWithOption))]
-        public void AddOption_Existed_Exception(OptionGroup group, Option option)
+        public void AddOption_Existed_Exception(OptionGroup group, OptionEntity option)
         {
             const string val = "Value";
             Assert.Throws<InconsistentDataStateException>(() => group.AddOption(new OptionName(option.Name.Value), 

@@ -20,7 +20,7 @@ namespace ConfigurationManagementSystem.ServicesConfiguring
             services.AddTransient<IOptions, Options>();
             services.AddDbContext<ConfigurationManagementSystemContext>(options =>
             {
-                options.ConfigureSqlite();
+                options.ConfigurePostgres(configuration);
             });
 
             services.AddConfig(configuration);
