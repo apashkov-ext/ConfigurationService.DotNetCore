@@ -19,7 +19,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context).Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context).Setup().Build();
             });
 
             var actual = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
@@ -33,7 +33,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context).Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context).Setup().Build();
             });
 
             var response = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
@@ -49,10 +49,10 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context => 
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
-                    .Commit();
+                    .Build();
             });
 
             var response = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
@@ -73,13 +73,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(root, group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var response = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications?hierarchy=true");
@@ -94,8 +94,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context).Setup().Build();
             });
 
             var response = await GetAsync($"api/applications/{Guid.NewGuid()}");
@@ -113,13 +112,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var response = await GetAsync<ApplicationDto>($"api/applications/{project.Id}?hierarchy=true");
@@ -135,10 +134,10 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                .Setup()
                 .WithEntities(project)
-                .Commit();
+                .Build();
             });
 
             var body = new
@@ -160,8 +159,8 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                .Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                .Setup().Build();
             });
 
             var body = new
@@ -180,8 +179,8 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                .Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                .Setup().Build();
             });
 
             var response = await DeleteAsync($"api/applications/{Guid.NewGuid()}");
@@ -196,10 +195,10 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
-                    .Commit();
+                    .Build();
             });
                 
             var response = await DeleteAsync($"api/applications/{project.Id}");
@@ -217,13 +216,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var response = await DeleteAsync($"api/applications/{project.Id}");
@@ -238,10 +237,10 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
-                    .Commit();
+                    .Build();
             });
 
             await DeleteAsync($"api/applications/{project.Id}");
@@ -267,13 +266,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(app)
                     .WithEntities(config)
                     .WithEntities(group, nestedGroup)
                     .WithEntities(option, nestedOption)
-                    .Commit();
+                    .Build();
             });
 
             await DeleteAsync($"api/applications/{app.Id}");

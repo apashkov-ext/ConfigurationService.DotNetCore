@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace ConfigurationManagementSystem.ServicesConfiguring.Exceptions
+namespace ConfigurationManagementSystem.Framework.Exceptions
 {
     [Serializable]
     internal class ImplementationNotFoundException : Exception

@@ -1,5 +1,5 @@
 ﻿using ConfigurationManagementSystem.Application.Pagination;
-using ConfigurationManagementSystem.Application.Stories.Framework;
+using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Domain.Entities;
 using System;
 using System.Linq;

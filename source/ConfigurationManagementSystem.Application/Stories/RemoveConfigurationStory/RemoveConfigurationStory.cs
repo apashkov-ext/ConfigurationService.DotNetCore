@@ -1,6 +1,6 @@
 ﻿using ConfigurationManagementSystem.Application.Exceptions;
 using ConfigurationManagementSystem.Application.Stories.Commands;
-using ConfigurationManagementSystem.Application.Stories.Framework;
+using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory;
 using ConfigurationManagementSystem.Domain.Entities;
 using System;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConfigurationManagementSystem.Framework.Attributes;
+using System;
 
 namespace ConfigurationManagementSystem.Application.AppConfiguration
 {

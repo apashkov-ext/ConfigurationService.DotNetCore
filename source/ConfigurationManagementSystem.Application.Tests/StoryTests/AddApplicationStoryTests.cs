@@ -1,10 +1,10 @@
-﻿using ConfigurationManagementSystem.Api.Tests.Tests;
-using ConfigurationManagementSystem.Application.Exceptions;
+﻿using ConfigurationManagementSystem.Application.Exceptions;
 using ConfigurationManagementSystem.Application.Stories.AddApplicationStory;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Persistence;
 using ConfigurationManagementSystem.Persistence.StoryImplementations.AddApplicationStory;
 using ConfigurationManagementSystem.Persistence.StoryImplementations.GetApplicationByIdStory;
+using ConfigurationManagementSystem.Tests;
 using ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization;
 using ConfigurationManagementSystem.Tests.Presets;
 using Xunit;
@@ -13,6 +13,10 @@ namespace ConfigurationManagementSystem.Application.Tests.StoryTests
 {
     public class AddApplicationStoryTests : IntegrationTests
     {
+        public AddApplicationStoryTests()
+        {
+        }
+
         [Fact]
         public void Add_NotExistedApplication_Success()
         {
@@ -20,7 +24,7 @@ namespace ConfigurationManagementSystem.Application.Tests.StoryTests
 
             ActWithDbContext(ctx =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(ctx).Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(ctx).Setup();
             });
 
             ActWithDbContext(async ctx =>
@@ -42,10 +46,10 @@ namespace ConfigurationManagementSystem.Application.Tests.StoryTests
         {
             ActWithDbContext(ctx =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(ctx)
-                .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(ctx)
+                .Setup()
                 .WithEntities(p)
-                .Commit();
+                .Build();
             });
 
             ActWithDbContext(async ctx =>

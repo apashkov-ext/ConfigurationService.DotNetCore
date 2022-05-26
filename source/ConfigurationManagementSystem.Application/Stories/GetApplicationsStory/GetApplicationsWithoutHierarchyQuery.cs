@@ -1,5 +1,5 @@
 ﻿using ConfigurationManagementSystem.Application.Stories;
-using ConfigurationManagementSystem.Application.Stories.Framework;
+using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Domain.Entities;
 using System.Linq;
 using System.Threading.Tasks;

@@ -6,11 +6,11 @@ namespace ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization
     /// Setups context before data initialization.
     /// </summary>
     /// <typeparam name="TContext">Concrete type of the <see cref="DbContext"/>.</typeparam>
-    public class ContextSetup<TContext> where TContext : DbContext
+    public class ContextPreparation<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
 
-        public ContextSetup(TContext context)
+        public ContextPreparation(TContext context)
         {
             _context = context;
         }
@@ -19,10 +19,8 @@ namespace ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization
         /// Prepares clean DbContext.
         /// This action removes all data from the database.
         /// </summary>
-        public ContextInitializer<TContext> Initialize()
+        public ContextInitializer<TContext> Setup()
         {
-            _context.Database.EnsureDeleted();
-            _context.Database.EnsureCreated();
             var c = new ContextInitializer<TContext>(_context);
             return c;
         }

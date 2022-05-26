@@ -33,9 +33,12 @@ namespace ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization
         /// <summary>
         /// Commits all changes.
         /// </summary>
-        public void Commit()
+        public TContext Build()
         {
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
             _context.SaveChanges();
+            return _context;
         }
     }
 }

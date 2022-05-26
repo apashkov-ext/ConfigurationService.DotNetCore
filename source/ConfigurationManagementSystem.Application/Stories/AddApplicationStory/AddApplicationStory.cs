@@ -1,5 +1,5 @@
 ﻿using ConfigurationManagementSystem.Application.Exceptions;
-using ConfigurationManagementSystem.Application.Stories.Framework;
+using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Application.Stories.GetApplicationByIdStory;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;

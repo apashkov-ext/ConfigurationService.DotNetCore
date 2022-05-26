@@ -3,6 +3,7 @@ using ConfigurationManagementSystem.Application.Stories.AddApplicationStory;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
 using ConfigurationManagementSystem.Persistence.StoryImplementations.AddApplicationStory;
+using ConfigurationManagementSystem.Tests;
 using ConfigurationManagementSystem.Tests.Fixtures;
 using ConfigurationManagementSystem.Tests.Presets;
 using Moq;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace ConfigurationManagementSystem.Persistence.Tests
 {
-    public class GetApplicationByNameQueryTests
+    public class GetApplicationByNameQueryTests : IntegrationTests
     {
         [Fact]
         public async void Execute_NotExisted_ReturnsNull()

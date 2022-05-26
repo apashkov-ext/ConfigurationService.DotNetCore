@@ -33,7 +33,7 @@ namespace ConfigurationManagementSystem.Api.Tests
                 services.AddDbContext<ConfigurationManagementSystemContext>(options =>
                 {
                     var path = GetDataSourcePath(_dbName);
-                    options.UseSqlite($"data source={path};foreign keys=true;");
+                    options.Usen($"data source={path};foreign keys=true;");
                 });
             });
         }

@@ -1,8 +1,9 @@
 ﻿using System;
+using ConfigurationManagementSystem.Api.Tests;
 using ConfigurationManagementSystem.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ConfigurationManagementSystem.Api.Tests.Tests
+namespace ConfigurationManagementSystem.Tests
 {
     public abstract class IntegrationTests : IDisposable
     {
@@ -16,6 +17,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         public virtual void Dispose()
         {
             WebAppFactory.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         protected void ActWithDbContext(Action<ConfigurationManagementSystemContext> action)
@@ -23,7 +25,15 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             var scopeFactory = WebAppFactory.Services;
             using var scope = scopeFactory.CreateScope();
             using var context = scope.ServiceProvider.GetService<ConfigurationManagementSystemContext>();
-            action(context);
+            //using var tr = context.Database.BeginTransaction();
+            //try
+            //{
+                action(context);
+            //}
+            //finally
+            //{
+            //    tr.Rollback();
+            //}
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ConfigurationManagementSystem.Application.Exceptions;
-using ConfigurationManagementSystem.Application.Stories.Framework;
+using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Exceptions;
 using System;

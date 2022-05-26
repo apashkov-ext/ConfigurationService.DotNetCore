@@ -22,8 +22,8 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup().Build();
             });
 
             var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations");
@@ -43,13 +43,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(root, group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations?hierarchy=true");
@@ -64,8 +64,8 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         {
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize();
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup().Build();
             });
 
             var actual = await GetAsync<ConfigurationDto>($"api/configurations/{Guid.NewGuid()}");
@@ -83,13 +83,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var actual = await GetAsync<ConfigurationDto>($"api/configurations/{env.Id}?hierarchy=true");
@@ -110,13 +110,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var body = new
@@ -140,13 +140,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
 
             ActWithDbContext(context =>
             {
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
 
             var body = new
@@ -178,13 +178,13 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
                 var env = project.AddConfiguration(new ConfigurationName("Dev"));
                 var group = env.OptionGroups.First();
                 var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
-                new ContextSetup<ConfigurationManagementSystemContext>(context)
-                    .Initialize()
+                new ContextPreparation<ConfigurationManagementSystemContext>(context)
+                    .Setup()
                     .WithEntities(project)
                     .WithEntities(env)
                     .WithEntities(group)
                     .WithEntities(option)
-                    .Commit();
+                    .Build();
             });
                 
             var body = new

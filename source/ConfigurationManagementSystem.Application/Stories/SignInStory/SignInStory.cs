@@ -1,6 +1,6 @@
 ﻿using ConfigurationManagementSystem.Application.AppConfiguration;
 using ConfigurationManagementSystem.Application.Exceptions;
-using ConfigurationManagementSystem.Application.Stories.Framework;
+using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Domain.ValueObjects;
 using Microsoft.IdentityModel.Tokens;
 using System;
