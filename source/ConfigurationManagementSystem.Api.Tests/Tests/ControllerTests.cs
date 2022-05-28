@@ -22,7 +22,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             return SendAsync(request);
         }
 
-        protected Task<ControllerResponseData<T>> GetAsync<T>(string endpoint)
+        protected Task<ControllerResponse<T>> GetAsync<T>(string endpoint)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
             return SendAsync<T>(request);
@@ -37,7 +37,7 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             return SendAsync(request);
         }
 
-        protected Task<ControllerResponseData<T>> PostAsync<T>(string endpoint, object body)
+        protected Task<ControllerResponse<T>> PostAsync<T>(string endpoint, object body)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
             {
@@ -64,11 +64,11 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
             return new ControllerResponse(response.StatusCode);
         }
 
-        private async Task<ControllerResponseData<T>> SendAsync<T>(HttpRequestMessage request)
+        private async Task<ControllerResponse<T>> SendAsync<T>(HttpRequestMessage request)
         {
             var response = await HttpClient.SendAsync(request);
             var parsed = await ParseContentAsync<T>(response);
-            return new ControllerResponseData<T>(parsed, response.StatusCode);
+            return new ControllerResponse<T>(parsed, response.StatusCode);
         }
 
         private static async Task<T> ParseContentAsync<T>(HttpResponseMessage response)
@@ -89,11 +89,11 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         }
     }
 
-    public class ControllerResponseData<T> : ControllerResponse
+    public class ControllerResponse<T> : ControllerResponse
     {
         public T ResponseData { get; }
 
-        public ControllerResponseData(T data, HttpStatusCode statusCode) : base(statusCode)
+        public ControllerResponse(T data, HttpStatusCode statusCode) : base(statusCode)
         {
             ResponseData = data;
         }

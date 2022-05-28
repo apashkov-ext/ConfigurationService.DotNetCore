@@ -1,6 +1,6 @@
 ﻿namespace ConfigurationManagementSystem.Framework.Attributes
 {
-    public class QueryAttribute : FrameworkAttribute
+    public class QueryAttribute : FrameworkComponentAttribute
     {
     }
 }

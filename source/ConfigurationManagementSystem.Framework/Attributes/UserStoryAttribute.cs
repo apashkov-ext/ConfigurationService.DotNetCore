@@ -4,7 +4,7 @@
     /// Marks class as a User Story thing. 
     /// User story implements a single business value.
     /// </summary>
-    public class UserStoryAttribute : FrameworkAttribute
+    public class UserStoryAttribute : FrameworkComponentAttribute
     {
     }
 }

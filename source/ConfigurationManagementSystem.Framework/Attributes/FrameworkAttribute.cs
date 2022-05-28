@@ -1,7 +1,7 @@
 ﻿namespace ConfigurationManagementSystem.Framework.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public abstract class FrameworkAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
+    public abstract class FrameworkComponentAttribute : Attribute
     {
     }
 }

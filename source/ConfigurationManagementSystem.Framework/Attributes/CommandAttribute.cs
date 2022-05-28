@@ -1,6 +1,6 @@
 ﻿namespace ConfigurationManagementSystem.Framework.Attributes
 {
-    public class CommandAttribute : FrameworkAttribute
+    public class CommandAttribute : FrameworkComponentAttribute
     {
     }
 }

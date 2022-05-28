@@ -1,19 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using ConfigurationManagementSystem.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigurationManagementSystem.Api.Tests
 {
     public class WebAppFactory : WebApplicationFactory<Startup>
     {
-        private readonly string _dbName = $"test-db-{Guid.NewGuid()}.db";
-
         protected override IWebHostBuilder CreateWebHostBuilder()
         {
             return WebHost.CreateDefaultBuilder().UseEnvironment("Development").UseStartup<Startup>();
@@ -32,17 +30,13 @@ namespace ConfigurationManagementSystem.Api.Tests
 
                 services.AddDbContext<ConfigurationManagementSystemContext>(options =>
                 {
-                    var path = GetDataSourcePath(_dbName);
-                    options.Usen($"data source={path};foreign keys=true;");
+                    var config = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.json")
+                        .AddEnvironmentVariables()
+                        .Build();
+                    options.UseNpgsql(config.GetConnectionString("postgres"));
                 });
             });
-        }
-
-        private static string GetDataSourcePath(string dbName)
-        {
-            var tempDir = Path.GetTempPath();
-            var dbPath = $"{tempDir}{dbName}";
-            return dbPath;
         }
     }
 }
