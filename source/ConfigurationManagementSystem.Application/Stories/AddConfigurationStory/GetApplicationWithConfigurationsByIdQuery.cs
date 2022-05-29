@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddConfigurationStory
 {
-    [Query]
+    [Component]
     public abstract class GetApplicationWithConfigurationsByIdQuery
     {
         public abstract Task<ApplicationEntity> ExecuteAsync(Guid applicationId);

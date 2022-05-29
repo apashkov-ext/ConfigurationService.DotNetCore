@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddApplicationStory
 {
-    [Command]
+    [Component]
     public abstract class CreateApplicationCommand
     {
         public abstract Task<Guid> ExecuteAsync(ApplicationName name, ApiKey apiKey);

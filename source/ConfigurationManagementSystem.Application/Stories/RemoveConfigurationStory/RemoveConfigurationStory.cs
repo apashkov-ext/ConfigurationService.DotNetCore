@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.RemoveConfigurationStory
 {
-    [UserStory]
+    [Component]
     public class RemoveConfigurationStory
     {
         private readonly GetConfigurationByIdWithHierarchyQuery _getConfigurationByIdWithHierarchyQuery;

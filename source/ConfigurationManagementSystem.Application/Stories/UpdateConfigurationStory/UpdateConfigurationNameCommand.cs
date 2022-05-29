@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.UpdateConfigurationStory
 {
-    [Command]
+    [Component]
     public abstract class UpdateConfigurationNameCommand
     {
         public abstract Task ExecuteAsync(ConfigurationEntity config, ConfigurationName name);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddApplicationStory
 {
-    [UserStory]
+    [Component]
     public class AddApplicationStory
     {
         private readonly GetApplicationByNameQuery _getApplicationByNameQuery;

@@ -1,10 +1,10 @@
 ﻿namespace ConfigurationManagementSystem.Framework.Attributes
 {
     /// <summary>
-    /// Marks class as a User Story thing. 
-    /// User story implements a single business value.
+    /// Marks class as a Framework Component. 
+    /// This allows to register marked class as dependency and resolve it automatically as transient.
     /// </summary>
-    public class UserStoryAttribute : FrameworkComponentAttribute
+    public sealed class ComponentAttribute : FrameworkComponentAttribute
     {
     }
 }

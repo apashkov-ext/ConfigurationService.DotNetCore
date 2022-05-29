@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.SignInStory
 {
-    [UserStory]
+    [Component]
     public class SignInStory
     {
         private readonly GetUserByUsernameQuery _getUserByUsernameQuery;

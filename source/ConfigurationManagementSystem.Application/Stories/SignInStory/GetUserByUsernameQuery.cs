@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.SignInStory
 {
-    [Query]
+    [Component]
     public abstract class GetUserByUsernameQuery
     {
         public abstract Task<UserEntity> ExecuteAsync(Username username);

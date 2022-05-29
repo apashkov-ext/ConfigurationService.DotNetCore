@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.RemoveApplicationStory
 {
-    [UserStory]
+    [Component]
     public class RemoveApplicationStory
     {
         private readonly GetApplicationByIdWithHierarchyQuery _getApplicationByIdWithHierarchyQuery;

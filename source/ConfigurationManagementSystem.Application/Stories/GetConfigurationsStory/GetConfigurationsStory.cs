@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationsStory
 {
-    [UserStory]
+    [Component]
     public class GetConfigurationsStory
     {
         private readonly GetConfigurationsWithHierarchyQuery _getConfigurationsWithHierarchyQuery;

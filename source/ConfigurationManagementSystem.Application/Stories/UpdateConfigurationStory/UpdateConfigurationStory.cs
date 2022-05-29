@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.UpdateConfigurationStory
 {
-    [UserStory]
+    [Component]
     public class UpdateConfigurationStory
     {
         private readonly GetConfigWithNeighborsAndApplicationQuery _getConfigWithNeighborsAndApplicationQuery;

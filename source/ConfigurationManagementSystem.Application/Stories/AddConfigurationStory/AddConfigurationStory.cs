@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddConfigurationStory
 {
-    [UserStory]
+    [Component]
     public class AddConfigurationStory
     {
         private readonly GetApplicationWithConfigurationsByIdQuery _getApplicationWithConfigurationsByIdQuery;

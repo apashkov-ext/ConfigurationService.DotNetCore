@@ -18,12 +18,7 @@ namespace ConfigurationManagementSystem.Persistence
 
         public ConfigurationManagementSystemContext() { }
 
-        public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options)
-        {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
-            //DataSeeding.Seed(this);
-        }
+        public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

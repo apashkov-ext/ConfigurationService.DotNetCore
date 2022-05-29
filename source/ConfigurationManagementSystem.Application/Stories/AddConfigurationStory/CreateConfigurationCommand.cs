@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddConfigurationStory
 {
-    [Query]
+    [Component]
     public abstract class CreateConfigurationCommand
     {
         public abstract Task<Guid> ExecuteAsync(ApplicationEntity app, ConfigurationName configurationName);

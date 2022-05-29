@@ -27,7 +27,7 @@ namespace ConfigurationManagementSystem.Framework
             var typeProv = FrameworkComponentTypeProvider.Create(assemblies);
             var implProvider = new TypeImplementationProvider(typeProv);
 
-            RegisterFrameworkComponents(() => typeProv.GetComponentTypesByAttribute<UserStoryAttribute>(), 
+            RegisterFrameworkComponents(() => typeProv.GetComponentTypesByAttribute<ComponentAttribute>(), 
                 type => services.AddTransient(type));
 
             RegisterFrameworkComponents(() => typeProv.GetComponentTypesByAttribute<QueryAttribute>().Select(implProvider.GetImplementation), 

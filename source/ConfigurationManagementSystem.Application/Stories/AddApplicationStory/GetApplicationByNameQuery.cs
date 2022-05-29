@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddApplicationStory
 {
-    [Query]
+    [Component]
     public abstract class GetApplicationByNameQuery
     {
         public abstract Task<ApplicationEntity> ExecuteAsync(ApplicationName name);

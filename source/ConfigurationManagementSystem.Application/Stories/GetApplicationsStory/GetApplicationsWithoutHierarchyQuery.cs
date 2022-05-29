@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetApplicationsStory
 {
-    [Query]
+    [Component]
     public abstract class GetApplicationsWithoutHierarchyQuery
     {
         public abstract Task<IQueryable<ApplicationEntity>> ExecuteAsync();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory
 {
-    [UserStory]
+    [Component]
     public class GetConfigurationByIdStory
     {
         private readonly GetConfigurationByIdWithHierarchyQuery _getConfigurationByIdWithHierarchyQuery;

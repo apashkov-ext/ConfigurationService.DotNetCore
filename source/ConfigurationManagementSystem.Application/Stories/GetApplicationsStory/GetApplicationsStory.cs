@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetApplicationsStory
 {
-    [UserStory]
+    [Component]
     public class GetApplicationsStory
     {
         private readonly GetApplicationsWithHierarchyQuery _getApplicationsWithHierarchyQuery;

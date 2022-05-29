@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationManagementSyst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationManagementSystem.Application.Tests", "ConfigurationManagementSystem.Application.Tests\ConfigurationManagementSystem.Application.Tests.csproj", "{2740AED0-3819-4648-813B-0789A7B9A7AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationManagementSystem.Framework", "ConfigurationManagementSystem.Framework\ConfigurationManagementSystem.Framework.csproj", "{A7B4994F-4CC9-4D49-AD9D-4ED1C52CA254}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationManagementSystem.Framework", "ConfigurationManagementSystem.Framework\ConfigurationManagementSystem.Framework.csproj", "{A7B4994F-4CC9-4D49-AD9D-4ED1C52CA254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationManagementSystem.Framework.Tests", "ConfigurationManagementSystem.Framework.Tests\ConfigurationManagementSystem.Framework.Tests.csproj", "{74FA0324-71FF-451C-9C45-9E52B515B029}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{A7B4994F-4CC9-4D49-AD9D-4ED1C52CA254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7B4994F-4CC9-4D49-AD9D-4ED1C52CA254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7B4994F-4CC9-4D49-AD9D-4ED1C52CA254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74FA0324-71FF-451C-9C45-9E52B515B029}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74FA0324-71FF-451C-9C45-9E52B515B029}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74FA0324-71FF-451C-9C45-9E52B515B029}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74FA0324-71FF-451C-9C45-9E52B515B029}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

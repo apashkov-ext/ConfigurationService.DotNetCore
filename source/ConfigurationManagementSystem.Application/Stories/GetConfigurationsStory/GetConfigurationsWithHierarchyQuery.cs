@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationsStory
 {
-    [Query]
+    [Component]
     public abstract class GetConfigurationsWithHierarchyQuery
     {
         public abstract Task<IQueryable<ConfigurationEntity>> ExecuteAsync();
