@@ -3,14 +3,15 @@ using System.Text.RegularExpressions;
 
 namespace ConfigurationManagementSystem.Framework.Attributes
 {
-    public class ConfigurationSectionAttribute : FrameworkComponentAttribute
+    /// <summary>
+    /// Marks class as a representation of the application configuration section.
+    /// </summary>
+    public sealed class ConfigurationSectionAttribute : FrameworkComponentAttribute
     {
         private static readonly Regex _regex = new(@"^[a-zA-Z]+\w+");
         public string SectionName { get; } = string.Empty;
 
-        public ConfigurationSectionAttribute()
-        {
-        }
+        public ConfigurationSectionAttribute() { }
 
         /// <summary>
         /// Creates instance of <see cref="ConfigurationSectionAttribute" /> with specified section name value.
@@ -23,10 +24,7 @@ namespace ConfigurationManagementSystem.Framework.Attributes
         /// <exception cref="InvalidConfigurationSectionNameException"></exception>
         public ConfigurationSectionAttribute(string sectionName)
         {
-            if (!_regex.IsMatch(sectionName))
-            {
-                throw new InvalidConfigurationSectionNameException("Invalid section name.");
-            }
+            if (!_regex.IsMatch(sectionName)) throw new InvalidConfigurationSectionNameException("Invalid section name.");
             SectionName = sectionName;
         }
     }

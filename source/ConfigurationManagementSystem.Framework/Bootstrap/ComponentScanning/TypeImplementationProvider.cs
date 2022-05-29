@@ -3,10 +3,20 @@ using System.Reflection;
 
 namespace ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning
 {
+    /// <summary>
+    /// Provides implementation for the specified base type.
+    /// Base type must be a class or an interface.
+    /// Provider supports hierarchy of inheritance, but there must be only one type in the top of hierarchy.
+    /// </summary>
     internal class TypeImplementationProvider
     {
         private readonly ITypeProvider _typeProvider;
 
+        /// <summary>
+        /// Creates instance of <see cref="TypeImplementationProvider"/>.
+        /// </summary>
+        /// <param name="typeProvider">Instance of <see cref="ITypeProvider"/>.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public TypeImplementationProvider(ITypeProvider typeProvider)
         {
             _typeProvider = typeProvider ?? throw new ArgumentNullException(nameof(typeProvider));
@@ -14,6 +24,7 @@ namespace ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning
 
         /// <summary>
         /// Returns implementation for the specified base type.
+        /// <paramref name="baseType"/> must be a class or an interface.
         /// </summary>
         /// <param name="baseType">Base (parent) type. Must be a class or an interface</param>
         /// <returns>Type that implemets specified base type.</returns>

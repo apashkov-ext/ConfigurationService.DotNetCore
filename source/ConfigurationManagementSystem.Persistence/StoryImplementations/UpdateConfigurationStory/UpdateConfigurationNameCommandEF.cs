@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Persistence.StoryImplementations.UpdateConfigurationStory
 {
-    internal class UpdateConfigurationNameCommandEF : UpdateConfigurationNameCommand
+    public class UpdateConfigurationNameCommandEF : UpdateConfigurationNameCommand
     {
         private readonly ConfigurationManagementSystemContext _context;
 

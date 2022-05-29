@@ -3,11 +3,11 @@ using ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning;
 
 namespace ConfigurationManagementSystem.Framework.Bootstrap.ConfigurationSectionDefinitionReading
 {
-    internal class ConfigurationDefinitionReader
+    internal class ConfigurationDefinitionProvider
     {
         private readonly IFrameworkComponentTypeProvider _componentTypeProvider;
 
-        public ConfigurationDefinitionReader(IFrameworkComponentTypeProvider componentTypeProvider)
+        public ConfigurationDefinitionProvider(IFrameworkComponentTypeProvider componentTypeProvider)
         {
             _componentTypeProvider = componentTypeProvider ?? throw new ArgumentNullException(nameof(componentTypeProvider));
         }

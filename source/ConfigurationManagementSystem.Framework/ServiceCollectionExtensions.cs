@@ -1,5 +1,7 @@
 ﻿using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning;
+using ConfigurationManagementSystem.Framework.Bootstrap.ConfigurationRegistering;
+using ConfigurationManagementSystem.Framework.Bootstrap.ConfigurationSectionDefinitionReading;
 using ConfigurationManagementSystem.Framework.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +14,9 @@ namespace ConfigurationManagementSystem.Framework
         {
             try
             {
-                ExecuteComponentRegistering(services, configuration);
+                var typeProv = GetComponentTypeProvider(configuration);
+                RegisterComponents(typeProv, services);
+                RegisterConfiguration(typeProv, services, configuration);
             }
             catch (Exception ex)
             {
@@ -20,28 +24,30 @@ namespace ConfigurationManagementSystem.Framework
             }
         }
 
-        private static void ExecuteComponentRegistering(IServiceCollection services, IConfiguration configuration)
-        {         
+        private static FrameworkComponentTypeProvider GetComponentTypeProvider(IConfiguration configuration)
+        {
             var asmLoader = new AssemblyLoader(configuration);
             var assemblies = asmLoader.LoadAssemblies();
-            var typeProv = FrameworkComponentTypeProvider.Create(assemblies);
-            var implProvider = new TypeImplementationProvider(typeProv);
-
-            RegisterFrameworkComponents(() => typeProv.GetComponentTypesByAttribute<ComponentAttribute>(), 
-                type => services.AddTransient(type));
-
-            RegisterFrameworkComponents(() => typeProv.GetComponentTypesByAttribute<QueryAttribute>().Select(implProvider.GetImplementation), 
-                type => services.AddTransient(type));
-
-            RegisterFrameworkComponents(() => typeProv.GetComponentTypesByAttribute<CommandAttribute>().Select(implProvider.GetImplementation), 
-                type => services.AddTransient(type));
+            return FrameworkComponentTypeProvider.Create(assemblies);
         }
 
-        private static void RegisterFrameworkComponents(Func<IEnumerable<Type>> getTypes, Action<Type> registrar)
-        {
-            foreach (var type in getTypes())
+        private static void RegisterComponents(FrameworkComponentTypeProvider typeProvider, IServiceCollection services)
+        {         
+            var implProvider = new TypeImplementationProvider(typeProvider);
+            var typesToRegister = typeProvider.GetComponentTypesByAttribute<ComponentAttribute>().Select(implProvider.GetImplementation);
+            foreach (var type in typesToRegister)
             {
-                registrar(type);
+                services.AddTransient(type);
+            }
+        }
+
+        private static void RegisterConfiguration(IFrameworkComponentTypeProvider typeProvider, IServiceCollection services, IConfiguration configuration)
+        {
+            var configRegistrar = ApplicationConfigurationRegistrar.Create(services, configuration);
+            var configDefs = new ConfigurationDefinitionProvider(typeProvider).GetDefinitions();
+            foreach (var configDef in configDefs)
+            {
+                configRegistrar.RegisterConfigurationSection(configDef.SectionName, configDef.TypeToBind);
             }
         }
     }
