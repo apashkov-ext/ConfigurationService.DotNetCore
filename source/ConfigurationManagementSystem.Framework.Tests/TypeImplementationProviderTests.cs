@@ -144,7 +144,35 @@ namespace ConfigurationManagementSystem.Framework.Tests
 
             Assert.Throws<ImplementationNotFoundException>(() => implProv.GetImplementation(baseType));
         }
-        
+
+        [Fact]
+        public void GetImplementation_InterfaceWithAmbiguousImplementation_ThrowsException()
+        {
+            var baseType = typeof(IInterfaceWithAmbigImpl);
+            var typeProv = new TestTypeProvider(new[] {
+            baseType,
+            typeof(ClassImplementsIInterfaceWithAmbigImpl),
+            typeof(ClassImplementsIInterfaceWithAmbigImpl2)
+        });
+            var implProv = new TypeImplementationProvider(typeProv);
+
+            Assert.Throws<AmbiguousTypeImplementationException>(() => implProv.GetImplementation(baseType));
+        }
+
+        [Fact]
+        public void GetImplementation_InterfaceWithAmbiguousImplementation2_ThrowsException()
+        {
+            var baseType = typeof(AnotherIInterfaceWithAmbigImpl);
+            var typeProv = new TestTypeProvider(new[] {
+            baseType,
+            typeof(ClassImplementsAnotherIInterfaceWithAmbigImpl),
+            typeof(ClassImplementsAnotherIInterfaceWithAmbigImpl2),
+            typeof(ClassImplementsAnotherIInterfaceWithAmbigImpl3)
+        });
+            var implProv = new TypeImplementationProvider(typeProv);
+
+            Assert.Throws<AmbiguousTypeImplementationException>(() => implProv.GetImplementation(baseType));
+        }
     }
 
     /////////////////////////
@@ -198,4 +226,17 @@ namespace ConfigurationManagementSystem.Framework.Tests
     public interface IBaseTypeWithHierarchy { }
     public class ClassImplementsIBaseTypeWithHierarchy : IBaseTypeWithHierarchy { }
     public class ClassImplementsIBaseTypeWithHierarchy2 : ClassImplementsIBaseTypeWithHierarchy { }
+
+    //
+
+    public interface IInterfaceWithAmbigImpl { }
+    public class ClassImplementsIInterfaceWithAmbigImpl : IInterfaceWithAmbigImpl { }
+    public class ClassImplementsIInterfaceWithAmbigImpl2 : IInterfaceWithAmbigImpl { }
+
+    //
+
+    public interface AnotherIInterfaceWithAmbigImpl { }
+    public class ClassImplementsAnotherIInterfaceWithAmbigImpl : AnotherIInterfaceWithAmbigImpl { }
+    public class ClassImplementsAnotherIInterfaceWithAmbigImpl2 : ClassImplementsAnotherIInterfaceWithAmbigImpl { }
+    public class ClassImplementsAnotherIInterfaceWithAmbigImpl3 : ClassImplementsAnotherIInterfaceWithAmbigImpl { }
 }

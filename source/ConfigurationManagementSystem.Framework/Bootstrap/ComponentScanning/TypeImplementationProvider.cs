@@ -26,13 +26,26 @@ namespace ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning
             if (baseType is null) throw new ArgumentNullException(nameof(baseType));
             if (!baseType.IsClass && !baseType.IsInterface) throw new InvalidOperationException("Base type must be a class or an interface.");
 
-            var implementations = _typeProvider.GetTypes()
+            TypeInfo[] implementations = GetAllImplementations(baseType).ToArray();
+            Type derivedClass = GetDirectlyDerivedClassTypes(baseType, implementations);
+
+            return GetTopOfHierarchy(implementations, derivedClass) ?? throw GetImplNotFoundEx(baseType);
+        }
+
+        private IEnumerable<TypeInfo> GetAllImplementations(Type baseType)
+        {
+            return _typeProvider.GetTypes()
                 .Where(x => x.IsClass && !x.IsAbstract)
                 .Where(x => x.IsAssignableTo(baseType))
                 .Select(x => x.GetTypeInfo())
                 .ToArray();
+        }
 
-            return GetTopOfHierarchy(implementations, baseType) ?? throw GetImplNotFoundEx(baseType);
+        private static Type GetDirectlyDerivedClassTypes(Type baseType, TypeInfo[] implementations)
+        {
+            return baseType.IsInterface
+                ? GetSingleDerivedType(implementations, typeof(object))
+                : baseType;
         }
 
         private Type GetTopOfHierarchy(IEnumerable<TypeInfo> types, Type baseType)
@@ -41,30 +54,29 @@ namespace ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning
             if (types.Count() == 1) return types.First();
 
             var typeArr = types.Where(x => x != baseType).ToArray();
+            var derived = GetSingleDerivedType(typeArr, baseType);
 
-            try
-            {
-                var derived = typeArr.SingleOrDefault(GetPredicate(baseType));
-                if (derived == null) throw GetImplNotFoundEx(baseType);
-
-                return GetTopOfHierarchy(typeArr, derived);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new AmbiguousTypeImplementationException($"Too many implementations was found for the [{baseType.Name}] type", ex);
-            }
+            return GetTopOfHierarchy(typeArr, derived);
         }
 
-        private static Func<TypeInfo, bool> GetPredicate(Type baseType)
+        private static Type GetSingleDerivedType(IEnumerable<Type> source, Type baseType)
         {
-            return baseType.IsClass
-                ? t => t.BaseType == baseType
-                : t => t.ImplementedInterfaces.Contains(baseType);
+            var result = source.Where(x => x.BaseType == baseType).ToArray();
+
+            if (!result.Any()) throw GetImplNotFoundEx(baseType);
+            if (result.Length > 1) throw GetAmbigTypeImplEx(baseType);
+
+            return result[0];
         }
 
         private static ImplementationNotFoundException GetImplNotFoundEx(Type baseType)
         {
             return new ImplementationNotFoundException($"No implementation was found for the [{baseType.Name}] type");
+        }
+
+        private static AmbiguousTypeImplementationException GetAmbigTypeImplEx(Type baseType)
+        {
+            return new AmbiguousTypeImplementationException($"Too many implementations was found for the [{baseType.Name}] type");
         }
     }
 }
