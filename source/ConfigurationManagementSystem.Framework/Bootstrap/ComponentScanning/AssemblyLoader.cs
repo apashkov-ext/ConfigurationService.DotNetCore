@@ -39,7 +39,8 @@ namespace ConfigurationManagementSystem.Framework.Bootstrap.ComponentScanning
             {
                 o.BindNonPublicProperties = true;
             });
-            return section?.Assemblies ?? throw new Exception("Configuration property not defined: ApplicationFramework.Assemblies");
+            return section?.Assemblies 
+                ?? throw new Exception($"Configuration property not defined: {nameof(ApplicationFrameworkSection)}.{nameof(ApplicationFrameworkSection.Assemblies)}");
         }
     }
 }

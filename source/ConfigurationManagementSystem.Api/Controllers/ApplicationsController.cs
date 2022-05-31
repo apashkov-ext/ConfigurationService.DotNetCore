@@ -47,9 +47,9 @@ namespace ConfigurationManagementSystem.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApplicationDto>> Get(Guid id, bool? hierarchy)
+        public async Task<ActionResult<ApplicationDto>> Get(Guid id)
         {
-            var apps = await _getApplicationByIdStory.ExecuteAsync(id, hierarchy ?? false);
+            var apps = await _getApplicationByIdStory.ExecuteAsync(id);
             return Ok(apps.ToDto());
         }
 

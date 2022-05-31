@@ -2,6 +2,9 @@
 
 namespace ConfigurationManagementSystem.Framework.Exceptions
 {
+    /// <summary>
+    /// Represents errors that occur during framework initialization.
+    /// </summary>
     [Serializable]
     internal class FrameworkInitializingException : Exception
     {

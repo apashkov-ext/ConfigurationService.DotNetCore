@@ -1,66 +1,52 @@
 ﻿using ConfigurationManagementSystem.Application.Exceptions;
 using ConfigurationManagementSystem.Application.Stories.AddApplicationStory;
+using ConfigurationManagementSystem.Application.Stories.GetApplicationByIdStory;
 using ConfigurationManagementSystem.Domain.Entities;
+using ConfigurationManagementSystem.Domain.ValueObjects;
 using ConfigurationManagementSystem.Persistence;
 using ConfigurationManagementSystem.Persistence.StoryImplementations.AddApplicationStory;
 using ConfigurationManagementSystem.Persistence.StoryImplementations.GetApplicationByIdStory;
 using ConfigurationManagementSystem.Tests;
 using ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization;
 using ConfigurationManagementSystem.Tests.Presets;
+using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConfigurationManagementSystem.Application.Tests.StoryTests
 {
     public class AddApplicationStoryTests : IntegrationTests
     {
-        public AddApplicationStoryTests()
+        [Theory]
+        [ClassData(typeof(EmptyApplication))]
+        public async Task Add_NotExistedApplication_Success(ApplicationEntity app)
         {
-        }
+            var getAppByNameQueryMock = new Mock<GetApplicationByNameQuery>();
+            getAppByNameQueryMock.Setup(x => x.ExecuteAsync(It.IsAny<ApplicationName>())).ReturnsAsync(() => null);
 
-        [Fact]
-        public void Add_NotExistedApplication_Success()
-        {
-            const string expectedName = "TestProject";
+            var createAppCommand= new Mock<CreateApplicationCommand>();
 
-            ActWithDbContext(ctx =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(ctx).Setup();
-            });
+            var getAppByIdQueryMock = new Mock<GetApplicationByIdWithoutHierarchyQuery>();
+            getAppByIdQueryMock.Setup(x => x.ExecuteAsync(It.IsAny<Guid>())).ReturnsAsync(() => app);
+            var story = new AddApplicationStory(getAppByNameQueryMock.Object, createAppCommand.Object, getAppByIdQueryMock.Object);
 
-            ActWithDbContext(async ctx =>
-            {
-                var story = new AddApplicationStory(
-                new GetApplicationByNameQueryEF(ctx),
-                new CreateApplicationCommandEF(ctx),
-                new GetApplicationByIdWithoutHierarchyQueryEF(ctx));
+            var p = await story.ExecuteAsync("NewApp");
 
-                var p = await story.ExecuteAsync(expectedName);
-
-                Assert.Equal(p.Name.Value, expectedName);
-            });
+            Assert.NotNull(p);          
         }
 
         [Theory]
         [ClassData(typeof(EmptyApplication))]
-        public void Add_ExistedApplication_Exception(ApplicationEntity p)
+        public async Task Add_ExistedApplication_ThrowsException(ApplicationEntity app)
         {
-            ActWithDbContext(ctx =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(ctx)
-                .Setup()
-                .WithEntities(p)
-                .Build();
-            });
-
-            ActWithDbContext(async ctx =>
-            {
-                var story = new AddApplicationStory(
-                new GetApplicationByNameQueryEF(ctx),
-                new CreateApplicationCommandEF(ctx),
-                new GetApplicationByIdWithoutHierarchyQueryEF(ctx));
-
-                await Assert.ThrowsAsync<AlreadyExistsException>(() => story.ExecuteAsync(p.Name.Value));
-            });
+            var getAppByNameQueryMock = new Mock<GetApplicationByNameQuery>();
+            getAppByNameQueryMock.Setup(x => x.ExecuteAsync(It.IsAny<ApplicationName>())).ReturnsAsync(() => app);
+            var createAppCommand = new Mock<CreateApplicationCommand>();
+            var getAppByIdQueryMock = new Mock<GetApplicationByIdWithoutHierarchyQuery>();
+            var story = new AddApplicationStory(getAppByNameQueryMock.Object, createAppCommand.Object, getAppByIdQueryMock.Object);
+            
+            await Assert.ThrowsAsync<AlreadyExistsException>(() => story.ExecuteAsync(app.Name.Value));       
         }
     }
 }

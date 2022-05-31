@@ -9,23 +9,16 @@ namespace ConfigurationManagementSystem.Application.Stories.GetApplicationByIdSt
     [Component]
     public class GetApplicationByIdStory
     {
-        private readonly GetApplicationByIdWithHierarchyQuery _getApplicationByIdWithHierarchyQuery;
         private readonly GetApplicationByIdWithoutHierarchyQuery _getApplicationByIdWithoutHierarchyQuery;
 
-        public GetApplicationByIdStory(
-            GetApplicationByIdWithHierarchyQuery getApplicationByIdWithHierarchyQuery,
-            GetApplicationByIdWithoutHierarchyQuery getApplicationByIdWithoutHierarchyQuery)
+        public GetApplicationByIdStory(GetApplicationByIdWithoutHierarchyQuery getApplicationByIdWithoutHierarchyQuery)
         {
-            _getApplicationByIdWithHierarchyQuery = getApplicationByIdWithHierarchyQuery;
             _getApplicationByIdWithoutHierarchyQuery = getApplicationByIdWithoutHierarchyQuery;
         }
 
-        public async Task<ApplicationEntity> ExecuteAsync(Guid id, bool hierarchy)
+        public async Task<ApplicationEntity> ExecuteAsync(Guid id)
         {
-            var app = hierarchy
-                ? await _getApplicationByIdWithHierarchyQuery.ExecuteAsync(id)
-                : await _getApplicationByIdWithoutHierarchyQuery.ExecuteAsync(id);
-
+            var app = await _getApplicationByIdWithoutHierarchyQuery.ExecuteAsync(id);
             return app ?? throw new EntityNotFoundException("Application does not exist");
         }
     }

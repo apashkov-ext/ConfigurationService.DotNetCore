@@ -10,12 +10,20 @@ namespace ConfigurationManagementSystem.Framework
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Runs framework initialization: scanning components, binding configurations, confuguring services. 
+        /// </summary>
+        /// <param name="services">Instance of <see cref="IServiceCollection"/></param>
+        /// <param name="configuration">Instance of <see cref="IConfiguration"/></param>
+        /// <exception cref="FrameworkInitializingException"></exception>
         public static void BootstrapFramework(this IServiceCollection services, IConfiguration configuration)
         {
             try
             {
                 var typeProv = GetComponentTypeProvider(configuration);
-                RegisterComponents(typeProv, services);
+                var implProvider = new TypeImplementationProvider(typeProv);
+
+                RegisterComponents(typeProv, implProvider, services);
                 RegisterConfiguration(typeProv, services, configuration);
             }
             catch (Exception ex)
@@ -31,10 +39,10 @@ namespace ConfigurationManagementSystem.Framework
             return FrameworkComponentTypeProvider.Create(assemblies);
         }
 
-        private static void RegisterComponents(FrameworkComponentTypeProvider typeProvider, IServiceCollection services)
+        private static void RegisterComponents(IFrameworkComponentTypeProvider typeProvider, 
+            TypeImplementationProvider implementationProvider, IServiceCollection services)
         {         
-            var implProvider = new TypeImplementationProvider(typeProvider);
-            var typesToRegister = typeProvider.GetComponentTypesByAttribute<ComponentAttribute>().Select(implProvider.GetImplementation);
+            var typesToRegister = typeProvider.GetComponentTypesByAttribute<ComponentAttribute>().Select(implementationProvider.GetImplementation);
             foreach (var type in typesToRegister)
             {
                 services.AddTransient(type);
