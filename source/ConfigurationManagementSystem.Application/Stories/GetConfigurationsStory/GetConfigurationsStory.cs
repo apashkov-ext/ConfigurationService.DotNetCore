@@ -30,12 +30,12 @@ namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationsSto
 
             if (string.IsNullOrEmpty(name))
             {
-                return result.ToPagedList(paginationOptions);
+                return result.AsPagedList(paginationOptions);
             }
 
             var filtered = result
                 .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
-                .ToPagedList(paginationOptions);
+                .AsPagedList(paginationOptions);
 
             return filtered;
         }

@@ -10,14 +10,14 @@ namespace ConfigurationManagementSystem.Application.Tests.PaginationTests
         [Fact]
         public void ToPagedList_NullSourceArg_ThrowsException()
         {
-            Assert.Throws<ArgumentNullException>(() => QueryableExtensions.ToPagedList<object>(null, new PaginationOptions(1, 1)));
+            Assert.Throws<ArgumentNullException>(() => QueryableExtensions.AsPagedList<object>(null, new PaginationOptions(1, 1)));
         }
 
         [Fact]
         public void ToPagedList_NullOptionsArg_ThrowsException()
         {
             var source = GetSource(0);
-            Assert.Throws<ArgumentNullException>(() => QueryableExtensions.ToPagedList(source, null));
+            Assert.Throws<ArgumentNullException>(() => QueryableExtensions.AsPagedList(source, null));
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace ConfigurationManagementSystem.Application.Tests.PaginationTests
             var source = GetSource(1);
             var options = new PaginationOptions(0, 10);
 
-            var res = QueryableExtensions.ToPagedList(source, options);
+            var res = QueryableExtensions.AsPagedList(source, options);
 
             Assert.NotEmpty(res.Data);
         }
@@ -38,7 +38,7 @@ namespace ConfigurationManagementSystem.Application.Tests.PaginationTests
             var expectedTotalLength = source.Count();
             var options = new PaginationOptions(2, 2);
 
-            var res = QueryableExtensions.ToPagedList(source, options);
+            var res = QueryableExtensions.AsPagedList(source, options);
             var elements = res.Data;
             var elementsLength = elements.Length;
 

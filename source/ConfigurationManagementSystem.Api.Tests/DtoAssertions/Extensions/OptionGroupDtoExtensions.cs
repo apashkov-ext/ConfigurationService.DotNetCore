@@ -16,6 +16,29 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
                 throw UnexpectedPropertyValueException.Create(id, () => dto.Id);
             }
 
+            if (dto.ParentId != null && model.Parent != null)
+            {
+                if (!dto.ParentId.Equals(model.Parent.Id.ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    throw UnexpectedPropertyValueException.Create(model.Parent.Id, () => dto.ParentId);
+                }
+            } 
+            else if (dto.ParentId == null || model.Parent == null)
+            {
+                throw UnexpectedPropertyValueException.Create(model.Parent?.Id, () => dto.ParentId);
+            }
+
+            var configId = model.Configuration.Id.ToString();
+            if (!dto.ConfigurationId.Equals(configId, StringComparison.OrdinalIgnoreCase))
+            {
+                throw UnexpectedPropertyValueException.Create(configId, () => dto.ConfigurationId);
+            }
+
+            if (!dto.Id.Equals(id, StringComparison.OrdinalIgnoreCase))
+            {
+                throw UnexpectedPropertyValueException.Create(id, () => dto.Id);
+            }
+
             if (dto.Name != model.Name.Value)
             {
                 throw UnexpectedPropertyValueException.Create(model.Name.Value, () => dto.Name);
@@ -27,29 +50,7 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
                 throw UnexpectedPropertyValueException.Create(isRoot, () => dto.Root);
             }
 
-            foreach (var option in model.Options)
-            {
-                var oId = option.Id.ToString();
-                var o = dto.Options.FirstOrDefault(x => x.Id.Equals(oId, StringComparison.OrdinalIgnoreCase));
-                if (o == null)
-                {
-                    throw NotFoundInValueException.Create(option, () => dto.Options);
-                }
 
-                o.IsEqualToModel(option);
-            }
-
-            foreach (var nested in model.NestedGroups)
-            {
-                var nId = nested.Id.ToString();
-                var g = dto.NestedGroups.FirstOrDefault(x => x.Id.Equals(nId, StringComparison.OrdinalIgnoreCase));
-                if (g == null)
-                {
-                    throw NotFoundInValueException.Create(nested, () => dto.NestedGroups);
-                }
-
-                g.IsEqualToModel(nested);
-            }
         }
     }
 }

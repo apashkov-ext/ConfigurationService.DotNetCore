@@ -9,13 +9,12 @@ namespace ConfigurationManagementSystem.Api.Extensions
         public static OptionGroupDto ToDto(this OptionGroup source)
         {
             var options = source.Options.Select(x => x.ToDto());
-            var nested = source.NestedGroups.Select(x => x.ToDto());
             return new OptionGroupDto
             {
                 Id = source.Id.ToString(),
+                ParentId = source.Parent?.Id.ToString(),
+                ConfigurationId = source.Configuration.Id.ToString(),
                 Name = source.Name.Value,
-                Options = options,
-                NestedGroups = nested,
                 Root = source.Parent == null
             };
         }

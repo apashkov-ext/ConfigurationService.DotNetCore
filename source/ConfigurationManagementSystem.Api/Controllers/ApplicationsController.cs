@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ConfigurationManagementSystem.Api.Attributes;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Application.Pagination;
@@ -38,7 +37,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         public async Task<ActionResult<PagedResponseDto<ApplicationDto>>> Get([FromQuery] GetRequestOptions options)
         {
             var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
-            var apps = await _getApplicationsStory.ExecuteAsync(options.Name, pOpt, options.Hierarchy ?? false);
+            var apps = await _getApplicationsStory.ExecuteAsync(options.Name, pOpt);
             var result = apps.ToPagedResponseDto(ApplicationExtensions.ToDto);
 
             return Ok(result);

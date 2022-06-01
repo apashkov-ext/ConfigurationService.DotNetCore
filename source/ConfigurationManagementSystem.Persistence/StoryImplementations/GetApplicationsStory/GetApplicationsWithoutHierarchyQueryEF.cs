@@ -1,12 +1,16 @@
-﻿using ConfigurationManagementSystem.Application.Stories.GetApplicationsStory;
+﻿using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Application.Stories.GetApplicationsStory;
 using ConfigurationManagementSystem.Domain.Entities;
+using ConfigurationManagementSystem.Domain.ValueObjects;
+using ConfigurationManagementSystem.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Persistence.StoryImplementations
 {
-    public class GetApplicationsWithoutHierarchyQueryEF : GetApplicationsWithoutHierarchyQuery
+    public class GetApplicationsWithoutHierarchyQueryEF : IGetApplicationsWithoutHierarchyQuery
     {
         private readonly ConfigurationManagementSystemContext _context;
 
@@ -15,11 +19,13 @@ namespace ConfigurationManagementSystem.Persistence.StoryImplementations
             _context = context;
         }
 
-        public override Task<IQueryable<ApplicationEntity>> ExecuteAsync()
+        public Task<PagedList<ApplicationEntity>> ExecuteAsync(ApplicationName filterByName, PaginationOptions paginationOptions)
         {
-            var result = _context.Applications
-                .AsNoTrackingWithIdentityResolution();
-            return Task.FromResult(result);
+            var query = filterByName == null
+                ? _context.Applications.AsNoTrackingWithIdentityResolution()
+                : _context.Applications.Where(x => x.Name.Value.StartsWith(filterByName.Value, StringComparison.OrdinalIgnoreCase)).AsNoTrackingWithIdentityResolution();
+
+            return query.AsPagedListAsync(paginationOptions);
         }
     }
 }

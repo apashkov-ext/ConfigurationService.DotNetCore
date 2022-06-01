@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ConfigurationManagementSystem.Api.Dto;
+﻿using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Domain.Entities;
 
 namespace ConfigurationManagementSystem.Api.Extensions
@@ -11,8 +10,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
             return new ApplicationDto
             {
                 Id = source.Id.ToString(),
-                Name = source.Name.Value,
-                Configurations = source.Configurations.Select(x => x.ToDto())
+                Name = source.Name.Value
             };
         }
 
@@ -22,7 +20,6 @@ namespace ConfigurationManagementSystem.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 Name = source.Name.Value,
-                Configurations = source.Configurations.Select(x => x.ToDto()),
                 ApiKey = source.ApiKey.Value.ToString()
             };
         }

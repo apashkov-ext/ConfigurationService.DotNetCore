@@ -2,43 +2,27 @@
 using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Domain.Entities;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
+using ConfigurationManagementSystem.Domain.ValueObjects;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetApplicationsStory
 {
     [Component]
     public class GetApplicationsStory
     {
-        private readonly GetApplicationsWithHierarchyQuery _getApplicationsWithHierarchyQuery;
-        private readonly GetApplicationsWithoutHierarchyQuery _getApplicationsWithoutHierarchyQuery;
+        private readonly IGetApplicationsWithoutHierarchyQuery _getApplicationsWithoutHierarchyQuery;
 
-        public GetApplicationsStory(
-            GetApplicationsWithHierarchyQuery getApplicationsWithHierarchyQuery,
-            GetApplicationsWithoutHierarchyQuery getApplicationsWithoutHierarchyQuery)
+        public GetApplicationsStory(IGetApplicationsWithoutHierarchyQuery getApplicationsWithoutHierarchyQuery)
         {
-            _getApplicationsWithHierarchyQuery = getApplicationsWithHierarchyQuery;
             _getApplicationsWithoutHierarchyQuery = getApplicationsWithoutHierarchyQuery;
         }
 
-        public async Task<PagedList<ApplicationEntity>> ExecuteAsync(string name, PaginationOptions paginationOptions, bool withHierarchy)
+        public Task<PagedList<ApplicationEntity>> ExecuteAsync(string name, PaginationOptions paginationOptions)
         {
             if (paginationOptions == null) throw new ArgumentNullException(nameof(paginationOptions));
 
-            var result = withHierarchy
-                ? await _getApplicationsWithHierarchyQuery.ExecuteAsync()
-                : await _getApplicationsWithoutHierarchyQuery.ExecuteAsync();
-
-            if (string.IsNullOrEmpty(name))
-            {
-                return result.ToPagedList(paginationOptions);
-            }
-
-            var filtered = result
-                .Where(x => x.Name.Value.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
-                .ToPagedList(paginationOptions);
-
-            return filtered;
+            var nameFilter = string.IsNullOrEmpty(name) ? null : new ApplicationName(name);
+            return _getApplicationsWithoutHierarchyQuery.ExecuteAsync(nameFilter, paginationOptions);
         }
     }
 }

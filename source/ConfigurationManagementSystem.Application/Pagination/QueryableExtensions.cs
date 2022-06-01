@@ -5,7 +5,7 @@ namespace ConfigurationManagementSystem.Application.Pagination
 {
     public static class QueryableExtensions
     {
-        public static PagedList<T> ToPagedList<T>(this IQueryable<T> source, PaginationOptions paginationOptions)
+        public static PagedList<T> AsPagedList<T>(this IQueryable<T> source, PaginationOptions paginationOptions)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (paginationOptions == null) throw new ArgumentNullException(nameof(paginationOptions));

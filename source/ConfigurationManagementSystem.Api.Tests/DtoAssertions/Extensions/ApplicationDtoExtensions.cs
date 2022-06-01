@@ -22,8 +22,6 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
             {
                 throw UnexpectedPropertyValueException.Create(model.Name.Value, () => dto.Name);
             }
-
-            EnvironmentsAreEqual(model.Configurations, dto.Configurations, () => dto.Configurations);
         }
 
         public static void IsEqualToModel(this CreatedApplicationDto dto, ApplicationEntity model)
@@ -43,23 +41,6 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
             if (!dto.ApiKey.Equals(key, StringComparison.OrdinalIgnoreCase))
             {
                 throw UnexpectedPropertyValueException.Create(key, () => dto.ApiKey);
-            }
-
-            EnvironmentsAreEqual(model.Configurations, dto.Configurations, () => dto.Configurations);
-        }
-
-        private static void EnvironmentsAreEqual(IEnumerable<ConfigurationEntity> envs, IEnumerable<ConfigurationDto> dtos, Expression<Func<object>> actualPropertySelector)
-        {
-            foreach (var e in envs)
-            {
-                var id = e.Id.ToString();
-                var env = dtos.FirstOrDefault(x => x.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
-                if (env == null)
-                {
-                    throw NotFoundInValueException.Create(e, actualPropertySelector);
-                }
-
-                env.IsEqualToModel(e);
             }
         }
     }

@@ -42,7 +42,7 @@ namespace ConfigurationManagementSystem.Api.Controllers
         public async Task<ActionResult<PagedResponseDto<ConfigurationDto>>> Get([FromQuery] GetRequestOptions options)
         {
             var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
-            var configs = await _getConfigurationsStory.ExecuteAsync(options.Name, pOpt, options.Hierarchy ?? false);
+            var configs = await _getConfigurationsStory.ExecuteAsync(options.Name, pOpt, false);
             var result = configs.ToPagedResponseDto(ConfigurationEntityExtensions.ToDto);
 
             return Ok(result);
