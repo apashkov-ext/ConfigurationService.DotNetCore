@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementation
 {
-    public class ConfigTree : Tree<OptionGroup>
+    public class ConfigTree : Tree<OptionGroupEntity>
     {
-        protected override Node<OptionGroup> Root { get; }
+        protected override Node<OptionGroupEntity> Root { get; }
 
-        public ConfigTree(OptionGroup root, ConfigurationManagementSystemContext context)
+        public ConfigTree(OptionGroupEntity root, ConfigurationManagementSystemContext context)
         {
             Root = new ConfigNode(root, context);
         }

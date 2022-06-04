@@ -42,10 +42,10 @@ namespace ConfigurationManagementSystem.Framework
         private static void RegisterComponents(IFrameworkComponentTypeProvider typeProvider, 
             TypeImplementationProvider implementationProvider, IServiceCollection services)
         {         
-            var typesToRegister = typeProvider.GetComponentTypesByAttribute<ComponentAttribute>().Select(implementationProvider.GetImplementation);
-            foreach (var type in typesToRegister)
+            foreach (var baseType in typeProvider.GetComponentTypesByAttribute<ComponentAttribute>())
             {
-                services.AddTransient(type);
+                var impl = implementationProvider.GetImplementation(baseType);
+                services.AddTransient(baseType, impl);
             }
         }
 

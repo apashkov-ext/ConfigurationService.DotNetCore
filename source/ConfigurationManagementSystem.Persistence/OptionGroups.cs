@@ -21,7 +21,7 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public async Task<IEnumerable<OptionGroup>> Get(string name)
+        public async Task<IEnumerable<OptionGroupEntity>> Get(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -38,13 +38,13 @@ namespace ConfigurationManagementSystem.Persistence
             return list;
         }
 
-        public async Task<OptionGroup> Get(Guid id)
+        public async Task<OptionGroupEntity> Get(Guid id)
         {
             var group = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == id);
             return group ?? throw new EntityNotFoundException("Option Group does not exist");
         }
 
-        public async Task<OptionGroup> Add(Guid parent, string name)
+        public async Task<OptionGroupEntity> Add(Guid parent, string name)
         {
             var parentGroup = await _context.OptionGroups.OptionGroupsWithIncludedEntities().FirstOrDefaultAsync(x => x.Id == parent);
             if (parentGroup == null)

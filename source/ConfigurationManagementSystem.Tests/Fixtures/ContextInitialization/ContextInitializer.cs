@@ -35,8 +35,8 @@ namespace ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization
         /// </summary>
         public TContext Build()
         {
-            _context.Database.EnsureDeleted();
-            _context.Database.EnsureCreated();
+            //_context.Database.EnsureDeleted();
+            //_context.Database.EnsureCreated();
             _context.SaveChanges();
             return _context;
         }

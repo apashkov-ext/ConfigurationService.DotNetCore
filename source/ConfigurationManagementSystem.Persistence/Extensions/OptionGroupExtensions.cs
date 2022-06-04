@@ -6,9 +6,9 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class OptionGroupExtensions
     {
-        public static IEnumerable<OptionGroup> ExpandHierarchy(this OptionGroup group)
+        public static IEnumerable<OptionGroupEntity> ExpandHierarchy(this OptionGroupEntity group)
         {
-            var allElements = new List<OptionGroup>{ group };
+            var allElements = new List<OptionGroupEntity>{ group };
 
             foreach (var nested in group.NestedGroups)
             {
@@ -25,7 +25,7 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
             return allElements;
         }
 
-        public static void RemoveWithHierarchy(this OptionGroup group, ConfigurationManagementSystemContext context)
+        public static void RemoveWithHierarchy(this OptionGroupEntity group, ConfigurationManagementSystemContext context)
         {
             context.Options.RemoveRange(group.Options);
 

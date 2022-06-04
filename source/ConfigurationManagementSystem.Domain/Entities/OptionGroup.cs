@@ -5,30 +5,30 @@ using ConfigurationManagementSystem.Domain.ValueObjects;
 
 namespace ConfigurationManagementSystem.Domain.Entities
 {
-    public class OptionGroup : DomainEntity
+    public class OptionGroupEntity : DomainEntity
     {
         public OptionGroupName Name { get; private set; }
-        public OptionGroup Parent { get; }
+        public OptionGroupEntity Parent { get; }
         public ConfigurationEntity Configuration { get; }
 
-        protected readonly List<OptionGroup> _nestedGroups = new List<OptionGroup>();
-        public IEnumerable<OptionGroup> NestedGroups => _nestedGroups;
+        protected readonly List<OptionGroupEntity> _nestedGroups = new List<OptionGroupEntity>();
+        public IEnumerable<OptionGroupEntity> NestedGroups => _nestedGroups;
 
         protected readonly List<OptionEntity> _options = new List<OptionEntity>();
         public IEnumerable<OptionEntity> Options => _options;
 
-        protected OptionGroup() { }
+        protected OptionGroupEntity() { }
 
-        protected OptionGroup(OptionGroupName name, ConfigurationEntity configuration, OptionGroup parent)
+        protected OptionGroupEntity(OptionGroupName name, ConfigurationEntity configuration, OptionGroupEntity parent)
         {
             Name = name;
             Configuration = configuration;
             Parent = parent;
         }
 
-        public static OptionGroup Create(OptionGroupName name, ConfigurationEntity configuration, OptionGroup parent = null)
+        public static OptionGroupEntity Create(OptionGroupName name, ConfigurationEntity configuration, OptionGroupEntity parent = null)
         {
-            return new OptionGroup(name, configuration, parent);
+            return new OptionGroupEntity(name, configuration, parent);
         }
 
         public OptionEntity AddOption(OptionName name, OptionValue value)
@@ -61,7 +61,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
             }
         }
 
-        public OptionGroup AddNestedGroup(OptionGroupName name)
+        public OptionGroupEntity AddNestedGroup(OptionGroupName name)
         {
             if (_nestedGroups.Any(x => x.Name == name))
             {
@@ -78,12 +78,12 @@ namespace ConfigurationManagementSystem.Domain.Entities
             return g;
         }
 
-        public IEnumerable<OptionGroup> GetOptionGroupsDeep()
+        public IEnumerable<OptionGroupEntity> GetOptionGroupsDeep()
         {
             return GetOptionGroupsDeep(this);
         }
 
-        private IEnumerable<OptionGroup> GetOptionGroupsDeep(OptionGroup root)
+        private IEnumerable<OptionGroupEntity> GetOptionGroupsDeep(OptionGroupEntity root)
         {
             yield return root;
 
@@ -99,7 +99,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
 
         public override string ToString()
         {
-            var s = $"{nameof(OptionGroup)} {{ Id={Id}, Name={Name.Value} }}";
+            var s = $"{nameof(OptionGroupEntity)} {{ Id={Id}, Name={Name.Value} }}";
             return s;
         }
     }

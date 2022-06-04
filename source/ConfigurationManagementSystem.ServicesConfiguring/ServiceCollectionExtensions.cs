@@ -10,13 +10,12 @@ namespace ConfigurationManagementSystem.ServicesConfiguring
     {
         public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IConfigurations, Configurations>();
             services.AddTransient<IEnvironments, Environments>();
             services.AddTransient<IOptionGroups, OptionGroups>();
             services.AddTransient<IOptions, Options>();
             services.AddDbContext<ConfigurationManagementSystemContext>(options =>
             {
-                options.ConfigurePostgres(configuration);
+                options.ConfigureDatabaseConnection(configuration);
             });
 
             services.BootstrapFramework(configuration);

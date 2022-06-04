@@ -233,23 +233,28 @@ namespace ConfigurationManagementSystem.Api.Tests.Tests
         [Fact]
         public async void Delete_Exists_RemovesEntityFromContext()
         {
-            var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var app = ApplicationEntity.Create(new ApplicationName("TestApp"), new ApiKey(Guid.NewGuid()));
 
-            ActWithDbContext(context =>
+            await ActWithDbContextAsync(async context =>
             {
                 new ContextPreparation<ConfigurationManagementSystemContext>(context)
                     .Setup()
-                    .WithEntities(project)
+                    .WithEntities(app)
                     .Build();
-            });
 
-            await DeleteAsync($"api/applications/{project.Id}");
+                await DeleteAsync($"api/applications/{app.Id}");
 
-            ActWithDbContext(context =>
-            {
                 var projects = context.Applications.ToList();
                 Assert.Empty(projects);
             });
+
+            
+
+            //ActWithDbContext(context =>
+            //{
+            //    var projects = context.Applications.ToList();
+            //    Assert.Empty(projects);
+            //});
         }
 
         [Fact]

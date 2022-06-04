@@ -12,8 +12,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
             {
                 Id = source.Id.ToString(),
                 ApplicationId = source.Application.Id.ToString(),
-                Name = source.Name.Value,
-                OptionGroup = root.ToDto()
+                Name = source.Name.Value
             };
         }
     }

@@ -5,9 +5,9 @@ using System;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {
-    internal class OptionGroupConfiguration : IEntityTypeConfiguration<OptionGroup>
+    internal class OptionGroupEntityConfiguration : IEntityTypeConfiguration<OptionGroupEntity>
     {
-        public void Configure(EntityTypeBuilder<OptionGroup> builder)
+        public void Configure(EntityTypeBuilder<OptionGroupEntity> builder)
         {
             builder.ToTable("OptionGroups").HasKey(x => x.Id);
             builder.Property(x => x.Created).DateTimeConversion().IsRequired();

@@ -24,7 +24,7 @@ namespace ConfigurationManagementSystem.Api
             return this;
         }
 
-        public static JsObject Create(OptionGroup source)
+        public static JsObject Create(OptionGroupEntity source)
         {
             if (source == null)
             {

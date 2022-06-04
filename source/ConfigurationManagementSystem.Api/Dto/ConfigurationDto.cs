@@ -5,6 +5,5 @@
         public string Id { get; set; }
         public string ApplicationId { get; set; }
         public string Name { get; set; }
-        public OptionGroupDto OptionGroup { get; set; }
     }
 }

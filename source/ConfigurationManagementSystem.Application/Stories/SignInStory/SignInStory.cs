@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace ConfigurationManagementSystem.Application.Stories.SignInStory
 {
@@ -18,11 +19,10 @@ namespace ConfigurationManagementSystem.Application.Stories.SignInStory
         private readonly GetUserByUsernameQuery _getUserByUsernameQuery;
         private readonly SecuritySection _securitySection;
 
-        public SignInStory(GetUserByUsernameQuery getUserByUsernameQuery, 
-            SecuritySection securitySection)
+        public SignInStory(GetUserByUsernameQuery getUserByUsernameQuery, IOptions<SecuritySection> securitySection)
         {
             _getUserByUsernameQuery = getUserByUsernameQuery;
-            _securitySection = securitySection;
+            _securitySection = securitySection.Value;
         }
 
         public async Task<string> ExecuteAsync(string username, string password)

@@ -8,15 +8,15 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting
 {
     internal class OptionGroupDeserializer
     {
-        public static OptionGroup DeserializeFromJson(string json)
+        public static OptionGroupEntity DeserializeFromJson(string json)
         {
             var doc = JsonDocument.Parse(json);
-            var rootGroup = OptionGroup.Create(new OptionGroupName(""), null);
+            var rootGroup = OptionGroupEntity.Create(new OptionGroupName(""), null);
             FillGroup(rootGroup, doc.RootElement);
             return rootGroup;
         }
 
-        private static void FillGroup(OptionGroup parent, JsonElement element)
+        private static void FillGroup(OptionGroupEntity parent, JsonElement element)
         {
             foreach (var p in element.EnumerateObject())
             {
@@ -31,7 +31,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting
             }
         }
 
-        private static void AddOption(OptionGroup group, JsonProperty prop)
+        private static void AddOption(OptionGroupEntity group, JsonProperty prop)
         {
             group.AddOption(new OptionName(prop.Name), GetOptionValue(prop));
         }

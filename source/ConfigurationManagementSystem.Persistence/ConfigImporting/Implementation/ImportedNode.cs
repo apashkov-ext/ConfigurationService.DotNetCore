@@ -4,13 +4,13 @@ using ConfigurationManagementSystem.Persistence.ConfigImporting.Abstractions;
 
 namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementation
 {
-    public class ImportedNode : Node<OptionGroup>
+    public class ImportedNode : Node<OptionGroupEntity>
     {
-        public override OptionGroup Value { get; }
-        private readonly List<Node<OptionGroup>> _children = new List<Node<OptionGroup>>();
-        public override IEnumerable<Node<OptionGroup>> Children => _children;
+        public override OptionGroupEntity Value { get; }
+        private readonly List<Node<OptionGroupEntity>> _children = new List<Node<OptionGroupEntity>>();
+        public override IEnumerable<Node<OptionGroupEntity>> Children => _children;
 
-        public ImportedNode(OptionGroup value)
+        public ImportedNode(OptionGroupEntity value)
         {
             Value = value;
 
@@ -20,16 +20,16 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             }
         }
 
-        protected override void ReplaceAction(OptionGroup value) { }
+        protected override void ReplaceAction(OptionGroupEntity value) { }
 
-        public override Node<OptionGroup> AddChild(OptionGroup value)
+        public override Node<OptionGroupEntity> AddChild(OptionGroupEntity value)
         {
             return null;
         }
 
-        public override void RemoveChild(Node<OptionGroup> child) { }
+        public override void RemoveChild(Node<OptionGroupEntity> child) { }
 
-        public override Node<OptionGroup> FindChild(OptionGroup value)
+        public override Node<OptionGroupEntity> FindChild(OptionGroupEntity value)
         {
             return null;
         }

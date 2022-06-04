@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using ConfigurationManagementSystem.Core;
 using ConfigurationManagementSystem.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigurationManagementSystem.Api.Tests
@@ -14,7 +13,7 @@ namespace ConfigurationManagementSystem.Api.Tests
     {
         protected override IWebHostBuilder CreateWebHostBuilder()
         {
-            return WebHost.CreateDefaultBuilder().UseEnvironment("Development").UseStartup<Startup>();
+            return WebHost.CreateDefaultBuilder().UseEnvironment(ApplicationConstants.EnvironmentName).UseStartup<Startup>();
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -30,11 +29,7 @@ namespace ConfigurationManagementSystem.Api.Tests
 
                 services.AddDbContext<ConfigurationManagementSystemContext>(options =>
                 {
-                    var config = new ConfigurationBuilder()
-                        .AddJsonFile("appsettings.json")
-                        .AddEnvironmentVariables()
-                        .Build();
-                    options.UseNpgsql(config.GetConnectionString("postgres"));
+                    options.ConfigureDatabaseConnection();
                 });
             });
         }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Persistence.ContextConfiguration;
 using Microsoft.EntityFrameworkCore;
-using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Persistence
 {
@@ -12,7 +11,7 @@ namespace ConfigurationManagementSystem.Persistence
     {
         public virtual DbSet<ApplicationEntity> Applications { get; set; }
         public virtual DbSet<ConfigurationEntity> Configurations { get; set; }
-        public virtual DbSet<OptionGroup> OptionGroups { get; set; }
+        public virtual DbSet<OptionGroupEntity> OptionGroups { get; set; }
         public virtual DbSet<OptionEntity> Options { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
 
@@ -24,9 +23,9 @@ namespace ConfigurationManagementSystem.Persistence
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder
-                .ApplyConfiguration(new ApplicationConfiguration())
+                .ApplyConfiguration(new ApplicationEntityConfiguration())
                 .ApplyConfiguration(new ConfigurationEntityConfiguration())
-                .ApplyConfiguration(new OptionGroupConfiguration())
+                .ApplyConfiguration(new OptionGroupEntityConfiguration())
                 .ApplyConfiguration(new OptionEntityConfiguration())
                 .ApplyConfiguration(new UserEntityConfiguration());
         }

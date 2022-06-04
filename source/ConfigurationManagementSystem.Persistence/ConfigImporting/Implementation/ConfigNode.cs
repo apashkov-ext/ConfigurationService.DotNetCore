@@ -7,15 +7,15 @@ using ConfigurationManagementSystem.Persistence.Extensions;
 
 namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementation
 {
-    public class ConfigNode : Node<OptionGroup>
+    public class ConfigNode : Node<OptionGroupEntity>
     {
         private readonly ConfigurationManagementSystemContext _context;
-        public override OptionGroup Value { get; }
+        public override OptionGroupEntity Value { get; }
 
-        private readonly List<Node<OptionGroup>> _children = new List<Node<OptionGroup>>();
-        public override IEnumerable<Node<OptionGroup>> Children => _children;
+        private readonly List<Node<OptionGroupEntity>> _children = new List<Node<OptionGroupEntity>>();
+        public override IEnumerable<Node<OptionGroupEntity>> Children => _children;
 
-        public ConfigNode(OptionGroup value, ConfigurationManagementSystemContext context)
+        public ConfigNode(OptionGroupEntity value, ConfigurationManagementSystemContext context)
         {
             _context = context;
             Value = value;
@@ -26,14 +26,14 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             }
         }
 
-        private ConfigNode(OptionGroup value, bool visited, ConfigurationManagementSystemContext context)
+        private ConfigNode(OptionGroupEntity value, bool visited, ConfigurationManagementSystemContext context)
         {
             _context = context;
             Value = value;
             Visited = visited;
         }
 
-        protected override void ReplaceAction(OptionGroup value)
+        protected override void ReplaceAction(OptionGroupEntity value)
         {
             if (!value.Options.Any())
             {
@@ -72,7 +72,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             }
         }
 
-        public override Node<OptionGroup> AddChild(OptionGroup value)
+        public override Node<OptionGroupEntity> AddChild(OptionGroupEntity value)
         {
             var group = Value.AddNestedGroup(value.Name);
             AddOptions(group, value.Options);
@@ -88,14 +88,14 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             return child;
         }
 
-        public override void RemoveChild(Node<OptionGroup> child)
+        public override void RemoveChild(Node<OptionGroupEntity> child)
         {
             var allElements = child.Value.ExpandHierarchy();
             _context.OptionGroups.RemoveRange(allElements);
             _children.Remove(child);
         }
 
-        public override Node<OptionGroup> FindChild(OptionGroup value)
+        public override Node<OptionGroupEntity> FindChild(OptionGroupEntity value)
         {
             return _children.FirstOrDefault(x => x.Value.Name.Value.Equals(value.Name.Value, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -105,7 +105,7 @@ namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementati
             dest.UpdateValue(source.Value);
         }
 
-        private static void AddOptions(OptionGroup group, IEnumerable<OptionEntity> options)
+        private static void AddOptions(OptionGroupEntity group, IEnumerable<OptionEntity> options)
         {
             foreach (var sourceOption in options)
             {

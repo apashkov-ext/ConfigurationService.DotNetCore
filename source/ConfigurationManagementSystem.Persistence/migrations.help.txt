@@ -1,0 +1,2 @@
+﻿Add new migration:
+dotnet ef migrations add <migration-name> --project ConfigurationManagementSystem.Persistence

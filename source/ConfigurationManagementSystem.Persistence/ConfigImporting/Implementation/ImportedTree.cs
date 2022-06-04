@@ -3,11 +3,11 @@ using ConfigurationManagementSystem.Persistence.ConfigImporting.Abstractions;
 
 namespace ConfigurationManagementSystem.Persistence.ConfigImporting.Implementation
 {
-    public class ImportedTree : Tree<OptionGroup>
+    public class ImportedTree : Tree<OptionGroupEntity>
     {
-        protected override Node<OptionGroup> Root { get; }
+        protected override Node<OptionGroupEntity> Root { get; }
 
-        public ImportedTree(OptionGroup root)
+        public ImportedTree(OptionGroupEntity root)
         {
             Root = new ImportedNode(root);
         }

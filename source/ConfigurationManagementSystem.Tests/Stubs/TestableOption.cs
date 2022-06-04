@@ -6,7 +6,7 @@ namespace ConfigurationManagementSystem.Tests.Stubs
 {
     internal class TestableOption : OptionEntity
     {
-        public TestableOption(Guid id, string name,  string value, OptionGroup group) 
+        public TestableOption(Guid id, string name,  string value, OptionGroupEntity group) 
             : base(new OptionName(name), new OptionValue(value), group)
         {
             Id = id;

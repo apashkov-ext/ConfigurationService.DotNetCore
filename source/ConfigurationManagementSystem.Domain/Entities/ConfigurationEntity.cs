@@ -12,8 +12,8 @@ namespace ConfigurationManagementSystem.Domain.Entities
         public bool IsDefault { get; }
         public ApplicationEntity Application { get; }
 
-        private readonly List<OptionGroup> _optionGroups = new List<OptionGroup>();
-        public IEnumerable<OptionGroup> OptionGroups => _optionGroups;
+        private readonly List<OptionGroupEntity> _optionGroups = new List<OptionGroupEntity>();
+        public IEnumerable<OptionGroupEntity> OptionGroups => _optionGroups;
 
         protected ConfigurationEntity() {}
 
@@ -35,7 +35,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
             Name = name;
         }
 
-        public OptionGroup GetRootOptionGroop()
+        public OptionGroupEntity GetRootOptionGroop()
         {
             var root = _optionGroups.SingleOrDefault(x => x.Parent == null);
             if (root == null)
@@ -47,7 +47,7 @@ namespace ConfigurationManagementSystem.Domain.Entities
 
         private void SetMainOptionGroup()
         {
-            var g = OptionGroup.Create(new OptionGroupName(""), this);
+            var g = OptionGroupEntity.Create(new OptionGroupName(""), this);
             _optionGroups.Add(g);
         }
 

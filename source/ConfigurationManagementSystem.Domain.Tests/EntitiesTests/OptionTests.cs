@@ -9,7 +9,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
     {
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void Create_CorrectData_NameIsCorrect(OptionGroup group)
+        public void Create_CorrectData_NameIsCorrect(OptionGroupEntity group)
         {
             var option = OptionEntity.Create(new OptionName("Enabled"), 
                 new OptionValue("Value"), group);
@@ -18,7 +18,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void Create_CorrectData_ValueIsCorrect(OptionGroup group)
+        public void Create_CorrectData_ValueIsCorrect(OptionGroupEntity group)
         {
             const string val = "Value";
             var option = OptionEntity.Create(new OptionName("Enabled"),

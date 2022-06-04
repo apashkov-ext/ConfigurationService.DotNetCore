@@ -10,18 +10,18 @@ namespace ConfigurationManagementSystem.Domain.Entities
     {
         public OptionName Name { get; private set; }
         public OptionValue Value { get; private set; }
-        public OptionGroup OptionGroup { get; }
+        public OptionGroupEntity OptionGroup { get; }
 
         protected OptionEntity() { }
 
-        protected OptionEntity(OptionName name, OptionValue value, OptionGroup optionGroup)
+        protected OptionEntity(OptionName name, OptionValue value, OptionGroupEntity optionGroup)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Value = value ?? throw new ArgumentNullException(nameof(value));
             OptionGroup = optionGroup ?? throw new ArgumentNullException(nameof(optionGroup));
         }
 
-        public static OptionEntity Create(OptionName name, OptionValue value, OptionGroup optionGroup)
+        public static OptionEntity Create(OptionName name, OptionValue value, OptionGroupEntity optionGroup)
         {
             return new OptionEntity(name, value, optionGroup);
         }

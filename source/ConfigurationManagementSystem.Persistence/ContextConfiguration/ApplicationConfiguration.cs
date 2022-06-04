@@ -1,11 +1,10 @@
 ﻿using ConfigurationManagementSystem.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {
-    internal class ApplicationConfiguration : IEntityTypeConfiguration<ApplicationEntity>
+    internal class ApplicationEntityConfiguration : IEntityTypeConfiguration<ApplicationEntity>
     {
         public void Configure(EntityTypeBuilder<ApplicationEntity> builder)
         {

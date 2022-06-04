@@ -6,7 +6,7 @@ namespace ConfigurationManagementSystem.Application
 {
     public interface IConfigurations
     {
-        Task<OptionGroup> GetItem(string project, string env, string apiKey);
+        Task<OptionGroupEntity> GetItem(string project, string env, string apiKey);
         Task Import(Guid app, string environment, byte[] file);
     }
 }

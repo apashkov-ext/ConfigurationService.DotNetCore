@@ -13,7 +13,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
         [ClassData(typeof(ValidEnvironment))]
         public void Create_CorrectData_ParentIsCorrect(ConfigurationEntity e)
         {
-            var group = OptionGroup.Create(
+            var group = OptionGroupEntity.Create(
                 new OptionGroupName("Validation"), 
                 e, 
                 e.GetRootOptionGroop());
@@ -22,7 +22,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void UpdateName_CorrectName_Success(OptionGroup group)
+        public void UpdateName_CorrectName_Success(OptionGroupEntity group)
         {
             const string name = "NewOptionGroupName";
             group.UpdateName(new OptionGroupName(name));
@@ -31,7 +31,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void AddNested_NotExisted_NameEqualsWithNewName(OptionGroup group)
+        public void AddNested_NotExisted_NameEqualsWithNewName(OptionGroupEntity group)
         {
             const string name = "Validation" + "Nested"; 
             group.AddNestedGroup(new OptionGroupName(name));
@@ -40,7 +40,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void AddNested_NotExisted_ParentIsCorrect(OptionGroup group)
+        public void AddNested_NotExisted_ParentIsCorrect(OptionGroupEntity group)
         {
             var nested = group.AddNestedGroup(new OptionGroupName("Validation" + "Nested"));
             Assert.Equal(group, nested.Parent);
@@ -48,21 +48,21 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroupWithNested))]
-        public void AddNested_Existed_Exception(OptionGroup parent, OptionGroup nested)
+        public void AddNested_Existed_Exception(OptionGroupEntity parent, OptionGroupEntity nested)
         {
             Assert.Throws<InconsistentDataStateException>(() => parent.AddNestedGroup(new OptionGroupName(nested.Name.Value)));
         }
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void AddNested_EmptyStringName_Exception(OptionGroup parent)
+        public void AddNested_EmptyStringName_Exception(OptionGroupEntity parent)
         {
             Assert.Throws<InconsistentDataStateException>(() => parent.AddNestedGroup(new OptionGroupName("")));
         }
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void AddOption_NotExisted_ValueIsCorrect(OptionGroup group)
+        public void AddOption_NotExisted_ValueIsCorrect(OptionGroupEntity group)
         {
             const string val = "Value";
             var option = group.AddOption(
@@ -73,7 +73,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroup))]
-        public void AddOption_NotExisted_NameIsCorrect(OptionGroup group)
+        public void AddOption_NotExisted_NameIsCorrect(OptionGroupEntity group)
         {
             var option = group.AddOption(
                 new OptionName("Enabled"),
@@ -83,7 +83,7 @@ namespace ConfigurationManagementSystem.Domain.Tests.EntitiesTests
 
         [Theory]
         [ClassData(typeof(NonRootOptionGroupWithOption))]
-        public void AddOption_Existed_Exception(OptionGroup group, OptionEntity option)
+        public void AddOption_Existed_Exception(OptionGroupEntity group, OptionEntity option)
         {
             const string val = "Value";
             Assert.Throws<InconsistentDataStateException>(() => group.AddOption(new OptionName(option.Name.Value), 

@@ -8,7 +8,6 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
         public static PropertyBuilder<DateTime> DateTimeConversion(this PropertyBuilder<DateTime> builder)
         {
             return builder;
-            //return builder.HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         }
     }
 }

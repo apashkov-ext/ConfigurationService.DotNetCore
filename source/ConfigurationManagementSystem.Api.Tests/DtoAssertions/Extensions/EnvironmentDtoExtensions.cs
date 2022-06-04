@@ -24,14 +24,6 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
             {
                 throw UnexpectedPropertyValueException.Create(projId, () => dto.ApplicationId);
             }
-
-            var root = model.GetRootOptionGroop();
-            if (dto.OptionGroup == null)
-            {
-                throw UnexpectedPropertyValueException.Create(root, () => dto.OptionGroup);
-            }
-
-            dto.OptionGroup.IsEqualToModel(root);
         }
     }
 }

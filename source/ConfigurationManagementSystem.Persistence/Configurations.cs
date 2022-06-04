@@ -25,7 +25,7 @@ namespace ConfigurationManagementSystem.Persistence
             _context = context;
         }
 
-        public async Task<OptionGroup> GetItem(string app, string environment, string apiKey)
+        public async Task<OptionGroupEntity> GetItem(string app, string environment, string apiKey)
         {
             var projName = new ApplicationName(app);
             var envName = new ConfigurationName(environment);
@@ -80,7 +80,7 @@ namespace ConfigurationManagementSystem.Persistence
             return await reader.ReadToEndAsync();
         }
 
-        private static Tree<OptionGroup> ParseTree(string json)
+        private static Tree<OptionGroupEntity> ParseTree(string json)
         {
             var hierarchy = OptionGroupDeserializer.DeserializeFromJson(json);
             return new ImportedTree(hierarchy);

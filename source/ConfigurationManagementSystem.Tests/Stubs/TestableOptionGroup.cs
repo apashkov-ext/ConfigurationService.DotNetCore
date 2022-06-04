@@ -5,9 +5,9 @@ using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.Config
 
 namespace ConfigurationManagementSystem.Tests.Stubs
 {
-    internal class TestableOptionGroup : OptionGroup
+    internal class TestableOptionGroup : OptionGroupEntity
     {
-        public TestableOptionGroup(Guid id, string name, ConfigurationEntity env, OptionGroup parent) 
+        public TestableOptionGroup(Guid id, string name, ConfigurationEntity env, OptionGroupEntity parent) 
             : base(new OptionGroupName(name), env, parent)
         {
             Id = id;
@@ -18,7 +18,7 @@ namespace ConfigurationManagementSystem.Tests.Stubs
             _options.Add(option);
         }
 
-        public void AddNested(OptionGroup group)
+        public void AddNested(OptionGroupEntity group)
         {
             _nestedGroups.Add(group);
         }

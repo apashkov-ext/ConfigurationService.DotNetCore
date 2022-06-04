@@ -6,7 +6,7 @@ namespace ConfigurationManagementSystem.Persistence.Extensions
 {
     internal static class OptionGroupQueryableCollectionExtensions
     {
-        public static IQueryable<OptionGroup> OptionGroupsWithIncludedEntities(this IQueryable<OptionGroup> source)
+        public static IQueryable<OptionGroupEntity> OptionGroupsWithIncludedEntities(this IQueryable<OptionGroupEntity> source)
         {
             return source
                 .Include(x => x.Parent)

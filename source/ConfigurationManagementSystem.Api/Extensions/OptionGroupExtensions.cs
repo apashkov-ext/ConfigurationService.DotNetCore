@@ -6,7 +6,7 @@ namespace ConfigurationManagementSystem.Api.Extensions
 {
     internal static class OptionGroupExtensions
     {
-        public static OptionGroupDto ToDto(this OptionGroup source)
+        public static OptionGroupDto ToDto(this OptionGroupEntity source)
         {
             var options = source.Options.Select(x => x.ToDto());
             return new OptionGroupDto

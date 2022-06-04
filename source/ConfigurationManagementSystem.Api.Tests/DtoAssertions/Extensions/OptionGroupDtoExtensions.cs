@@ -8,7 +8,7 @@ namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
 {
     internal static class OptionGroupDtoExtensions
     {
-        public static void IsEqualToModel(this OptionGroupDto dto, OptionGroup model)
+        public static void IsEqualToModel(this OptionGroupDto dto, OptionGroupEntity model)
         {
             var id = model.Id.ToString();
             if (!dto.Id.Equals(id, StringComparison.OrdinalIgnoreCase))

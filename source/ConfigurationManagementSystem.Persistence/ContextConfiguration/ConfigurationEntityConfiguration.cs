@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ConfigurationManagementSystem.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 
 namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 {

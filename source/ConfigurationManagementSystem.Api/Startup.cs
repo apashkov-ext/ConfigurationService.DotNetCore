@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Primitives;
 using Microsoft.OpenApi.Models;
 
 namespace ConfigurationManagementSystem.Api
@@ -39,9 +38,9 @@ namespace ConfigurationManagementSystem.Api
                 .ConfigureApiBehavior();
         }
 
-        public void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app)
         {
-            if (_env.IsProduction())
+            if (_env.IsEnvironment("production"))
             {
                 // Needs to pass headers to the reverse proxy.
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -52,8 +51,6 @@ namespace ConfigurationManagementSystem.Api
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ConfigurationService.Api v1"));
-
-            ChangeToken.OnChange(Configuration.GetReloadToken, lifetime.StopApplication);
 
             app.UseHttpLogging()
                 .UseMiddleware<ExceptionHandlingMiddleware>()
