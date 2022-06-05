@@ -14,7 +14,7 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 
             builder.OwnsOne(x => x.Name, y =>
             {
-                y.Property(p => p.Value).HasColumnName("Name");
+                y.Property(p => p.Value).IsRequired().HasColumnName("Name");
                 y.HasIndex(i => i.Value);
             });
 

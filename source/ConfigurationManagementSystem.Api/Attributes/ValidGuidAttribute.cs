@@ -2,33 +2,32 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace ConfigurationManagementSystem.Api.Attributes
+namespace ConfigurationManagementSystem.Api.Attributes;
+
+/// <summary>
+/// Specifies that a data field value should be a valid and a non-empty Guid.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class ValidGuidAttribute : ValidationAttribute
 {
-    /// <summary>
-    /// Specifies that a data field value should be a valid and a non-empty Guid.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class ValidGuidAttribute : ValidationAttribute
+    public ValidGuidAttribute() : base("'{0}' does not contain a valid guid")
     {
-        public ValidGuidAttribute() : base("'{0}' does not contain a valid guid")
+    }
+
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        var input = Convert.ToString(value, CultureInfo.CurrentCulture);
+
+        if (!Guid.TryParse(input, out Guid guid))
         {
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        if (guid == Guid.Empty)
         {
-            var input = Convert.ToString(value, CultureInfo.CurrentCulture);
-
-            if (!Guid.TryParse(input, out Guid guid))
-            {
-                return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
-            }
-
-            if (guid == Guid.Empty)
-            {
-                return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
-            }
-
-            return null;
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
         }
+
+        return null;
     }
 }

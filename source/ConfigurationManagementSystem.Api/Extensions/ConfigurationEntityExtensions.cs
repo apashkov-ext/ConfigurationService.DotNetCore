@@ -1,5 +1,5 @@
 ﻿using ConfigurationManagementSystem.Api.Dto;
-using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
+using ConfigurationManagementSystem.Domain.Entities;
 
 namespace ConfigurationManagementSystem.Api.Extensions
 {

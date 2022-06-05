@@ -17,13 +17,17 @@ namespace ConfigurationManagementSystem.Persistence.ContextConfiguration
 
             builder.OwnsOne(x => x.Name, y =>
             {
-                y.Property(p => p.Value).HasColumnName("Name");
+                y.Property(p => p.Value).IsRequired().HasColumnName("Name");
                 y.HasIndex(i => i.Value);
             });
             builder.OwnsOne(x => x.Value, a =>
             {
                 a.Property(x => x.Value).HasColumnName("Value");
-                a.Property(x => x.Type).HasColumnName("Type").HasConversion(new EnumToNumberConverter<OptionValueType, int>()).HasDefaultValue(OptionValueType.String);
+                a.Property(x => x.Type)
+                    .IsRequired()
+                    .HasColumnName("Type")
+                    .HasConversion(new EnumToNumberConverter<OptionValueType, int>())
+                    .HasDefaultValue(OptionValueType.String);
             });
         }
     }

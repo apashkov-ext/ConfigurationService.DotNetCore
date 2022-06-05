@@ -1,4 +1,3 @@
-using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Api.Extensions.ServiceCollection;
 using ConfigurationManagementSystem.Api.Middleware;
 using ConfigurationManagementSystem.ServicesConfiguring;

@@ -7,7 +7,7 @@ namespace ConfigurationManagementSystem.Core
         public static IConfigurationRoot GetConfigurationRoot()
         {
             return new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory()))
+                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../ConfigurationManagementSystem.Api"))
                 .AddJsonFile("appsettings.json", false)
                 .AddJsonFile($"appsettings.{ApplicationConstants.EnvironmentName}.json", false)
                 .AddEnvironmentVariables()
