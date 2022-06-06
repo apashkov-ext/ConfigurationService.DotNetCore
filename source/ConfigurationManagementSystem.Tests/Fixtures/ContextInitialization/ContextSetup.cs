@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ConfigurationManagementSystem.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization
 {
@@ -6,11 +7,11 @@ namespace ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization
     /// Setups context before data initialization.
     /// </summary>
     /// <typeparam name="TContext">Concrete type of the <see cref="DbContext"/>.</typeparam>
-    public class ContextPreparation<TContext> where TContext : DbContext
+    public class ContextSetup<TContext> where TContext : DbContext, ICleanableDbContext
     {
         private readonly TContext _context;
 
-        public ContextPreparation(TContext context)
+        public ContextSetup(TContext context)
         {
             _context = context;
         }

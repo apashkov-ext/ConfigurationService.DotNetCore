@@ -1,71 +1,79 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ConfigurationManagementSystem.Domain.Entities;
-using ConfigurationManagementSystem.Persistence.ContextConfiguration;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConfigurationManagementSystem.Persistence
+namespace ConfigurationManagementSystem.Persistence;
+
+public interface ICleanableDbContext
 {
-    public class ConfigurationManagementSystemContext : DbContext
+    public void CleanData();
+}
+
+public class ConfigurationManagementSystemContext : DbContext, ICleanableDbContext
+{
+    public virtual DbSet<ApplicationEntity> Applications { get; set; }
+    public virtual DbSet<ConfigurationEntity> Configurations { get; set; }
+    public virtual DbSet<OptionGroupEntity> OptionGroups { get; set; }
+    public virtual DbSet<OptionEntity> Options { get; set; }
+    public virtual DbSet<UserEntity> Users { get; set; }
+
+    public ConfigurationManagementSystemContext() 
+    { 
+    }
+
+    public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options) 
+    { 
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public virtual DbSet<ApplicationEntity> Applications { get; set; }
-        public virtual DbSet<ConfigurationEntity> Configurations { get; set; }
-        public virtual DbSet<OptionGroupEntity> OptionGroups { get; set; }
-        public virtual DbSet<OptionEntity> Options { get; set; }
-        public virtual DbSet<UserEntity> Users { get; set; }
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 
-        public ConfigurationManagementSystemContext() { }
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        UpdateTimestamp();
+        return base.SaveChangesAsync(cancellationToken);
+    }
 
-        public ConfigurationManagementSystemContext(DbContextOptions<ConfigurationManagementSystemContext> options) : base(options) { }
+    public override int SaveChanges()
+    {
+        UpdateTimestamp();
+        return base.SaveChanges();
+    }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    private void UpdateTimestamp()
+    {
+        var now = DateTime.UtcNow;
+        UpdateTimestampForCreated(now);
+        UpdateTimestampForModified(now);
+    }
+
+    private void UpdateTimestampForCreated(DateTime stamp)
+    {
+        var created = ChangeTracker.Entries().SelectEntityInstances(EntityState.Added);
+        foreach (var entity in created)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder
-                .ApplyConfiguration(new ApplicationEntityConfiguration())
-                .ApplyConfiguration(new ConfigurationEntityConfiguration())
-                .ApplyConfiguration(new OptionGroupEntityConfiguration())
-                .ApplyConfiguration(new OptionEntityConfiguration())
-                .ApplyConfiguration(new UserEntityConfiguration());
+            entity.UpdateCreated(stamp);
+            entity.UpdateModified(stamp);
         }
+    }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    private void UpdateTimestampForModified(DateTime stamp)
+    {
+        var modified = ChangeTracker.Entries().SelectEntityInstances(EntityState.Modified);
+        foreach (var entity in modified)
         {
-            UpdateTimestamp();
-            return base.SaveChangesAsync(cancellationToken);
+            entity.UpdateModified(stamp);
         }
+    }
 
-        public override int SaveChanges()
-        {
-            UpdateTimestamp();
-            return base.SaveChanges();
-        }
-
-        private void UpdateTimestamp()
-        {
-            var now = DateTime.UtcNow;
-            UpdateTimestampForCreated(now);
-            UpdateTimestampForModified(now);
-        }
-
-        private void UpdateTimestampForCreated(DateTime stamp)
-        {
-            var created = ChangeTracker.Entries().SelectEntityInstances(EntityState.Added);
-            foreach (var entity in created)
-            {
-                entity.UpdateCreated(stamp);
-                entity.UpdateModified(stamp);
-            }
-        }
-
-        private void UpdateTimestampForModified(DateTime stamp)
-        {
-            var modified = ChangeTracker.Entries().SelectEntityInstances(EntityState.Modified);
-            foreach (var entity in modified)
-            {
-                entity.UpdateModified(stamp);
-            }
-        }
+    public void CleanData()
+    {
+        Database.ExecuteSqlRaw("truncate table \"Applications\" cascade");
     }
 }

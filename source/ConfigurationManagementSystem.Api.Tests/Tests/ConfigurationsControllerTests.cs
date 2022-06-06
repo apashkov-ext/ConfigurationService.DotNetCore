@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using ConfigurationManagementSystem.Api.Dto;
@@ -13,201 +12,200 @@ using ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace ConfigurationManagementSystem.Api.Tests.Tests
+namespace ConfigurationManagementSystem.Api.Tests.Tests;
+
+public class ConfigurationsControllerTests : ControllerTests
 {
-    public class ConfigurationsControllerTests : ControllerTests
+    [Fact]
+    public async void GetAll_NotExists_ReturnsEmptyArray()
     {
-        [Fact]
-        public async void GetAll_NotExists_ReturnsEmptyArray()
+        ActWithDbContext(context =>
         {
-            ActWithDbContext(context =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup().Build();
-            });
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup().Initialize();
+        });
 
-            var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations");
+        var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations");
 
-            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
-            Assert.Empty(actual.ResponseData.Data);
-        }
+        Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+        Assert.Empty(actual.ResponseData.Data);
+    }
 
-        [Fact]
-        public async void GetAll_ExistsSingleWithHierarchy_ReturnsSingleWithHierarchy()
+    [Fact]
+    public async void GetAll_ExistsSingleWithHierarchy_ReturnsSingleWithHierarchy()
+    {
+        var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+        var env = project.AddConfiguration(new ConfigurationName("Dev"));
+        var root = env.GetRootOptionGroop();
+        var group = root.AddNestedGroup(new OptionGroupName("NestedG"));
+        var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+
+        ActWithDbContext(context =>
         {
-            var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
-            var env = project.AddConfiguration(new ConfigurationName("Dev"));
-            var root = env.GetRootOptionGroop();
-            var group = root.AddNestedGroup(new OptionGroupName("NestedG"));
-            var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup()
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(root, group)
+                .AddEntities(option)
+                .Initialize();
+        });
 
-            ActWithDbContext(context =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup()
-                    .WithEntities(project)
-                    .WithEntities(env)
-                    .WithEntities(root, group)
-                    .WithEntities(option)
-                    .Build();
-            });
+        var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations?hierarchy=true");
 
-            var actual = await GetAsync<PagedResponseDto<ConfigurationDto>>("api/configurations?hierarchy=true");
+        Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+        Assert.Single(actual.ResponseData.Data);
+        Assertions.ConfigurationDtosAreEquivalentToModel(actual.ResponseData.Data, env);
+    }
 
-            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
-            Assert.Single(actual.ResponseData.Data);
-            Assertions.ConfigurationDtosAreEquivalentToModel(actual.ResponseData.Data, env);
-        }
-
-        [Fact]
-        public async void GetById_NotExists_Returns404()
+    [Fact]
+    public async void GetById_NotExists_Returns404()
+    {
+        ActWithDbContext(context =>
         {
-            ActWithDbContext(context =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup().Build();
-            });
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup().Initialize();
+        });
 
-            var actual = await GetAsync<ConfigurationDto>($"api/configurations/{Guid.NewGuid()}");
+        var actual = await GetAsync<ConfigurationDto>($"api/configurations/{Guid.NewGuid()}");
 
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, actual.StatusCode);
-        }
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, actual.StatusCode);
+    }
 
-        [Fact]
-        public async void GetByIdWithHierarchy__Exists_ReturnsDto()
+    [Fact]
+    public async void GetByIdWithHierarchy__Exists_ReturnsDto()
+    {
+        var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+        var env = project.AddConfiguration(new ConfigurationName("Dev"));
+        var group = env.OptionGroups.First();
+        var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+
+        ActWithDbContext(context =>
         {
-            var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup()
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(group)
+                .AddEntities(option)
+                .Initialize();
+        });
+
+        var actual = await GetAsync<ConfigurationDto>($"api/configurations/{env.Id}?hierarchy=true");
+
+        Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
+        Assertions.ConfigurationDtoIsEquivalentToModel(actual.ResponseData, env);
+    }
+
+    [Fact]
+    public async void Post_ExistsWithTheSameName_Returns422()
+    {
+        const string configName = "SomeConfig";
+
+        var project = ApplicationEntity.Create(new ApplicationName("TestApp"), new ApiKey(Guid.NewGuid()));
+        var env = project.AddConfiguration(new ConfigurationName(configName));
+        var group = env.OptionGroups.First();
+        var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+
+        ActWithDbContext(context =>
+        {
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup()
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(group)
+                .AddEntities(option)
+                .Initialize();
+        });
+
+        var body = new
+        {
+            application = project.Id.ToString(),
+            name = configName
+        };
+
+        var actual = await PostAsync<ConfigurationDto>($"api/configurations", body);
+
+        Assert.Equal(System.Net.HttpStatusCode.UnprocessableEntity, actual.StatusCode);
+    }
+
+    [Fact]
+    public async void Post_NotExisted_Returns201AndDto()
+    {
+        var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+        var env = project.AddConfiguration(new ConfigurationName("Dev"));
+        var group = env.OptionGroups.First();
+        var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+
+        ActWithDbContext(context =>
+        {
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup()
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(group)
+                .AddEntities(option)
+                .Initialize();
+        });
+
+        var body = new
+        {
+            application = project.Id.ToString(),
+            name = "NewEnv"
+        };
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/configurations")
+        {
+            Content = RequestContentFactory.CreateJsonStringContent(body)
+        };
+        var response = await HttpClient.SendAsync(request);
+        var actual = await response.ParseContentAsync<ConfigurationDto>();
+
+        Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
+        Assert.Equal(body.name, actual.Name);
+        Assert.True(body.application.Equals(actual.ApplicationId.ToString(), StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async void Post_NotExisted_ProjectContainsNewEnv()
+    {
+        const string newEnvName = "NewEnv";
+        var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+
+        ActWithDbContext(context =>
+        {
             var env = project.AddConfiguration(new ConfigurationName("Dev"));
             var group = env.OptionGroups.First();
             var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+                .Setup()
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(group)
+                .AddEntities(option)
+                .Initialize();
+        });
 
-            ActWithDbContext(context =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup()
-                    .WithEntities(project)
-                    .WithEntities(env)
-                    .WithEntities(group)
-                    .WithEntities(option)
-                    .Build();
-            });
-
-            var actual = await GetAsync<ConfigurationDto>($"api/configurations/{env.Id}?hierarchy=true");
-
-            Assert.Equal(System.Net.HttpStatusCode.OK, actual.StatusCode);
-            Assertions.ConfigurationDtoIsEquivalentToModel(actual.ResponseData, env);
-        }
-
-        [Fact]
-        public async void Post_ExistsWithTheSameName_Returns422()
+        var body = new
         {
-            const string configName = "SomeConfig";
+            application = project.Id.ToString(),
+            name = newEnvName
+        };
 
-            var project = ApplicationEntity.Create(new ApplicationName("TestApp"), new ApiKey(Guid.NewGuid()));
-            var env = project.AddConfiguration(new ConfigurationName(configName));
-            var group = env.OptionGroups.First();
-            var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
-
-            ActWithDbContext(context =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup()
-                    .WithEntities(project)
-                    .WithEntities(env)
-                    .WithEntities(group)
-                    .WithEntities(option)
-                    .Build();
-            });
-
-            var body = new
-            {
-                application = project.Id.ToString(),
-                name = configName
-            };
-
-            var actual = await PostAsync<ConfigurationDto>($"api/configurations", body);
-
-            Assert.Equal(System.Net.HttpStatusCode.UnprocessableEntity, actual.StatusCode);
-        }
-
-        [Fact]
-        public async void Post_NotExisted_Returns201AndDto()
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/configurations")
         {
-            var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
-            var env = project.AddConfiguration(new ConfigurationName("Dev"));
-            var group = env.OptionGroups.First();
-            var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
+            Content = RequestContentFactory.CreateJsonStringContent(body)
+        };
+        _ = await HttpClient.SendAsync(request);
 
-            ActWithDbContext(context =>
-            {
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup()
-                    .WithEntities(project)
-                    .WithEntities(env)
-                    .WithEntities(group)
-                    .WithEntities(option)
-                    .Build();
-            });
-
-            var body = new
-            {
-                application = project.Id.ToString(),
-                name = "NewEnv"
-            };
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/configurations")
-            {
-                Content = RequestContentFactory.CreateJsonStringContent(body)
-            };
-            var response = await HttpClient.SendAsync(request);
-            var actual = await response.ParseContentAsync<ConfigurationDto>();
-
-            Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
-            Assert.Equal(body.name, actual.Name);
-            Assert.True(body.application.Equals(actual.ApplicationId.ToString(), StringComparison.OrdinalIgnoreCase));
-        }
-
-        [Fact]
-        public async void Post_NotExisted_ProjectContainsNewEnv()
+        ActWithDbContext(context =>
         {
-            const string newEnvName = "NewEnv";
-            var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
+            var proj = context.Applications.Include(x => x.Configurations)
+                .AsSingleQuery()
+                .AsNoTrackingWithIdentityResolution()
+                .First(x => x.Id == project.Id);
 
-            ActWithDbContext(context =>
-            {
-                var env = project.AddConfiguration(new ConfigurationName("Dev"));
-                var group = env.OptionGroups.First();
-                var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
-                new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                    .Setup()
-                    .WithEntities(project)
-                    .WithEntities(env)
-                    .WithEntities(group)
-                    .WithEntities(option)
-                    .Build();
-            });
-                
-            var body = new
-            {
-                application = project.Id.ToString(),
-                name = newEnvName
-            };
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/configurations")
-            {
-                Content = RequestContentFactory.CreateJsonStringContent(body)
-            };
-            _ = await HttpClient.SendAsync(request);
-
-            ActWithDbContext(context =>
-            {
-                var proj = context.Applications.Include(x => x.Configurations)
-                    .AsSingleQuery()
-                    .AsNoTrackingWithIdentityResolution()
-                    .First(x => x.Id == project.Id);
-
-                Assert.Contains(proj.Configurations, x => x.Name.Value == newEnvName);
-            });
-        }
+            Assert.Contains(proj.Configurations, x => x.Name.Value == newEnvName);
+        });
     }
 }

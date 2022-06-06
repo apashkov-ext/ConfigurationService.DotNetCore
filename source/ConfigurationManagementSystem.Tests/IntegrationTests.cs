@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ConfigurationManagementSystem.Api.Tests;
 using ConfigurationManagementSystem.Persistence;
+using ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigurationManagementSystem.Tests
 {
-    public abstract class IntegrationTests : IDisposable
+    public abstract class IntegrationTests<TContext> : IDisposable where TContext : DbContext, ICleanableDbContext, new()
     {
-        protected WebAppFactory WebAppFactory { get; }
+        protected WebAppFactory<TContext> WebAppFactory { get; }
 
         public IntegrationTests()
         {
-            WebAppFactory = new WebAppFactory();
+            WebAppFactory = new WebAppFactory<TContext>();
         }
 
         public virtual void Dispose()
@@ -23,11 +23,10 @@ namespace ConfigurationManagementSystem.Tests
             GC.SuppressFinalize(this);
         }
 
-        protected void ActWithDbContext(Action<ConfigurationManagementSystemContext> action)
+        protected void ActWithDbContext(Action<TContext> action)
         {
             using var scope = WebAppFactory.Services.CreateScope();
-            using var context = scope.ServiceProvider.GetService<ConfigurationManagementSystemContext>();
-            context.Database.Migrate();
+            using var context = scope.ServiceProvider.GetService<TContext>();
             using var tr = context.Database.BeginTransaction();
             try
             {
@@ -39,20 +38,61 @@ namespace ConfigurationManagementSystem.Tests
             }
         }
 
-        protected async Task ActWithDbContextAsync(Func<ConfigurationManagementSystemContext, Task> action)
+        protected void ActWithDbContext(Action<ContextInitializer<TContext>> initialize, Action<TContext> action)
         {
-            using var scope = WebAppFactory.Services.CreateAsyncScope();
-            using var context = scope.ServiceProvider.GetService<ConfigurationManagementSystemContext>();
-            await context.Database.MigrateAsync();
-            using var tr = await context.Database.BeginTransactionAsync();
+            Initialize(initialize);
+
+            RunInScope(ctx =>
+            {
+                using var tr = ctx.Database.BeginTransaction();
+                try
+                {
+                    action(ctx);
+                }
+                finally
+                {
+                    tr.Rollback();
+                }
+            });
+        }
+
+        protected async Task ActWithDbContextAsync(Action<ContextInitializer<TContext>> initialize, Func<TContext, Task> action)
+        {
+            Initialize(initialize);
+
+            using var scope = WebAppFactory.Services.CreateScope();
+            using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
+            using var tr = await ctx.Database.BeginTransactionAsync();
             try
             {
-                await action(context);
+                await action(ctx);
             }
             finally
             {
                 await tr.RollbackAsync();
             }
+        }
+
+        private void Initialize(Action<ContextInitializer<TContext>> initialize)
+        {
+            RunInScope(ctx =>
+            {
+                try
+                {
+                    initialize(new ContextSetup<TContext>(ctx).Setup());
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error occurred while initializing database before testing.", ex);
+                }
+            });
+        }
+
+        private void RunInScope(Action<TContext> action)
+        {
+            using var scope = WebAppFactory.Services.CreateScope();
+            using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
+            action(ctx);
         }
     }
 }

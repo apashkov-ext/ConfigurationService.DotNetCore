@@ -3,6 +3,7 @@ using ConfigurationManagementSystem.Application.Stories.AddApplicationStory;
 using ConfigurationManagementSystem.Application.Stories.GetApplicationByIdStory;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
+using ConfigurationManagementSystem.Persistence;
 using ConfigurationManagementSystem.Tests;
 using ConfigurationManagementSystem.Tests.Presets;
 using Moq;
@@ -12,7 +13,7 @@ using Xunit;
 
 namespace ConfigurationManagementSystem.Application.Tests.StoryTests
 {
-    public class AddApplicationStoryTests : IntegrationTests
+    public class AddApplicationStoryTests : IntegrationTests<ConfigurationManagementSystemContext>
     {
         [Theory]
         [ClassData(typeof(EmptyApplication))]

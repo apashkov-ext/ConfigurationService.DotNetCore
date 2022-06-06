@@ -1,4 +1,5 @@
-﻿using ConfigurationManagementSystem.Application;
+﻿using ConfigurationManagementSystem.Core;
+using ConfigurationManagementSystem.Persistence;
 using ConfigurationManagementSystem.Tests;
 using System.Net;
 using System.Net.Http;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Api.Tests.Tests
 {
-    public abstract class ControllerTests : IntegrationTests
+    public abstract class ControllerTests : IntegrationTests<ConfigurationManagementSystemContext>
     {
         protected readonly HttpClient HttpClient;
 

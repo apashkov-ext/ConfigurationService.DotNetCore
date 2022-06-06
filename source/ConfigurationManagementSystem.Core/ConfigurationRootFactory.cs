@@ -1,17 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace ConfigurationManagementSystem.Core
+namespace ConfigurationManagementSystem.Core;
+
+public static class ConfigurationRootFactory
 {
-    public static class ConfigurationRootFactory
+    public static IConfigurationRoot GetConfigurationRoot()
     {
-        public static IConfigurationRoot GetConfigurationRoot()
-        {
-            return new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../ConfigurationManagementSystem.Api"))
-                .AddJsonFile("appsettings.json", false)
-                .AddJsonFile($"appsettings.{ApplicationConstants.EnvironmentName}.json", false)
-                .AddEnvironmentVariables()
-                .Build();
-        }
+        return new ConfigurationBuilder()
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../ConfigurationManagementSystem.Api"))
+            .AddJsonFile("appsettings.json", false)
+            .AddJsonFile($"appsettings.{ApplicationConstants.EnvironmentName}.json", false)
+            .AddEnvironmentVariables()
+            .Build();
     }
 }

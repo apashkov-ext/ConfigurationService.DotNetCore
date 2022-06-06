@@ -45,7 +45,7 @@ namespace ConfigurationManagementSystem.Framework.Bootstrap.ConfigurationRegiste
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.Name == nameof(OptionsConfigurationServiceCollectionExtensions.Configure) && x.IsGenericMethodDefinition)
                 .Where(x => x.GetGenericArguments().Length == 1)
-                .Where(x => x.GetParameters().Length == 2)
+                .Where(x => x.GetParameters().Length == 3 && x.GetParameters().Any(x => x.ParameterType == typeof(Action<BinderOptions>)))
                 .Single();
 
             return new ApplicationConfigurationRegistrar(services, configuration, configureMethod);
@@ -78,7 +78,8 @@ namespace ConfigurationManagementSystem.Framework.Bootstrap.ConfigurationRegiste
         private void Configure(Type typeToRegister, IConfigurationSection section)
         {
             var genericConfigureMethod = _configureMethod.MakeGenericMethod(typeToRegister);
-            genericConfigureMethod.Invoke(null, new object[] { _services, section });
+            Action<BinderOptions> bo = x => x.BindNonPublicProperties = true;
+            genericConfigureMethod.Invoke(null, new object[] { _services, section, bo });
         }
     }
 }

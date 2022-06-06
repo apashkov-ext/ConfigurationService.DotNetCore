@@ -12,7 +12,7 @@ internal static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        var secSection = configuration.GetSection(nameof(SecuritySection)).Get<SecuritySection>();
+        var secSection = configuration.GetSection(nameof(SecuritySection)).Get<SecuritySection>(c => c.BindNonPublicProperties = true);
         services.AddAuthentication(opt =>
         {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

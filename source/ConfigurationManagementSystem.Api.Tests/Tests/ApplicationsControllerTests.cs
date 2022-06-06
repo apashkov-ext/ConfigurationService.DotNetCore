@@ -19,7 +19,7 @@ public class ApplicationsControllerTests : ControllerTests
     {
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context).Setup().Build();
+            new ContextSetup<ConfigurationManagementSystemContext>(context).Setup().Initialize();
         });
 
         var actual = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
@@ -33,7 +33,7 @@ public class ApplicationsControllerTests : ControllerTests
     {
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context).Setup().Build();
+            new ContextSetup<ConfigurationManagementSystemContext>(context).Setup().Initialize();
         });
 
         var response = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
@@ -49,10 +49,10 @@ public class ApplicationsControllerTests : ControllerTests
 
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Setup()
-                .WithEntities(project)
-                .Build();
+                .AddEntities(project)
+                .Initialize();
         });
 
         var response = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications");
@@ -73,13 +73,13 @@ public class ApplicationsControllerTests : ControllerTests
 
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Setup()
-                .WithEntities(project)
-                .WithEntities(env)
-                .WithEntities(root, group)
-                .WithEntities(option)
-                .Build();
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(root, group)
+                .AddEntities(option)
+                .Initialize();
         });
 
         var response = await GetAsync<PagedResponseDto<ApplicationDto>>("api/applications?hierarchy=true");
@@ -94,7 +94,7 @@ public class ApplicationsControllerTests : ControllerTests
     {
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context).Setup().Build();
+            new ContextSetup<ConfigurationManagementSystemContext>(context).Setup().Initialize();
         });
 
         var response = await GetAsync($"api/applications/{Guid.NewGuid()}");
@@ -112,13 +112,13 @@ public class ApplicationsControllerTests : ControllerTests
 
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Setup()
-                .WithEntities(project)
-                .WithEntities(env)
-                .WithEntities(group)
-                .WithEntities(option)
-                .Build();
+                .AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(group)
+                .AddEntities(option)
+                .Initialize();
         });
 
         var response = await GetAsync<ApplicationDto>($"api/applications/{project.Id}?hierarchy=true");
@@ -134,10 +134,10 @@ public class ApplicationsControllerTests : ControllerTests
 
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
             .Setup()
-            .WithEntities(project)
-            .Build();
+            .AddEntities(project)
+            .Initialize();
         });
 
         var body = new
@@ -159,8 +159,8 @@ public class ApplicationsControllerTests : ControllerTests
     {
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
-            .Setup().Build();
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+            .Setup().Initialize();
         });
 
         var body = new
@@ -179,8 +179,8 @@ public class ApplicationsControllerTests : ControllerTests
     {
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
-            .Setup().Build();
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
+            .Setup().Initialize();
         });
 
         var response = await DeleteAsync($"api/applications/{Guid.NewGuid()}");
@@ -193,17 +193,14 @@ public class ApplicationsControllerTests : ControllerTests
     {
         var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
 
-        ActWithDbContext(context =>
+        await ActWithDbContextAsync(init =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                .Setup()
-                .WithEntities(project)
-                .Build();
+            init.AddEntities(project).Initialize();
+        }, async ctx =>
+        {
+            var response = await DeleteAsync($"api/applications/{project.Id}");
+            Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
         });
-
-        var response = await DeleteAsync($"api/applications/{project.Id}");
-
-        Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
     }
 
     [Fact]
@@ -214,20 +211,19 @@ public class ApplicationsControllerTests : ControllerTests
         var group = env.OptionGroups.First();
         var option = group.AddOption(new OptionName("OptionName"), new OptionValue(true));
 
-        ActWithDbContext(context =>
+        await ActWithDbContextAsync(init =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                .Setup()
-                .WithEntities(project)
-                .WithEntities(env)
-                .WithEntities(group)
-                .WithEntities(option)
-                .Build();
+            init.AddEntities(project)
+                .AddEntities(env)
+                .AddEntities(group)
+                .AddEntities(option)
+                .Initialize();
+        }, async ctx =>
+        {
+            var response = await DeleteAsync($"api/applications/{project.Id}");
+
+            Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
         });
-
-        var response = await DeleteAsync($"api/applications/{project.Id}");
-
-        Assert.Equal(System.Net.HttpStatusCode.NoContent, response.StatusCode);
     }
 
     [Fact]
@@ -235,26 +231,16 @@ public class ApplicationsControllerTests : ControllerTests
     {
         var app = ApplicationEntity.Create(new ApplicationName("TestApp"), new ApiKey(Guid.NewGuid()));
 
-        await ActWithDbContextAsync(async context =>
+        await ActWithDbContextAsync(init =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
-                .Setup()
-                .WithEntities(app)
-                .Build();
-
+            init.AddEntities(app).Initialize();
+        }, async context =>
+        {
             await DeleteAsync($"api/applications/{app.Id}");
 
             var projects = context.Applications.ToList();
             Assert.Empty(projects);
         });
-
-
-
-        //ActWithDbContext(context =>
-        //{
-        //    var projects = context.Applications.ToList();
-        //    Assert.Empty(projects);
-        //});
     }
 
     [Fact]
@@ -271,13 +257,13 @@ public class ApplicationsControllerTests : ControllerTests
 
         ActWithDbContext(context =>
         {
-            new ContextPreparation<ConfigurationManagementSystemContext>(context)
+            new ContextSetup<ConfigurationManagementSystemContext>(context)
                 .Setup()
-                .WithEntities(app)
-                .WithEntities(config)
-                .WithEntities(group, nestedGroup)
-                .WithEntities(option, nestedOption)
-                .Build();
+                .AddEntities(app)
+                .AddEntities(config)
+                .AddEntities(group, nestedGroup)
+                .AddEntities(option, nestedOption)
+                .Initialize();
         });
 
         await DeleteAsync($"api/applications/{app.Id}");

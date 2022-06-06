@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using ConfigurationManagementSystem.Application;
+using ConfigurationManagementSystem.Core;
 
 namespace ConfigurationManagementSystem.Api.Tests
 {

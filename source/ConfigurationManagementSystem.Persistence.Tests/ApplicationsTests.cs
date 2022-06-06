@@ -7,12 +7,11 @@ using ConfigurationManagementSystem.Tests;
 using ConfigurationManagementSystem.Tests.Fixtures;
 using ConfigurationManagementSystem.Tests.Presets;
 using Moq;
-using System;
 using Xunit;
 
 namespace ConfigurationManagementSystem.Persistence.Tests
 {
-    public class GetApplicationByNameQueryTests : IntegrationTests
+    public class GetApplicationByNameQueryTests : IntegrationTests<ConfigurationManagementSystemContext>
     {
         [Fact]
         public async void Execute_NotExisted_ReturnsNull()

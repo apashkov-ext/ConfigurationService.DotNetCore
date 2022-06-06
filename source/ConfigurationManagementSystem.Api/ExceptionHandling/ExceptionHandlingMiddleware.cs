@@ -1,6 +1,6 @@
 ﻿using ConfigurationManagementSystem.Api.ExceptionHandling.Abstractions;
 using ConfigurationManagementSystem.Api.ExceptionHandling.HandlerCollectionBuilding;
-using ConfigurationManagementSystem.Application;
+using ConfigurationManagementSystem.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

@@ -8,7 +8,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ConfigurationM
     public ConfigurationManagementSystemContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ConfigurationManagementSystemContext>();
-        optionsBuilder.ConfigureDatabaseConnection();
+        optionsBuilder.ConfigureLocalhostDatabaseConnection();
         return new ConfigurationManagementSystemContext(optionsBuilder.Options);
     }
 }
