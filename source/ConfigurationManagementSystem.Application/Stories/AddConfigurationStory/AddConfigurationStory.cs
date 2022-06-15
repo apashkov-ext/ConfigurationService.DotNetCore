@@ -2,9 +2,10 @@
 using ConfigurationManagementSystem.Framework.Attributes;
 using ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory;
 using ConfigurationManagementSystem.Domain;
-using ConfigurationManagementSystem.Domain.Entities;
 using System;
 using System.Threading.Tasks;
+using ConfigurationManagementSystem.Application.Dto;
+using ConfigurationManagementSystem.Application.Extensions;
 
 namespace ConfigurationManagementSystem.Application.Stories.AddConfigurationStory
 {
@@ -24,16 +25,20 @@ namespace ConfigurationManagementSystem.Application.Stories.AddConfigurationStor
             _getConfigurationByIdWithoutHierarchyQuery = getConfigurationByIdWithoutHierarchyQuery;
         }
 
-        public async Task<ConfigurationEntity> ExecuteAsync(Guid applicationId, string configurationName)
+        public async Task<ConfigurationDto> ExecuteAsync(CreateConfigurationDto dto)
         {
-            var app = await _getApplicationWithConfigurationsByIdQuery.ExecuteAsync(applicationId);
+            if (dto is null) throw new ArgumentNullException(nameof(dto));
+
+            var app = await _getApplicationWithConfigurationsByIdQuery.ExecuteAsync(dto.Application);
             if (app == null)
             {
                 throw new EntityNotFoundException("Application does not exist");
             }
 
-            var id = await _createConfigurationCommand.ExecuteAsync(app, new ConfigurationName(configurationName));
-            return await _getConfigurationByIdWithoutHierarchyQuery.ExecuteAsync(id);
+            var id = await _createConfigurationCommand.ExecuteAsync(app, new ConfigurationName(dto.Name));
+            var created = await _getConfigurationByIdWithoutHierarchyQuery.ExecuteAsync(id);
+
+            return created.ToDto();
         }
     }
 }

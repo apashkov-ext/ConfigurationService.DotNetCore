@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ConfigurationManagementSystem.Api.Dto;
-using ConfigurationManagementSystem.Api.Extensions;
-using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Application.Dto;
 using ConfigurationManagementSystem.Application.Stories.AddApplicationStory;
 using ConfigurationManagementSystem.Application.Stories.GetApplicationByIdStory;
 using ConfigurationManagementSystem.Application.Stories.GetApplicationsStory;
@@ -16,12 +14,12 @@ namespace ConfigurationManagementSystem.Api.Controllers;
 [ApiController]
 public class ApplicationsController : ControllerBase
 {
-    private readonly GetApplicationsStory _getApplicationsStory;
+    private readonly FindApplicationsByNameStory _getApplicationsStory;
     private readonly GetApplicationByIdStory _getApplicationByIdStory;
     private readonly AddApplicationStory _addApplicationStory;
     private readonly RemoveApplicationStory _removeApplicationStory;
 
-    public ApplicationsController(GetApplicationsStory getApplicationsStory,
+    public ApplicationsController(FindApplicationsByNameStory getApplicationsStory,
         GetApplicationByIdStory getApplicationByIdStory,
         AddApplicationStory addApplicationStory,
         RemoveApplicationStory removeApplicationStory)
@@ -34,13 +32,9 @@ public class ApplicationsController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<PagedResponseDto<ApplicationDto>>> Get([FromQuery] GetRequestOptions options)
+    public async Task<ActionResult<PagedResponseDto<ApplicationDto>>> Get([FromQuery] PagedRequest request)
     {
-        var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
-        var apps = await _getApplicationsStory.ExecuteAsync(options.Name, pOpt);
-        var result = apps.ToPagedResponseDto(ApplicationExtensions.ToDto);
-
-        return Ok(result);
+        return Ok(await _getApplicationsStory.ExecuteAsync(request));
     }
 
     [HttpGet("{id}")]
@@ -48,8 +42,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApplicationDto>> Get(Guid id)
     {
-        var apps = await _getApplicationByIdStory.ExecuteAsync(id);
-        return Ok(apps.ToDto());
+        return Ok(await _getApplicationByIdStory.ExecuteAsync(id));
     }
 
     [HttpPost]
@@ -59,8 +52,7 @@ public class ApplicationsController : ControllerBase
     public async Task<ActionResult<CreatedApplicationDto>> Create(CreateApplicationDto body)
     {
         var created = await _addApplicationStory.ExecuteAsync(body.Name);
-        var dto = created.ToCreatedApplicationDto();
-        return CreatedAtAction(nameof(Get), new { id = created.Id }, dto);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
     [HttpDelete("{id}")]

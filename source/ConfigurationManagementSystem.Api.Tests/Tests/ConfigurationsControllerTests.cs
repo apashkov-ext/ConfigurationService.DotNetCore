@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using ConfigurationManagementSystem.Api.Dto;
+using System.Threading.Tasks;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions;
 using ConfigurationManagementSystem.Api.Tests.Extensions;
+using ConfigurationManagementSystem.Application.Dto;
 using ConfigurationManagementSystem.Domain;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
@@ -26,7 +27,7 @@ public class ConfigurationsControllerTests : ControllerTests
     }
 
     [Fact]
-    public async void GetAll_ExistsSingleWithHierarchy_ReturnsSingleWithHierarchy()
+    public async Task GetAll_ExistsSingleWithHierarchy_ReturnsSingleWithHierarchy()
     {
         var project = ApplicationEntity.Create(new ApplicationName("TestProject"), new ApiKey(Guid.NewGuid()));
         var env = project.AddConfiguration(new ConfigurationName("Dev"));

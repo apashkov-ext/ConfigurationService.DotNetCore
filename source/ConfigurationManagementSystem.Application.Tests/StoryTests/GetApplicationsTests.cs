@@ -1,4 +1,5 @@
-﻿using ConfigurationManagementSystem.Application.Pagination;
+﻿using ConfigurationManagementSystem.Application.Dto;
+using ConfigurationManagementSystem.Application.Pagination;
 using ConfigurationManagementSystem.Application.Stories.GetApplicationsStory;
 using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain.ValueObjects;
@@ -18,8 +19,8 @@ public class GetApplicationsTests
         geAppByNameQuery.Setup(x => x.ExecuteAsync(It.IsAny<ApplicationName>(), It.IsAny<PaginationOptions>()))
             .ReturnsAsync(() => PagedList<ApplicationEntity>.Empty());
 
-        var story = new GetApplicationsStory(geAppByNameQuery.Object);
-        var res = await story.ExecuteAsync("app", PaginationOptions.Default());
+        var story = new FindApplicationsByNameStory(geAppByNameQuery.Object);
+        var res = await story.ExecuteAsync(new PagedRequest { Name = "" });
 
         Assert.NotNull(res);
         Assert.Empty(res.Data);
@@ -33,8 +34,8 @@ public class GetApplicationsTests
         geAppByNameQuery.Setup(x => x.ExecuteAsync(It.IsAny<ApplicationName>(), It.IsAny<PaginationOptions>()))
             .ReturnsAsync(() => PagedList<ApplicationEntity>.Of(app));
 
-        var story = new GetApplicationsStory(geAppByNameQuery.Object);
-        var res = await story.ExecuteAsync("app", PaginationOptions.Default());
+        var story = new FindApplicationsByNameStory(geAppByNameQuery.Object);
+        var res = await story.ExecuteAsync(new PagedRequest { Name = "" });
 
         Assert.NotNull(res);
         Assert.NotEmpty(res.Data);
@@ -44,8 +45,8 @@ public class GetApplicationsTests
     public async void Get_NullPaginationArg_ThrowsEx()
     {
         var geAppByNameQuery = new Mock<IGetApplicationsWithoutHierarchyQuery>();
-        var story = new GetApplicationsStory(geAppByNameQuery.Object);
+        var story = new FindApplicationsByNameStory(geAppByNameQuery.Object);
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => story.ExecuteAsync("app", null));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => story.ExecuteAsync(null));
     }
 }

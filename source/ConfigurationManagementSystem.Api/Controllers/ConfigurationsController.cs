@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ConfigurationManagementSystem.Api.Dto;
-using ConfigurationManagementSystem.Api.Extensions;
-using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Application.Dto;
 using ConfigurationManagementSystem.Application.Stories.AddConfigurationStory;
 using ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory;
 using ConfigurationManagementSystem.Application.Stories.GetConfigurationsStory;
@@ -22,9 +20,9 @@ public class ConfigurationsController : ControllerBase
     private readonly AddConfigurationStory _addConfigurationStory;
     private readonly UpdateConfigurationStory _updateConfigurationStory;
     private readonly RemoveConfigurationStory _removeConfigurationStory;
-    private readonly GetConfigurationsStory _getConfigurationsStory;
+    private readonly FindConfigurationsByNameStory _getConfigurationsStory;
 
-    public ConfigurationsController(GetConfigurationsStory getConfigurationsStory,
+    public ConfigurationsController(FindConfigurationsByNameStory getConfigurationsStory,
         GetConfigurationByIdStory getConfigurationByIdStory,
         AddConfigurationStory addConfigurationStory,
         UpdateConfigurationStory updateConfigurationStory,
@@ -39,13 +37,9 @@ public class ConfigurationsController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<PagedResponseDto<ConfigurationDto>>> Get([FromQuery] GetRequestOptions options)
+    public async Task<ActionResult<PagedResponseDto<ConfigurationDto>>> Get([FromQuery] PagedRequest request)
     {
-        var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
-        var configs = await _getConfigurationsStory.ExecuteAsync(options.Name, pOpt, false);
-        var result = configs.ToPagedResponseDto(ConfigurationEntityExtensions.ToDto);
-
-        return Ok(result);
+        return Ok(await _getConfigurationsStory.ExecuteAsync(request));
     }
 
     [HttpGet("{id}")]
@@ -53,8 +47,7 @@ public class ConfigurationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ConfigurationDto>> Get(Guid id)
     {
-        var config = await _getConfigurationByIdStory.ExecuteAsync(id);
-        return Ok(config.ToDto());
+        return Ok(await _getConfigurationByIdStory.ExecuteAsync(id));
     }
 
     [HttpPost]
@@ -63,9 +56,8 @@ public class ConfigurationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<ConfigurationDto>> Create(CreateConfigurationDto body)
     {
-        var created = await _addConfigurationStory.ExecuteAsync(body.Application, body.Name);
-        var dto = created.ToDto();
-        return CreatedAtAction(nameof(Get), new { id = created.Id }, dto);
+        var created = await _addConfigurationStory.ExecuteAsync(body);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]

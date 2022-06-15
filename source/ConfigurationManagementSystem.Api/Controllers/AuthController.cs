@@ -1,4 +1,4 @@
-﻿using ConfigurationManagementSystem.Api.Dto;
+﻿using ConfigurationManagementSystem.Application.Dto;
 using ConfigurationManagementSystem.Application.Stories.SignInStory;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,9 +17,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> SignIn(SignInDto request)
+    public async Task<ActionResult<TokenDto>> SignIn(SignInDto request)
     {
-        var token = await _signInStory.ExecuteAsync(request.Username, request.Password);
-        return Ok(new { token });
+        return Ok(await _signInStory.ExecuteAsync(request.Username, request.Password));
     }
 }

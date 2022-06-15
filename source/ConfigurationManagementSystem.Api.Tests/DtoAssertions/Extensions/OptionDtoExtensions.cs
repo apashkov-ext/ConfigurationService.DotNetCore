@@ -1,8 +1,9 @@
-﻿using ConfigurationManagementSystem.Api.Dto;
-using ConfigurationManagementSystem.Domain.Entities;
+﻿using ConfigurationManagementSystem.Domain.Entities;
 using ConfigurationManagementSystem.Domain;
 using System;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions;
+using ConfigurationManagementSystem.Application.Dto;
+using ConfigurationManagementSystem.Application;
 
 namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
 {

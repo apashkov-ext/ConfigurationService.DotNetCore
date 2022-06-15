@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using ConfigurationManagementSystem.Application.Dto;
 
 namespace ConfigurationManagementSystem.Application.Stories.SignInStory
 {
@@ -25,7 +26,7 @@ namespace ConfigurationManagementSystem.Application.Stories.SignInStory
             _securitySection = securitySection.Value;
         }
 
-        public async Task<string> ExecuteAsync(string username, string password)
+        public async Task<TokenDto> ExecuteAsync(string username, string password)
         {
             var usern = new Username(username);
 
@@ -48,7 +49,7 @@ namespace ConfigurationManagementSystem.Application.Stories.SignInStory
                 notBefore: now
             );
             var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-            return token;
+            return new TokenDto { Token = token };
         }
     }
 }

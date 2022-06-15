@@ -1,6 +1,6 @@
-﻿using ConfigurationManagementSystem.Api.Dto;
-using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
+﻿using ConfigurationEntity = ConfigurationManagementSystem.Domain.Entities.ConfigurationEntity;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions;
+using ConfigurationManagementSystem.Application.Dto;
 
 namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions
 {

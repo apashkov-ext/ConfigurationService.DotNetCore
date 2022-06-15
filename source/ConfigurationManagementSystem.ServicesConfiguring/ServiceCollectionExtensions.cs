@@ -1,4 +1,5 @@
 ﻿using ConfigurationManagementSystem.Application;
+using ConfigurationManagementSystem.Application.Mappers;
 using ConfigurationManagementSystem.Framework;
 using ConfigurationManagementSystem.Persistence;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,8 @@ namespace ConfigurationManagementSystem.ServicesConfiguring
             });
 
             services.BootstrapFramework(configuration);
+
+            services.AddAutoMapper(typeof(ApplicationMapperProfile));
 
             return services;
         } 

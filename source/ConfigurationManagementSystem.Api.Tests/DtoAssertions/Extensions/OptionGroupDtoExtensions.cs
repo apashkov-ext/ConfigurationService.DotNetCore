@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Tests.DtoAssertions.Exceptions;
+using ConfigurationManagementSystem.Application.Dto;
 using ConfigurationManagementSystem.Domain.Entities;
 
 namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions

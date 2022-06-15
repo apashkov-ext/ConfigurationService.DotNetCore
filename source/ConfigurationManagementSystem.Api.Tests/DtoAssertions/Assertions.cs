@@ -1,7 +1,7 @@
 ﻿using ConfigurationManagementSystem.Api.Tests.DtoAssertions.Extensions;
 using System.Collections.Generic;
-using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Domain.Entities;
+using ConfigurationManagementSystem.Application.Dto;
 
 namespace ConfigurationManagementSystem.Api.Tests.DtoAssertions
 {

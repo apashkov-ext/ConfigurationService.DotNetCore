@@ -1,8 +1,9 @@
 ﻿using ConfigurationManagementSystem.Application.Exceptions;
 using ConfigurationManagementSystem.Framework.Attributes;
-using ConfigurationManagementSystem.Domain.Entities;
 using System;
 using System.Threading.Tasks;
+using ConfigurationManagementSystem.Application.Dto;
+using ConfigurationManagementSystem.Application.Extensions;
 
 namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory
 {
@@ -16,10 +17,11 @@ namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationById
             _getConfigurationByIdWithoutHierarchyQuery = getConfigurationByIdWithoutHierarchyQuery;
         }
 
-        public async Task<ConfigurationEntity> ExecuteAsync(Guid id)
+        public async Task<ConfigurationDto> ExecuteAsync(Guid id)
         {
-            var app = await _getConfigurationByIdWithoutHierarchyQuery.ExecuteAsync(id);
-            return app ?? throw new EntityNotFoundException("Configuration does not exist");
+            var config = await _getConfigurationByIdWithoutHierarchyQuery.ExecuteAsync(id);
+            if (config is null) throw new EntityNotFoundException("Configuration does not exist");
+            return config.ToDto();
         }
     }
 }

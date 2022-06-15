@@ -1,17 +1,29 @@
-﻿using ConfigurationManagementSystem.Application.Pagination;
-using ConfigurationManagementSystem.Domain.Entities;
+﻿using ConfigurationManagementSystem.Application.Dto;
+using ConfigurationManagementSystem.Application.Extensions;
+using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Domain.ValueObjects;
+using ConfigurationManagementSystem.Framework.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Stories.FindOptionGroupsByNameStory;
 
+[Component]
 public class FindOptionGroupsByNameStory
 {
-    public Task<PagedList<OptionGroupEntity>> ExecuteAsync(string name, PaginationOptions paginationOptions)
+    private readonly IGetOptionGroupsByNameQuery _getOptionGroupsByNameQuery;
+
+    public FindOptionGroupsByNameStory(IGetOptionGroupsByNameQuery getOptionGroupsByNameQuery)
     {
-        return Task.FromResult(PagedList<OptionGroupEntity>.Empty());
+        _getOptionGroupsByNameQuery = getOptionGroupsByNameQuery;
+    }
+
+    public async Task<PagedResponseDto<OptionGroupDto>> ExecuteAsync(PagedRequest request)
+    {
+        if (request is null) throw new ArgumentNullException(nameof(request));
+
+        var oGroupName = string.IsNullOrEmpty(request.Name) ? null : new OptionGroupName(request.Name);
+        var groups = await _getOptionGroupsByNameQuery.ExecuteAsync(oGroupName, PaginationOptions.Create(request.Offset, request.Limit));
+        return groups.ToPagedResponseDto(OptionGroupExtensions.ToDto);
     }
 }
