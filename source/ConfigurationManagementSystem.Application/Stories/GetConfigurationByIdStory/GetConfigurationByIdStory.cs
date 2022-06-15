@@ -9,22 +9,16 @@ namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationById
     [Component]
     public class GetConfigurationByIdStory
     {
-        private readonly GetConfigurationByIdWithHierarchyQuery _getConfigurationByIdWithHierarchyQuery;
         private readonly GetConfigurationByIdWithoutHierarchyQuery _getConfigurationByIdWithoutHierarchyQuery;
 
-        public GetConfigurationByIdStory(GetConfigurationByIdWithHierarchyQuery getConfigurationByIdWithHierarchyQuery,
-            GetConfigurationByIdWithoutHierarchyQuery getConfigurationByIdWithoutHierarchyQuery)
+        public GetConfigurationByIdStory(GetConfigurationByIdWithoutHierarchyQuery getConfigurationByIdWithoutHierarchyQuery)
         {
-            _getConfigurationByIdWithHierarchyQuery = getConfigurationByIdWithHierarchyQuery;
             _getConfigurationByIdWithoutHierarchyQuery = getConfigurationByIdWithoutHierarchyQuery;
         }
 
-        public async Task<ConfigurationEntity> ExecuteAsync(Guid id, bool hierarchy)
+        public async Task<ConfigurationEntity> ExecuteAsync(Guid id)
         {
-            var app = hierarchy
-                ? await _getConfigurationByIdWithHierarchyQuery.ExecuteAsync(id)
-                : await _getConfigurationByIdWithoutHierarchyQuery.ExecuteAsync(id);
-
+            var app = await _getConfigurationByIdWithoutHierarchyQuery.ExecuteAsync(id);
             return app ?? throw new EntityNotFoundException("Configuration does not exist");
         }
     }

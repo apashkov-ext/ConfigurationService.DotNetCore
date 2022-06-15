@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using ConfigurationManagementSystem.Persistence;
 using ConfigurationManagementSystem.Tests.Fixtures.ContextInitialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigurationManagementSystem.Tests
@@ -23,76 +22,69 @@ namespace ConfigurationManagementSystem.Tests
             GC.SuppressFinalize(this);
         }
 
-        protected void ActWithDbContext(Action<TContext> action)
+        protected TContext GetContext()
         {
             using var scope = WebAppFactory.Services.CreateScope();
-            using var context = scope.ServiceProvider.GetService<TContext>();
-            using var tr = context.Database.BeginTransaction();
-            try
-            {
-                action(context);
-            }
-            finally
-            {
-                tr.Rollback();
-            }
+            return scope.ServiceProvider.GetRequiredService<TContext>();
         }
 
-        protected void ActWithDbContext(Action<ContextInitializer<TContext>> initialize, Action<TContext> action)
+        protected void SetupTest()
         {
-            Initialize(initialize);
-
-            RunInScope(ctx =>
-            {
-                using var tr = ctx.Database.BeginTransaction();
-                try
-                {
-                    action(ctx);
-                }
-                finally
-                {
-                    tr.Rollback();
-                }
-            });
+            using var scope = WebAppFactory.Services.CreateScope();
+            using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
+            new ContextSetup<TContext>(ctx).Initialize();
         }
 
-        protected async Task ActWithDbContextAsync(Action<ContextInitializer<TContext>> initialize, Func<TContext, Task> action)
+        protected void SetupTest(Action<IContextSetup<TContext>> contextSetup)
         {
-            Initialize(initialize);
+            if (contextSetup is null)
+            {
+                throw new ArgumentNullException(nameof(contextSetup));
+            }
 
             using var scope = WebAppFactory.Services.CreateScope();
             using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
-            using var tr = await ctx.Database.BeginTransactionAsync();
+            var setup = new ContextSetup<TContext>(ctx);
+            contextSetup(setup);
+            setup.Initialize();
+        }
+
+        protected void Verify(Action<TContext> action)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            using var scope = WebAppFactory.Services.CreateScope();
+            using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
+            try
+            {
+                action(ctx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+        }
+
+        protected async Task VerifyAsync(Func<TContext, Task> action)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            using var scope = WebAppFactory.Services.CreateScope();
+            using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
             try
             {
                 await action(ctx);
             }
-            finally
+            catch (Exception ex)
             {
-                await tr.RollbackAsync();
+                Console.WriteLine($"Error: {ex}");
             }
-        }
-
-        private void Initialize(Action<ContextInitializer<TContext>> initialize)
-        {
-            RunInScope(ctx =>
-            {
-                try
-                {
-                    initialize(new ContextSetup<TContext>(ctx).Setup());
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error occurred while initializing database before testing.", ex);
-                }
-            });
-        }
-
-        private void RunInScope(Action<TContext> action)
-        {
-            using var scope = WebAppFactory.Services.CreateScope();
-            using var ctx = scope.ServiceProvider.GetRequiredService<TContext>();
-            action(ctx);
         }
     }
 }

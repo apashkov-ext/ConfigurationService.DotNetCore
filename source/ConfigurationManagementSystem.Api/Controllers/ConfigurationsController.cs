@@ -51,9 +51,9 @@ public class ConfigurationsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ConfigurationDto>> Get(Guid id, bool? hierarchy)
+    public async Task<ActionResult<ConfigurationDto>> Get(Guid id)
     {
-        var config = await _getConfigurationByIdStory.ExecuteAsync(id, hierarchy ?? false);
+        var config = await _getConfigurationByIdStory.ExecuteAsync(id);
         return Ok(config.ToDto());
     }
 

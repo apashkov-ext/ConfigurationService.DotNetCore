@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ConfigurationManagementSystem.Api.Dto;
 using ConfigurationManagementSystem.Api.Extensions;
 using ConfigurationManagementSystem.Application;
+using ConfigurationManagementSystem.Application.Pagination;
+using ConfigurationManagementSystem.Application.Stories.FindOptionGroupsByNameStory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,19 +16,22 @@ namespace ConfigurationManagementSystem.Api.Controllers;
 public class OptionGroupsController : ControllerBase
 {
     private readonly IOptionGroups _optionGroups;
+    private readonly FindOptionGroupsByNameStory _findOptionGroupsByNameStory;
 
-    public OptionGroupsController(IOptionGroups optionGroups)
+    public OptionGroupsController(IOptionGroups optionGroups, FindOptionGroupsByNameStory findOptionGroupsByNameStory)
     {
         _optionGroups = optionGroups;
+        _findOptionGroupsByNameStory = findOptionGroupsByNameStory;
     }
 
     [HttpGet]
     [Produces(typeof(IEnumerable<OptionGroupDto>))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<OptionGroupDto>>> Get(string name)
+    public async Task<ActionResult<IEnumerable<OptionGroupDto>>> Get([FromQuery] GetRequestOptions options)
     {
-        var groups = await _optionGroups.Get(name);
-        var resp = groups.Select(x => x.ToDto());
+        var pOpt = PaginationOptions.Create(options.Offset, options.Limit);
+        var groups = await _findOptionGroupsByNameStory.ExecuteAsync(options.Name, pOpt);
+        var resp = groups.ToPagedResponseDto(OptionGroupExtensions.ToDto);
         return Ok(resp);
     }
 

@@ -7,7 +7,7 @@ namespace ConfigurationManagementSystem.Tests.Presets
 {
     public class EmptyApplication : IEnumerable<object[]>
     {
-        private static readonly Random Rand = new Random();
+        private static readonly Random _rand = new();
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[]{ new TestableApplication(Guid.NewGuid(), $"Application{ApplicationNamePostfix()}", Guid.NewGuid()) };
@@ -20,7 +20,7 @@ namespace ConfigurationManagementSystem.Tests.Presets
 
         private static string ApplicationNamePostfix()
         {
-            return $"{(char) Rand.Next(65, 91)}{(char) Rand.Next(97, 123)}{(char)Rand.Next(97, 123)}";
+            return $"{(char) _rand.Next(65, 91)}{(char) _rand.Next(97, 123)}{(char)_rand.Next(97, 123)}";
         }
     }
 }

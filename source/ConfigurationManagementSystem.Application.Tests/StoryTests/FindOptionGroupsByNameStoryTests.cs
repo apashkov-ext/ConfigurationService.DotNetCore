@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ConfigurationManagementSystem.Application.Tests.StoryTests
 {
-    public class GetApplicationsStoryTests
+    public class FindOptionGroupsByNameStoryTests
     {
-       
+
     }
 }

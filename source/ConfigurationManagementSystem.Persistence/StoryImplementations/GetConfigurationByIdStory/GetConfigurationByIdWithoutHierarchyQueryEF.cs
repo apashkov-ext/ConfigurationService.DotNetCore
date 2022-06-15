@@ -15,7 +15,7 @@ namespace ConfigurationManagementSystem.Persistence.StoryImplementations.GetConf
             _context = context;
         }
 
-        public override Task<ConfigurationEntity> ExecuteAsync(Guid id)
+        public Task<ConfigurationEntity> ExecuteAsync(Guid id)
         {
             return _context.Configurations.Include(x => x.Application).FirstOrDefaultAsync(x => x.Id == id);
         }

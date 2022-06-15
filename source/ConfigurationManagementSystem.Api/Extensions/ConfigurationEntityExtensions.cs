@@ -7,7 +7,6 @@ namespace ConfigurationManagementSystem.Api.Extensions
     {
         public static ConfigurationDto ToDto(this ConfigurationEntity source)
         {
-            var root = source.GetRootOptionGroop();
             return new ConfigurationDto
             {
                 Id = source.Id.ToString(),

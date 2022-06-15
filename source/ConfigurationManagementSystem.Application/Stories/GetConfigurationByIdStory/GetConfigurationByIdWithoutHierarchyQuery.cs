@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 namespace ConfigurationManagementSystem.Application.Stories.GetConfigurationByIdStory
 {
     [Component]
-    public abstract class GetConfigurationByIdWithoutHierarchyQuery
+    public interface GetConfigurationByIdWithoutHierarchyQuery
     {
-        public abstract Task<ConfigurationEntity> ExecuteAsync(Guid id);
+        Task<ConfigurationEntity> ExecuteAsync(Guid id);
     }
 }

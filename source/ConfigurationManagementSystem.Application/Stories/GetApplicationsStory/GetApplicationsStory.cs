@@ -10,11 +10,11 @@ namespace ConfigurationManagementSystem.Application.Stories.GetApplicationsStory
     [Component]
     public class GetApplicationsStory
     {
-        private readonly IGetApplicationsWithoutHierarchyQuery _getApplicationsWithoutHierarchyQuery;
+        private readonly IGetApplicationsWithoutHierarchyQuery _getApplicationsByNameQuery;
 
-        public GetApplicationsStory(IGetApplicationsWithoutHierarchyQuery getApplicationsWithoutHierarchyQuery)
+        public GetApplicationsStory(IGetApplicationsWithoutHierarchyQuery getApplicationsByNameQuery)
         {
-            _getApplicationsWithoutHierarchyQuery = getApplicationsWithoutHierarchyQuery;
+            _getApplicationsByNameQuery = getApplicationsByNameQuery;
         }
 
         public Task<PagedList<ApplicationEntity>> ExecuteAsync(string name, PaginationOptions paginationOptions)
@@ -22,7 +22,7 @@ namespace ConfigurationManagementSystem.Application.Stories.GetApplicationsStory
             if (paginationOptions == null) throw new ArgumentNullException(nameof(paginationOptions));
 
             var nameFilter = string.IsNullOrEmpty(name) ? null : new ApplicationName(name);
-            return _getApplicationsWithoutHierarchyQuery.ExecuteAsync(nameFilter, paginationOptions);
+            return _getApplicationsByNameQuery.ExecuteAsync(nameFilter, paginationOptions);
         }
     }
 }

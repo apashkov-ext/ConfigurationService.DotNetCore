@@ -21,5 +21,20 @@ namespace ConfigurationManagementSystem.Application.Pagination
             Limit = paginationOptions.Limit;
             TotalElements = total;
         }
+
+        public static PagedList<T> Empty()
+        {
+            return new PagedList<T>(Enumerable.Empty<T>(), PaginationOptions.Default(), 0);
+        }
+
+        public static PagedList<T> Of(params T[] elements)
+        {
+            if (elements is null)
+            {
+                throw new ArgumentNullException(nameof(elements));
+            }
+
+            return new(elements, PaginationOptions.Default(), elements.Length);
+        }
     }
 }

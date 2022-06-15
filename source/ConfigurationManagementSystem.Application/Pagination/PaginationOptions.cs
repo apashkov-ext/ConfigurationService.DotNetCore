@@ -18,6 +18,16 @@ namespace ConfigurationManagementSystem.Application.Pagination
 
         public static PaginationOptions Create(int? offset, int? limit)
         {
+            return Default(offset, limit);
+        }
+
+        public static PaginationOptions Default()
+        {
+            return Default(null, null);
+        }
+
+        private static PaginationOptions Default(int? offset = null, int? limit = null)
+        {
             return new(offset ?? 0, limit ?? 20);
         }
     }
